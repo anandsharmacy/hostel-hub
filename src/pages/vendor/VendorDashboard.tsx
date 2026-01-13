@@ -3,12 +3,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { StatusBadge } from '@/components/StatusBadge';
 import { useData, RequestStatus } from '@/contexts/DataContext';
-import { ShoppingBag, Package, Clock, CheckCircle, MapPin } from 'lucide-react';
+import { ShoppingBag, Package, Clock, CheckCircle, MapPin, Loader2 } from 'lucide-react';
 import { format } from 'date-fns';
 import { toast } from 'sonner';
 
 export default function VendorDashboard() {
-  const { storeOrders, updateStoreOrderStatus } = useData();
+  const { storeOrders, updateStoreOrderStatus, isLoading } = useData();
 
   const formatDate = (dateString: string) => {
     try {
@@ -18,14 +18,29 @@ export default function VendorDashboard() {
     }
   };
 
-  const handleStatusUpdate = (id: string, status: RequestStatus) => {
-    updateStoreOrderStatus(id, status);
-    toast.success(`Order marked as ${status === 'completed' ? 'delivered' : status}`);
+  const handleStatusUpdate = async (id: string, status: RequestStatus) => {
+    try {
+      await updateStoreOrderStatus(id, status);
+      toast.success(`Order marked as ${status === 'completed' ? 'delivered' : status}`);
+    } catch (error) {
+      console.error('Error updating status:', error);
+      toast.error('Failed to update status');
+    }
   };
 
   const pendingOrders = storeOrders.filter((o) => o.status === 'pending').length;
   const inProgressOrders = storeOrders.filter((o) => o.status === 'in-progress').length;
   const completedOrders = storeOrders.filter((o) => o.status === 'completed').length;
+
+  if (isLoading) {
+    return (
+      <DashboardLayout>
+        <div className="flex items-center justify-center py-12">
+          <Loader2 className="w-8 h-8 animate-spin text-primary" />
+        </div>
+      </DashboardLayout>
+    );
+  }
 
   return (
     <DashboardLayout>

@@ -14,6 +14,87 @@ export type Database = {
   }
   public: {
     Tables: {
+      appliance_complaints: {
+        Row: {
+          appliance: string
+          created_at: string
+          description: string
+          hostel_block: string
+          id: string
+          room_number: string
+          status: string
+          student_name: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          appliance: string
+          created_at?: string
+          description: string
+          hostel_block: string
+          id?: string
+          room_number: string
+          status?: string
+          student_name: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          appliance?: string
+          created_at?: string
+          description?: string
+          hostel_block?: string
+          id?: string
+          room_number?: string
+          status?: string
+          student_name?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      cleaning_requests: {
+        Row: {
+          created_at: string
+          hostel_block: string
+          id: string
+          notes: string | null
+          preferred_date: string
+          preferred_time: string
+          room_number: string
+          status: string
+          student_name: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          hostel_block: string
+          id?: string
+          notes?: string | null
+          preferred_date: string
+          preferred_time: string
+          room_number: string
+          status?: string
+          student_name: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          hostel_block?: string
+          id?: string
+          notes?: string | null
+          preferred_date?: string
+          preferred_time?: string
+          room_number?: string
+          status?: string
+          student_name?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
@@ -42,6 +123,45 @@ export type Database = {
           id?: string
           room_number?: string | null
           sap_id?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      store_orders: {
+        Row: {
+          category: string
+          created_at: string
+          hostel_block: string
+          id: string
+          items: Json
+          room_number: string
+          status: string
+          student_name: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          hostel_block: string
+          id?: string
+          items?: Json
+          room_number: string
+          status?: string
+          student_name: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          hostel_block?: string
+          id?: string
+          items?: Json
+          room_number?: string
+          status?: string
+          student_name?: string
           updated_at?: string
           user_id?: string
         }

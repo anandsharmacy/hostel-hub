@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { StatusBadge } from '@/components/StatusBadge';
 import { useData, RequestStatus } from '@/contexts/DataContext';
-import { Sparkles, Wrench, Calendar, MapPin, Clock, CheckCircle } from 'lucide-react';
+import { Sparkles, Wrench, Calendar, MapPin, Clock, CheckCircle, Loader2 } from 'lucide-react';
 import { format } from 'date-fns';
 import { toast } from 'sonner';
 
@@ -16,6 +16,7 @@ export default function AdminDashboard() {
     applianceComplaints,
     updateCleaningRequestStatus,
     updateApplianceComplaintStatus,
+    isLoading,
   } = useData();
 
   const formatDate = (dateString: string) => {
@@ -26,18 +27,38 @@ export default function AdminDashboard() {
     }
   };
 
-  const handleCleaningStatusUpdate = (id: string, status: RequestStatus) => {
-    updateCleaningRequestStatus(id, status);
-    toast.success(`Request marked as ${status}`);
+  const handleCleaningStatusUpdate = async (id: string, status: RequestStatus) => {
+    try {
+      await updateCleaningRequestStatus(id, status);
+      toast.success(`Request marked as ${status}`);
+    } catch (error) {
+      console.error('Error updating status:', error);
+      toast.error('Failed to update status');
+    }
   };
 
-  const handleApplianceStatusUpdate = (id: string, status: RequestStatus) => {
-    updateApplianceComplaintStatus(id, status);
-    toast.success(`Complaint marked as ${status}`);
+  const handleApplianceStatusUpdate = async (id: string, status: RequestStatus) => {
+    try {
+      await updateApplianceComplaintStatus(id, status);
+      toast.success(`Complaint marked as ${status}`);
+    } catch (error) {
+      console.error('Error updating status:', error);
+      toast.error('Failed to update status');
+    }
   };
 
   const pendingCleaning = cleaningRequests.filter((r) => r.status === 'pending').length;
   const pendingAppliance = applianceComplaints.filter((c) => c.status === 'pending').length;
+
+  if (isLoading) {
+    return (
+      <DashboardLayout>
+        <div className="flex items-center justify-center py-12">
+          <Loader2 className="w-8 h-8 animate-spin text-primary" />
+        </div>
+      </DashboardLayout>
+    );
+  }
 
   return (
     <DashboardLayout>

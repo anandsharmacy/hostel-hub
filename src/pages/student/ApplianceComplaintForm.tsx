@@ -43,19 +43,21 @@ export function ApplianceComplaintForm() {
 
     setIsSubmitting(true);
     
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 800));
-    
-    addApplianceComplaint(formData);
-    toast.success('Complaint submitted successfully!');
-    
-    setFormData({
-      ...formData,
-      appliance: '',
-      description: '',
-    });
-    
-    setIsSubmitting(false);
+    try {
+      await addApplianceComplaint(formData);
+      toast.success('Complaint submitted successfully!');
+      
+      setFormData({
+        ...formData,
+        appliance: '',
+        description: '',
+      });
+    } catch (error) {
+      console.error('Error submitting complaint:', error);
+      toast.error('Failed to submit complaint. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
