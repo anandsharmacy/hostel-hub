@@ -1,37 +1,35 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth, UserRole } from '@/contexts/AuthContext';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { GraduationCap, Wrench, Store, LogIn } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { GraduationCap, Shield, Store } from 'lucide-react';
 import { toast } from 'sonner';
+import nmimsLogo from '@/assets/nmims-logo.png';
 
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [selectedRole, setSelectedRole] = useState<UserRole>('student');
+  const [selectedRole, setSelectedRole] = useState<UserRole | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
+  const handleLogin = async (role: UserRole) => {
     if (!email.trim() || !password.trim()) {
       toast.error('Please enter both email and password');
       return;
     }
 
+    setSelectedRole(role);
     setIsLoading(true);
     
     try {
-      const success = await login(email, password, selectedRole);
+      const success = await login(email, password, role);
       if (success) {
         toast.success('Login successful!');
-        switch (selectedRole) {
+        switch (role) {
           case 'student':
             navigate('/student');
             break;
@@ -49,127 +47,153 @@ export default function Login() {
       toast.error('An error occurred. Please try again.');
     } finally {
       setIsLoading(false);
+      setSelectedRole(null);
     }
   };
 
-  const roleConfig = {
-    student: {
-      icon: GraduationCap,
-      title: 'Student Login',
-      description: 'Access cleaning, maintenance, and store services',
-      demo: 'student@nmims.edu',
-    },
-    admin: {
-      icon: Wrench,
-      title: 'Administration Login',
-      description: 'Manage cleaning and maintenance requests',
-      demo: 'admin@nmims.edu',
-    },
-    vendor: {
-      icon: Store,
-      title: 'Store Vendor Login',
-      description: 'Manage student orders and deliveries',
-      demo: 'vendor@nmims.edu',
-    },
-  };
-
-  const CurrentIcon = roleConfig[selectedRole].icon;
+  const navLinks = [
+    { label: 'About', href: '#' },
+    { label: 'Contact', href: '#' },
+    { label: 'Instructions', href: '#' },
+    { label: 'Hostel Rules', href: '#' },
+    { label: 'Hostel Application', href: '#' },
+    { label: 'Security Scanner', href: '#' },
+  ];
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
-      {/* Header */}
-      <header className="bg-header text-header-foreground py-6">
+    <div className="min-h-screen flex flex-col">
+      {/* Navigation Header */}
+      <header className="nmims-header text-white">
         <div className="container mx-auto px-4">
-          <div className="flex items-center justify-center gap-4">
-            <div className="w-12 h-12 bg-header-foreground/10 rounded-xl flex items-center justify-center">
-              <span className="text-2xl font-bold">N</span>
+          <div className="flex items-center justify-between h-14">
+            {/* Logo */}
+            <div className="flex items-center">
+              <img 
+                src={nmimsLogo} 
+                alt="NMIMS Logo" 
+                className="h-8 w-auto brightness-0 invert"
+              />
             </div>
-            <div className="text-center sm:text-left">
-              <h1 className="text-xl sm:text-2xl font-bold">NMIMS Hyderabad</h1>
-              <p className="text-sm text-header-foreground/80">Hostel Service Management Portal</p>
-            </div>
+            
+            {/* Navigation Links */}
+            <nav className="hidden md:flex items-center gap-6">
+              {navLinks.map((link) => (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  className="text-sm font-medium hover:text-white/80 transition-colors"
+                >
+                  {link.label}
+                </a>
+              ))}
+            </nav>
           </div>
         </div>
       </header>
 
-      {/* Main Content */}
-      <main className="flex-1 flex items-center justify-center p-4 py-12">
-        <Card className="w-full max-w-md card-elevated animate-fade-in">
-          <CardHeader className="text-center pb-2">
-            <div className="mx-auto w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-4">
-              <CurrentIcon className="w-8 h-8 text-primary" />
-            </div>
-            <CardTitle className="text-2xl">{roleConfig[selectedRole].title}</CardTitle>
-            <CardDescription>{roleConfig[selectedRole].description}</CardDescription>
+      {/* Main Content with Geometric Background */}
+      <main className="flex-1 geometric-bg flex flex-col items-center justify-center px-4 py-12">
+        {/* Large Centered Logo */}
+        <div className="mb-8 animate-fade-in">
+          <img 
+            src={nmimsLogo} 
+            alt="SVKM's NMIMS - Deemed to be University" 
+            className="h-40 md:h-52 w-auto"
+          />
+        </div>
+
+        {/* Title */}
+        <h1 className="text-3xl md:text-4xl font-semibold text-nmims-maroon mb-8 text-center animate-slide-up">
+          Hostel Service Management
+        </h1>
+
+        {/* Login Buttons */}
+        <div className="flex flex-col gap-4 mb-8 animate-slide-up">
+          <button
+            onClick={() => handleLogin('student')}
+            disabled={isLoading}
+            className="nmims-btn"
+          >
+            {isLoading && selectedRole === 'student' ? (
+              <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+            ) : (
+              <GraduationCap className="w-5 h-5" />
+            )}
+            Student Login
+          </button>
+          
+          <button
+            onClick={() => handleLogin('admin')}
+            disabled={isLoading}
+            className="nmims-btn"
+          >
+            {isLoading && selectedRole === 'admin' ? (
+              <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+            ) : (
+              <Shield className="w-5 h-5" />
+            )}
+            Admin Login
+          </button>
+
+          <button
+            onClick={() => handleLogin('vendor')}
+            disabled={isLoading}
+            className="nmims-btn"
+          >
+            {isLoading && selectedRole === 'vendor' ? (
+              <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+            ) : (
+              <Store className="w-5 h-5" />
+            )}
+            Vendor Login
+          </button>
+        </div>
+
+        {/* Demo Credentials Card */}
+        <Card className="w-full max-w-md bg-white/90 backdrop-blur border-0 shadow-lg animate-slide-up">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-lg text-center">Demo Login</CardTitle>
           </CardHeader>
-          <CardContent>
-            <Tabs value={selectedRole} onValueChange={(v) => setSelectedRole(v as UserRole)} className="mb-6">
-              <TabsList className="grid grid-cols-3 w-full">
-                <TabsTrigger value="student" className="text-xs sm:text-sm">
-                  <GraduationCap className="w-4 h-4 mr-1 hidden sm:inline" />
-                  Student
-                </TabsTrigger>
-                <TabsTrigger value="admin" className="text-xs sm:text-sm">
-                  <Wrench className="w-4 h-4 mr-1 hidden sm:inline" />
-                  Admin
-                </TabsTrigger>
-                <TabsTrigger value="vendor" className="text-xs sm:text-sm">
-                  <Store className="w-4 h-4 mr-1 hidden sm:inline" />
-                  Vendor
-                </TabsTrigger>
-              </TabsList>
-            </Tabs>
-
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="input-group">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder={roleConfig[selectedRole].demo}
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="h-11"
-                />
-              </div>
-              <div className="input-group">
-                <Label htmlFor="password">Password</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder="Enter your password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="h-11"
-                />
-              </div>
-              <Button type="submit" className="w-full h-11" disabled={isLoading}>
-                {isLoading ? (
-                  <span className="flex items-center gap-2">
-                    <span className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
-                    Signing in...
-                  </span>
-                ) : (
-                  <span className="flex items-center gap-2">
-                    <LogIn className="w-4 h-4" />
-                    Sign In
-                  </span>
-                )}
-              </Button>
-            </form>
-
-            <div className="mt-6 p-4 bg-muted rounded-lg">
-              <p className="text-xs text-muted-foreground text-center">
-                <strong>Demo:</strong> Use any email and password to log in
-              </p>
+          <CardContent className="space-y-4">
+            <div className="input-group">
+              <Label htmlFor="email" className="text-sm">Email</Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="Enter any email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="bg-white"
+              />
             </div>
+            <div className="input-group">
+              <Label htmlFor="password" className="text-sm">Password</Label>
+              <Input
+                id="password"
+                type="password"
+                placeholder="Enter any password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="bg-white"
+              />
+            </div>
+            <p className="text-xs text-center text-muted-foreground">
+              Enter any credentials and click a login button above
+            </p>
           </CardContent>
         </Card>
+
+        {/* Scrolling Welcome Message */}
+        <div className="w-full max-w-2xl mt-8 overflow-hidden">
+          <p className="text-nmims-maroon font-medium whitespace-nowrap animate-marquee">
+            Welcome to Hostel Service Management Portal | Submit your service requests in advance!
+          </p>
+        </div>
       </main>
 
       {/* Footer */}
-      <footer className="py-4 text-center text-sm text-muted-foreground">
-        <p>© 2026 NMIMS Hyderabad. All rights reserved.</p>
+      <footer className="bg-gray-800 text-white py-3 text-center text-sm">
+        <p>2026 © NMIMS Hyderabad - All rights reserved.</p>
       </footer>
     </div>
   );
