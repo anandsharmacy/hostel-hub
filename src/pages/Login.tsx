@@ -6,6 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import LoadingSpinner from '@/components/LoadingSpinner';
 import { LogIn, UserPlus, ArrowLeft } from 'lucide-react';
 import { toast } from 'sonner';
 import nmimsLogo from '@/assets/nmims-logo.png';
@@ -144,7 +145,7 @@ export default function Login() {
   if (authLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="w-8 h-8 border-4 border-nmims-maroon/30 border-t-nmims-maroon rounded-full animate-spin" />
+        <LoadingSpinner size="lg" text="Loading..." />
       </div>
     );
   }

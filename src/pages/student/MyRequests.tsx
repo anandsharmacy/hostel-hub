@@ -1,7 +1,8 @@
 import { useData } from '@/contexts/DataContext';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { StatusBadge } from '@/components/StatusBadge';
-import { Sparkles, Wrench, ShoppingBag, Calendar, MapPin, Loader2 } from 'lucide-react';
+import LoadingSpinner from '@/components/LoadingSpinner';
+import { Sparkles, Wrench, ShoppingBag, Calendar, MapPin } from 'lucide-react';
 import { format } from 'date-fns';
 
 export function MyRequests() {
@@ -18,7 +19,7 @@ export function MyRequests() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+        <LoadingSpinner size="lg" text="Loading requests..." />
       </div>
     );
   }

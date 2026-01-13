@@ -4,8 +4,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { StatusBadge } from '@/components/StatusBadge';
+import LoadingSpinner from '@/components/LoadingSpinner';
 import { useData, RequestStatus } from '@/contexts/DataContext';
-import { Sparkles, Wrench, Calendar, MapPin, Clock, CheckCircle, Loader2 } from 'lucide-react';
+import { Sparkles, Wrench, Calendar, MapPin, Clock, CheckCircle } from 'lucide-react';
 import { format } from 'date-fns';
 import { toast } from 'sonner';
 
@@ -54,7 +55,7 @@ export default function AdminDashboard() {
     return (
       <DashboardLayout>
         <div className="flex items-center justify-center py-12">
-          <Loader2 className="w-8 h-8 animate-spin text-primary" />
+          <LoadingSpinner size="lg" text="Loading dashboard..." />
         </div>
       </DashboardLayout>
     );

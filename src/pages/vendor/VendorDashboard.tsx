@@ -2,8 +2,9 @@ import { DashboardLayout } from '@/components/layout/DashboardLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { StatusBadge } from '@/components/StatusBadge';
+import LoadingSpinner from '@/components/LoadingSpinner';
 import { useData, RequestStatus } from '@/contexts/DataContext';
-import { ShoppingBag, Package, Clock, CheckCircle, MapPin, Loader2 } from 'lucide-react';
+import { ShoppingBag, Package, Clock, CheckCircle, MapPin } from 'lucide-react';
 import { format } from 'date-fns';
 import { toast } from 'sonner';
 
@@ -36,7 +37,7 @@ export default function VendorDashboard() {
     return (
       <DashboardLayout>
         <div className="flex items-center justify-center py-12">
-          <Loader2 className="w-8 h-8 animate-spin text-primary" />
+          <LoadingSpinner size="lg" text="Loading orders..." />
         </div>
       </DashboardLayout>
     );
