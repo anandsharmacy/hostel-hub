@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth, UserRole } from '@/contexts/AuthContext';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -135,12 +135,11 @@ export default function Login() {
   };
 
   const navLinks = [
-    { label: 'About', href: '#' },
-    { label: 'Contact', href: '#' },
-    { label: 'Instructions', href: '#' },
-    { label: 'Hostel Rules', href: '#' },
-    { label: 'Hostel Application', href: '#' },
-    { label: 'Security Scanner', href: '#' },
+    { label: 'About', href: '#', isRoute: false },
+    { label: 'Contact', href: '/contact', isRoute: true },
+    { label: 'Instructions', href: '#', isRoute: false },
+    { label: 'Hostel Rules', href: '#', isRoute: false },
+    { label: 'Hostel Application', href: '#', isRoute: false },
   ];
 
   if (authLoading) {
@@ -167,13 +166,23 @@ export default function Login() {
             
             <nav className="hidden md:flex items-center gap-6">
               {navLinks.map((link) => (
-                <a
-                  key={link.label}
-                  href={link.href}
-                  className="text-sm font-medium hover:text-white/80 transition-colors"
-                >
-                  {link.label}
-                </a>
+                link.isRoute ? (
+                  <Link
+                    key={link.label}
+                    to={link.href}
+                    className="text-sm font-medium hover:text-white/80 transition-colors"
+                  >
+                    {link.label}
+                  </Link>
+                ) : (
+                  <a
+                    key={link.label}
+                    href={link.href}
+                    className="text-sm font-medium hover:text-white/80 transition-colors"
+                  >
+                    {link.label}
+                  </a>
+                )
               ))}
             </nav>
           </div>
