@@ -107,18 +107,21 @@ export function StoreOrderForm() {
 
     setIsSubmitting(true);
     
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 800));
-    
-    addStoreOrder({
-      ...formData,
-      category: selectedCategory,
-      items: cart.map(({ name, quantity }) => ({ name, quantity })),
-    });
-    
-    toast.success('Order placed successfully!');
-    setCart([]);
-    setIsSubmitting(false);
+    try {
+      await addStoreOrder({
+        ...formData,
+        category: selectedCategory,
+        items: cart.map(({ name, quantity }) => ({ name, quantity })),
+      });
+      
+      toast.success('Order placed successfully!');
+      setCart([]);
+    } catch (error) {
+      console.error('Error placing order:', error);
+      toast.error('Failed to place order. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (

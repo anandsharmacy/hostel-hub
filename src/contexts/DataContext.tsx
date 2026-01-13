@@ -1,9 +1,12 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
+import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from './AuthContext';
 
 export type RequestStatus = 'pending' | 'in-progress' | 'completed';
 
 export interface CleaningRequest {
   id: string;
+  user_id: string;
   studentName: string;
   hostelBlock: string;
   roomNumber: string;
@@ -16,6 +19,7 @@ export interface CleaningRequest {
 
 export interface ApplianceComplaint {
   id: string;
+  user_id: string;
   studentName: string;
   roomNumber: string;
   hostelBlock: string;
@@ -27,6 +31,7 @@ export interface ApplianceComplaint {
 
 export interface StoreOrder {
   id: string;
+  user_id: string;
   studentName: string;
   roomNumber: string;
   hostelBlock: string;
@@ -40,145 +45,219 @@ interface DataContextType {
   cleaningRequests: CleaningRequest[];
   applianceComplaints: ApplianceComplaint[];
   storeOrders: StoreOrder[];
-  addCleaningRequest: (request: Omit<CleaningRequest, 'id' | 'status' | 'createdAt'>) => void;
-  addApplianceComplaint: (complaint: Omit<ApplianceComplaint, 'id' | 'status' | 'createdAt'>) => void;
-  addStoreOrder: (order: Omit<StoreOrder, 'id' | 'status' | 'createdAt'>) => void;
-  updateCleaningRequestStatus: (id: string, status: RequestStatus) => void;
-  updateApplianceComplaintStatus: (id: string, status: RequestStatus) => void;
-  updateStoreOrderStatus: (id: string, status: RequestStatus) => void;
+  isLoading: boolean;
+  addCleaningRequest: (request: Omit<CleaningRequest, 'id' | 'user_id' | 'status' | 'createdAt'>) => Promise<void>;
+  addApplianceComplaint: (complaint: Omit<ApplianceComplaint, 'id' | 'user_id' | 'status' | 'createdAt'>) => Promise<void>;
+  addStoreOrder: (order: Omit<StoreOrder, 'id' | 'user_id' | 'status' | 'createdAt'>) => Promise<void>;
+  updateCleaningRequestStatus: (id: string, status: RequestStatus) => Promise<void>;
+  updateApplianceComplaintStatus: (id: string, status: RequestStatus) => Promise<void>;
+  updateStoreOrderStatus: (id: string, status: RequestStatus) => Promise<void>;
+  refetchData: () => Promise<void>;
 }
 
 const DataContext = createContext<DataContextType | undefined>(undefined);
 
-// Initial mock data
-const initialCleaningRequests: CleaningRequest[] = [
-  {
-    id: '1',
-    studentName: 'Priya Patel',
-    hostelBlock: 'Block B',
-    roomNumber: '205',
-    preferredDate: '2026-01-14',
-    preferredTime: '10:00 AM',
-    notes: 'Please clean the bathroom as well',
-    status: 'pending',
-    createdAt: '2026-01-13T09:00:00',
-  },
-  {
-    id: '2',
-    studentName: 'Amit Kumar',
-    hostelBlock: 'Block A',
-    roomNumber: '112',
-    preferredDate: '2026-01-14',
-    preferredTime: '02:00 PM',
-    notes: '',
-    status: 'in-progress',
-    createdAt: '2026-01-12T14:30:00',
-  },
-];
+// Helper to map database row to CleaningRequest
+function mapCleaningRequest(row: any): CleaningRequest {
+  return {
+    id: row.id,
+    user_id: row.user_id,
+    studentName: row.student_name,
+    hostelBlock: row.hostel_block,
+    roomNumber: row.room_number,
+    preferredDate: row.preferred_date,
+    preferredTime: row.preferred_time,
+    notes: row.notes || '',
+    status: row.status as RequestStatus,
+    createdAt: row.created_at,
+  };
+}
 
-const initialApplianceComplaints: ApplianceComplaint[] = [
-  {
-    id: '1',
-    studentName: 'Sneha Reddy',
-    roomNumber: '308',
-    hostelBlock: 'Block A',
-    appliance: 'AC',
-    description: 'AC is not cooling properly, making noise',
-    status: 'pending',
-    createdAt: '2026-01-13T08:15:00',
-  },
-  {
-    id: '2',
-    studentName: 'Vikram Singh',
-    roomNumber: '401',
-    hostelBlock: 'Block C',
-    appliance: 'Geyser',
-    description: 'Geyser not heating water',
-    status: 'in-progress',
-    createdAt: '2026-01-12T16:45:00',
-  },
-];
+// Helper to map database row to ApplianceComplaint
+function mapApplianceComplaint(row: any): ApplianceComplaint {
+  return {
+    id: row.id,
+    user_id: row.user_id,
+    studentName: row.student_name,
+    hostelBlock: row.hostel_block,
+    roomNumber: row.room_number,
+    appliance: row.appliance,
+    description: row.description,
+    status: row.status as RequestStatus,
+    createdAt: row.created_at,
+  };
+}
 
-const initialStoreOrders: StoreOrder[] = [
-  {
-    id: '1',
-    studentName: 'Neha Gupta',
-    roomNumber: '203',
-    hostelBlock: 'Block B',
-    category: 'Stationery',
-    items: [
-      { name: 'Notebook', quantity: 3 },
-      { name: 'Pen Set', quantity: 2 },
-    ],
-    status: 'pending',
-    createdAt: '2026-01-13T11:00:00',
-  },
-  {
-    id: '2',
-    studentName: 'Arjun Mehta',
-    roomNumber: '105',
-    hostelBlock: 'Block A',
-    category: 'Fruits',
-    items: [
-      { name: 'Apples (1kg)', quantity: 1 },
-      { name: 'Bananas (dozen)', quantity: 2 },
-    ],
-    status: 'completed',
-    createdAt: '2026-01-12T10:30:00',
-  },
-];
+// Helper to map database row to StoreOrder
+function mapStoreOrder(row: any): StoreOrder {
+  return {
+    id: row.id,
+    user_id: row.user_id,
+    studentName: row.student_name,
+    hostelBlock: row.hostel_block,
+    roomNumber: row.room_number,
+    category: row.category,
+    items: row.items as { name: string; quantity: number }[],
+    status: row.status as RequestStatus,
+    createdAt: row.created_at,
+  };
+}
 
 export function DataProvider({ children }: { children: ReactNode }) {
-  const [cleaningRequests, setCleaningRequests] = useState<CleaningRequest[]>(initialCleaningRequests);
-  const [applianceComplaints, setApplianceComplaints] = useState<ApplianceComplaint[]>(initialApplianceComplaints);
-  const [storeOrders, setStoreOrders] = useState<StoreOrder[]>(initialStoreOrders);
+  const { user, isAuthenticated } = useAuth();
+  const [cleaningRequests, setCleaningRequests] = useState<CleaningRequest[]>([]);
+  const [applianceComplaints, setApplianceComplaints] = useState<ApplianceComplaint[]>([]);
+  const [storeOrders, setStoreOrders] = useState<StoreOrder[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const addCleaningRequest = (request: Omit<CleaningRequest, 'id' | 'status' | 'createdAt'>) => {
-    const newRequest: CleaningRequest = {
-      ...request,
-      id: Date.now().toString(),
+  const fetchCleaningRequests = useCallback(async () => {
+    const { data, error } = await supabase
+      .from('cleaning_requests')
+      .select('*')
+      .order('created_at', { ascending: false });
+    
+    if (error) {
+      console.error('Error fetching cleaning requests:', error);
+      return [];
+    }
+    return (data || []).map(mapCleaningRequest);
+  }, []);
+
+  const fetchApplianceComplaints = useCallback(async () => {
+    const { data, error } = await supabase
+      .from('appliance_complaints')
+      .select('*')
+      .order('created_at', { ascending: false });
+    
+    if (error) {
+      console.error('Error fetching appliance complaints:', error);
+      return [];
+    }
+    return (data || []).map(mapApplianceComplaint);
+  }, []);
+
+  const fetchStoreOrders = useCallback(async () => {
+    const { data, error } = await supabase
+      .from('store_orders')
+      .select('*')
+      .order('created_at', { ascending: false });
+    
+    if (error) {
+      console.error('Error fetching store orders:', error);
+      return [];
+    }
+    return (data || []).map(mapStoreOrder);
+  }, []);
+
+  const refetchData = useCallback(async () => {
+    if (!isAuthenticated) return;
+    
+    setIsLoading(true);
+    try {
+      const [cleaning, appliance, orders] = await Promise.all([
+        fetchCleaningRequests(),
+        fetchApplianceComplaints(),
+        fetchStoreOrders(),
+      ]);
+      setCleaningRequests(cleaning);
+      setApplianceComplaints(appliance);
+      setStoreOrders(orders);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [isAuthenticated, fetchCleaningRequests, fetchApplianceComplaints, fetchStoreOrders]);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      refetchData();
+    } else {
+      // Clear data when logged out
+      setCleaningRequests([]);
+      setApplianceComplaints([]);
+      setStoreOrders([]);
+    }
+  }, [isAuthenticated, refetchData]);
+
+  const addCleaningRequest = async (request: Omit<CleaningRequest, 'id' | 'user_id' | 'status' | 'createdAt'>) => {
+    if (!user) throw new Error('User not authenticated');
+
+    const { error } = await supabase.from('cleaning_requests').insert({
+      user_id: user.id,
+      student_name: request.studentName,
+      hostel_block: request.hostelBlock,
+      room_number: request.roomNumber,
+      preferred_date: request.preferredDate,
+      preferred_time: request.preferredTime,
+      notes: request.notes,
       status: 'pending',
-      createdAt: new Date().toISOString(),
-    };
-    setCleaningRequests((prev) => [newRequest, ...prev]);
+    });
+
+    if (error) throw error;
+    await refetchData();
   };
 
-  const addApplianceComplaint = (complaint: Omit<ApplianceComplaint, 'id' | 'status' | 'createdAt'>) => {
-    const newComplaint: ApplianceComplaint = {
-      ...complaint,
-      id: Date.now().toString(),
+  const addApplianceComplaint = async (complaint: Omit<ApplianceComplaint, 'id' | 'user_id' | 'status' | 'createdAt'>) => {
+    if (!user) throw new Error('User not authenticated');
+
+    const { error } = await supabase.from('appliance_complaints').insert({
+      user_id: user.id,
+      student_name: complaint.studentName,
+      hostel_block: complaint.hostelBlock,
+      room_number: complaint.roomNumber,
+      appliance: complaint.appliance,
+      description: complaint.description,
       status: 'pending',
-      createdAt: new Date().toISOString(),
-    };
-    setApplianceComplaints((prev) => [newComplaint, ...prev]);
+    });
+
+    if (error) throw error;
+    await refetchData();
   };
 
-  const addStoreOrder = (order: Omit<StoreOrder, 'id' | 'status' | 'createdAt'>) => {
-    const newOrder: StoreOrder = {
-      ...order,
-      id: Date.now().toString(),
+  const addStoreOrder = async (order: Omit<StoreOrder, 'id' | 'user_id' | 'status' | 'createdAt'>) => {
+    if (!user) throw new Error('User not authenticated');
+
+    const { error } = await supabase.from('store_orders').insert({
+      user_id: user.id,
+      student_name: order.studentName,
+      hostel_block: order.hostelBlock,
+      room_number: order.roomNumber,
+      category: order.category,
+      items: order.items,
       status: 'pending',
-      createdAt: new Date().toISOString(),
-    };
-    setStoreOrders((prev) => [newOrder, ...prev]);
+    });
+
+    if (error) throw error;
+    await refetchData();
   };
 
-  const updateCleaningRequestStatus = (id: string, status: RequestStatus) => {
-    setCleaningRequests((prev) =>
-      prev.map((req) => (req.id === id ? { ...req, status } : req))
-    );
+  const updateCleaningRequestStatus = async (id: string, status: RequestStatus) => {
+    const { error } = await supabase
+      .from('cleaning_requests')
+      .update({ status })
+      .eq('id', id);
+
+    if (error) throw error;
+    await refetchData();
   };
 
-  const updateApplianceComplaintStatus = (id: string, status: RequestStatus) => {
-    setApplianceComplaints((prev) =>
-      prev.map((complaint) => (complaint.id === id ? { ...complaint, status } : complaint))
-    );
+  const updateApplianceComplaintStatus = async (id: string, status: RequestStatus) => {
+    const { error } = await supabase
+      .from('appliance_complaints')
+      .update({ status })
+      .eq('id', id);
+
+    if (error) throw error;
+    await refetchData();
   };
 
-  const updateStoreOrderStatus = (id: string, status: RequestStatus) => {
-    setStoreOrders((prev) =>
-      prev.map((order) => (order.id === id ? { ...order, status } : order))
-    );
+  const updateStoreOrderStatus = async (id: string, status: RequestStatus) => {
+    const { error } = await supabase
+      .from('store_orders')
+      .update({ status })
+      .eq('id', id);
+
+    if (error) throw error;
+    await refetchData();
   };
 
   return (
@@ -187,12 +266,14 @@ export function DataProvider({ children }: { children: ReactNode }) {
         cleaningRequests,
         applianceComplaints,
         storeOrders,
+        isLoading,
         addCleaningRequest,
         addApplianceComplaint,
         addStoreOrder,
         updateCleaningRequestStatus,
         updateApplianceComplaintStatus,
         updateStoreOrderStatus,
+        refetchData,
       }}
     >
       {children}

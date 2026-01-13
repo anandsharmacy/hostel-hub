@@ -40,20 +40,22 @@ export function CleaningRequestForm() {
 
     setIsSubmitting(true);
     
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 800));
-    
-    addCleaningRequest(formData);
-    toast.success('Cleaning request submitted successfully!');
-    
-    setFormData({
-      ...formData,
-      preferredDate: '',
-      preferredTime: '',
-      notes: '',
-    });
-    
-    setIsSubmitting(false);
+    try {
+      await addCleaningRequest(formData);
+      toast.success('Cleaning request submitted successfully!');
+      
+      setFormData({
+        ...formData,
+        preferredDate: '',
+        preferredTime: '',
+        notes: '',
+      });
+    } catch (error) {
+      console.error('Error submitting cleaning request:', error);
+      toast.error('Failed to submit request. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
