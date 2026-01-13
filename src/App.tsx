@@ -7,6 +7,7 @@ import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import { DataProvider } from "@/contexts/DataContext";
 import Index from "./pages/Index";
 import Login from "./pages/Login";
+import About from "./pages/About";
 import Contact from "./pages/Contact";
 import HostelRules from "./pages/HostelRules";
 import StudentDashboard from "./pages/student/StudentDashboard";
@@ -45,6 +46,7 @@ function AppRoutes() {
     <Routes>
       <Route path="/" element={<Index />} />
       <Route path="/login" element={<Login />} />
+      <Route path="/about" element={<About />} />
       <Route path="/contact" element={<Contact />} />
       <Route path="/hostel-rules" element={<HostelRules />} />
       <Route

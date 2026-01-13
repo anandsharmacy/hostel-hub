@@ -135,7 +135,7 @@ export default function Login() {
   };
 
   const navLinks = [
-    { label: 'About', href: '#', isRoute: false },
+    { label: 'About', href: '/about', isRoute: true },
     { label: 'Contact', href: '/contact', isRoute: true },
     { label: 'Hostel Rules', href: '/hostel-rules', isRoute: true },
     { label: 'Hostel Application', href: 'https://portal.svkm.ac.in/usermgmt/viewHostels', isRoute: false },
