@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, useEffect, ReactNode } from
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 
-export type UserRole = 'student' | 'admin' | 'vendor';
+export type UserRole = 'student' | 'admin' | 'vendor' | 'super_user';
 
 interface Profile {
   id: string;
@@ -18,8 +18,9 @@ interface AuthContextType {
   session: Session | null;
   profile: Profile | null;
   role: UserRole | null;
-  login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
-  signup: (email: string, password: string, fullName: string, role: UserRole, sapId?: string, roomNumber?: string, hostelBlock?: string) => Promise<{ success: boolean; error?: string }>;
+  isApproved: boolean;
+  login: (email: string, password: string) => Promise<{ success: boolean; error?: string; pendingApproval?: boolean }>;
+  signup: (email: string, password: string, fullName: string, role: UserRole, sapId?: string, roomNumber?: string, hostelBlock?: string) => Promise<{ success: boolean; error?: string; pendingApproval?: boolean }>;
   logout: () => Promise<void>;
   isAuthenticated: boolean;
   isLoading: boolean;
@@ -32,6 +33,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [role, setRole] = useState<UserRole | null>(null);
+  const [isApproved, setIsApproved] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
 
   const fetchUserData = async (userId: string) => {
@@ -47,11 +49,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setProfile(profileData as Profile);
       }
 
-      // Fetch role using the database function
-      const { data: roleData } = await supabase.rpc('get_user_role', { _user_id: userId });
+      // Fetch role and approval status
+      const { data: roleData } = await supabase
+        .from('user_roles')
+        .select('role, approved')
+        .eq('user_id', userId)
+        .maybeSingle();
       
       if (roleData) {
-        setRole(roleData as UserRole);
+        setRole(roleData.role as UserRole);
+        setIsApproved(roleData.approved);
       }
     } catch (error) {
       console.error('Error fetching user data:', error);
@@ -73,6 +80,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         } else {
           setProfile(null);
           setRole(null);
+          setIsApproved(true);
         }
         
         setIsLoading(false);
@@ -94,15 +102,30 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => subscription.unsubscribe();
   }, []);
 
-  const login = async (email: string, password: string): Promise<{ success: boolean; error?: string }> => {
+  const login = async (email: string, password: string): Promise<{ success: boolean; error?: string; pendingApproval?: boolean }> => {
     try {
-      const { error } = await supabase.auth.signInWithPassword({
+      const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
       if (error) {
         return { success: false, error: error.message };
+      }
+
+      if (data.user) {
+        // Check approval status for admin/vendor
+        const { data: roleData } = await supabase
+          .from('user_roles')
+          .select('role, approved')
+          .eq('user_id', data.user.id)
+          .maybeSingle();
+
+        if (roleData && (roleData.role === 'admin' || roleData.role === 'vendor') && !roleData.approved) {
+          // Sign out the user if not approved
+          await supabase.auth.signOut();
+          return { success: false, error: 'Your account is pending approval by Super User', pendingApproval: true };
+        }
       }
 
       return { success: true };
@@ -115,11 +138,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     email: string, 
     password: string, 
     fullName: string, 
-    role: UserRole,
+    userRole: UserRole,
     sapId?: string,
     roomNumber?: string,
     hostelBlock?: string
-  ): Promise<{ success: boolean; error?: string }> => {
+  ): Promise<{ success: boolean; error?: string; pendingApproval?: boolean }> => {
     try {
       const redirectUrl = `${window.location.origin}/`;
       
@@ -152,17 +175,46 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           return { success: false, error: 'Failed to create profile' };
         }
 
-        // Create role
+        // Admin and vendor accounts need approval, students are auto-approved
+        const needsApproval = userRole === 'admin' || userRole === 'vendor';
+        
+        // Create role with approval status
         const { error: roleError } = await supabase
           .from('user_roles')
           .insert({
             user_id: data.user.id,
-            role: role,
+            role: userRole,
+            approved: !needsApproval, // Students are auto-approved
           });
 
         if (roleError) {
           console.error('Role creation error:', roleError);
           return { success: false, error: 'Failed to assign role' };
+        }
+
+        // If admin/vendor, create approval request and sign out
+        if (needsApproval) {
+          const { error: approvalError } = await supabase
+            .from('approval_requests')
+            .insert({
+              user_id: data.user.id,
+              role: userRole,
+              full_name: fullName,
+              email: email,
+              status: 'pending',
+            });
+
+          if (approvalError) {
+            console.error('Approval request error:', approvalError);
+          }
+
+          // Sign out since they need approval
+          await supabase.auth.signOut();
+          
+          return { 
+            success: true, 
+            pendingApproval: true 
+          };
         }
       }
 
@@ -178,6 +230,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setSession(null);
     setProfile(null);
     setRole(null);
+    setIsApproved(true);
   };
 
   return (
@@ -186,6 +239,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       session,
       profile,
       role,
+      isApproved,
       login, 
       signup,
       logout, 

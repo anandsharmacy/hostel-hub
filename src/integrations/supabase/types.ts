@@ -53,6 +53,42 @@ export type Database = {
         }
         Relationships: []
       }
+      approval_requests: {
+        Row: {
+          approved_at: string | null
+          approved_by: string | null
+          email: string
+          full_name: string
+          id: string
+          requested_at: string
+          role: string
+          status: string
+          user_id: string
+        }
+        Insert: {
+          approved_at?: string | null
+          approved_by?: string | null
+          email: string
+          full_name: string
+          id?: string
+          requested_at?: string
+          role: string
+          status?: string
+          user_id: string
+        }
+        Update: {
+          approved_at?: string | null
+          approved_by?: string | null
+          email?: string
+          full_name?: string
+          id?: string
+          requested_at?: string
+          role?: string
+          status?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       cleaning_requests: {
         Row: {
           created_at: string
@@ -169,16 +205,19 @@ export type Database = {
       }
       user_roles: {
         Row: {
+          approved: boolean
           id: string
           role: Database["public"]["Enums"]["app_role"]
           user_id: string
         }
         Insert: {
+          approved?: boolean
           id?: string
           role: Database["public"]["Enums"]["app_role"]
           user_id: string
         }
         Update: {
+          approved?: boolean
           id?: string
           role?: Database["public"]["Enums"]["app_role"]
           user_id?: string

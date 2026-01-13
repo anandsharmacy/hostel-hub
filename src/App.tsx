@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import { DataProvider } from "@/contexts/DataContext";
+import LoadingSpinner from "@/components/LoadingSpinner";
 import Index from "./pages/Index";
 import Login from "./pages/Login";
 import About from "./pages/About";
@@ -13,6 +14,7 @@ import HostelRules from "./pages/HostelRules";
 import StudentDashboard from "./pages/student/StudentDashboard";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import VendorDashboard from "./pages/vendor/VendorDashboard";
+import SuperUserDashboard from "./pages/superuser/SuperUserDashboard";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -24,7 +26,7 @@ function ProtectedRoute({ children, allowedRoles }: { children: React.ReactNode;
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="w-8 h-8 border-4 border-primary/30 border-t-primary rounded-full animate-spin" />
+        <LoadingSpinner size="lg" text="Loading..." />
       </div>
     );
   }
@@ -70,6 +72,14 @@ function AppRoutes() {
         element={
           <ProtectedRoute allowedRoles={['vendor']}>
             <VendorDashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/super-user"
+        element={
+          <ProtectedRoute allowedRoles={['super_user']}>
+            <SuperUserDashboard />
           </ProtectedRoute>
         }
       />

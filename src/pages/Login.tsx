@@ -7,12 +7,12 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import LoadingSpinner from '@/components/LoadingSpinner';
-import { LogIn, UserPlus, ArrowLeft } from 'lucide-react';
+import { LogIn, UserPlus, ArrowLeft, ShieldCheck } from 'lucide-react';
 import { toast } from 'sonner';
 import nmimsLogo from '@/assets/nmims-logo.png';
 import { z } from 'zod';
 
-type AuthView = 'home' | 'signin' | 'signup';
+type AuthView = 'home' | 'signin' | 'signup' | 'superuser';
 
 const loginSchema = z.object({
   email: z.string().email('Please enter a valid email address'),
@@ -23,7 +23,7 @@ const signupSchema = z.object({
   email: z.string().email('Please enter a valid email address'),
   password: z.string().min(6, 'Password must be at least 6 characters'),
   fullName: z.string().min(2, 'Name must be at least 2 characters').max(100, 'Name is too long'),
-  role: z.enum(['student', 'admin', 'vendor']),
+  role: z.enum(['student', 'admin', 'vendor', 'super_user']),
   sapId: z.string().optional(),
   roomNumber: z.string().optional(),
   hostelBlock: z.string().optional(),
@@ -54,6 +54,9 @@ export default function Login() {
           break;
         case 'vendor':
           navigate('/vendor');
+          break;
+        case 'super_user':
+          navigate('/super-user');
           break;
       }
     }
@@ -113,8 +116,14 @@ export default function Login() {
       );
       
       if (result.success) {
-        toast.success('Account created successfully!');
-        // Navigation will be handled by useEffect
+        if (result.pendingApproval) {
+          toast.success('Account created! Your request has been sent to the Super User for approval.');
+          setCurrentView('home');
+          resetForm();
+        } else {
+          toast.success('Account created successfully!');
+          // Navigation will be handled by useEffect
+        }
       } else {
         toast.error(result.error || 'Failed to create account');
       }
@@ -234,7 +243,86 @@ export default function Login() {
                 Welcome to Hostel Service Management Portal | Submit your service requests in advance!
               </p>
             </div>
+
+            {/* Super User Button */}
+            <div className="mt-8">
+              <button
+                onClick={() => {
+                  resetForm();
+                  setCurrentView('superuser');
+                }}
+                className="text-sm text-muted-foreground hover:text-nmims-maroon transition-colors flex items-center gap-2"
+              >
+                <ShieldCheck className="w-4 h-4" />
+                Super User Login
+              </button>
+            </div>
           </>
+        ) : currentView === 'superuser' ? (
+          <Card className="w-full max-w-md bg-white/95 backdrop-blur border-0 shadow-xl animate-scale-in">
+            <CardHeader className="pb-4 text-center relative">
+              <button
+                onClick={() => setCurrentView('home')}
+                className="absolute left-4 top-4 p-2 text-muted-foreground hover:text-nmims-maroon transition-colors"
+              >
+                <ArrowLeft className="w-5 h-5" />
+              </button>
+              <div className="flex justify-center mb-3">
+                <ShieldCheck className="w-8 h-8 text-nmims-maroon" />
+              </div>
+              <CardTitle className="text-xl text-nmims-maroon">
+                Super User Login
+              </CardTitle>
+              <p className="text-sm text-muted-foreground mt-1">
+                Approve Admin & Vendor accounts
+              </p>
+            </CardHeader>
+            <CardContent className="space-y-5">
+              <div className="space-y-2">
+                <Label htmlFor="superEmail" className="text-sm font-medium">
+                  Email
+                </Label>
+                <Input
+                  id="superEmail"
+                  type="email"
+                  placeholder="Enter super user email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="bg-white h-11"
+                  autoComplete="email"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="superPassword" className="text-sm font-medium">
+                  Password
+                </Label>
+                <Input
+                  id="superPassword"
+                  type="password"
+                  placeholder="Enter your password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="bg-white h-11"
+                  autoComplete="current-password"
+                />
+              </div>
+              
+              <Button
+                onClick={handleLogin}
+                disabled={isLoading}
+                className="w-full h-11 bg-nmims-maroon hover:bg-nmims-dark-maroon text-white font-medium"
+              >
+                {isLoading ? (
+                  <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                ) : (
+                  <>
+                    <ShieldCheck className="w-4 h-4 mr-2" />
+                    Sign In as Super User
+                  </>
+                )}
+              </Button>
+            </CardContent>
+          </Card>
         ) : currentView === 'signin' ? (
           <Card className="w-full max-w-md bg-white/95 backdrop-blur border-0 shadow-xl animate-scale-in">
             <CardHeader className="pb-4 text-center relative">
@@ -393,6 +481,14 @@ export default function Login() {
                   </SelectContent>
                 </Select>
               </div>
+
+              {(selectedRole === 'admin' || selectedRole === 'vendor') && (
+                <div className="p-3 bg-warning/10 border border-warning/30 rounded-lg">
+                  <p className="text-xs text-warning-foreground">
+                    <strong>Note:</strong> Admin and Vendor accounts require Super User approval before you can login.
+                  </p>
+                </div>
+              )}
 
               {selectedRole === 'student' && (
                 <>
