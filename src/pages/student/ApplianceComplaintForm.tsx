@@ -21,14 +21,14 @@ const appliances = [
 ];
 
 export function ApplianceComplaintForm() {
-  const { user } = useAuth();
+  const { profile } = useAuth();
   const { addApplianceComplaint } = useData();
   const [isSubmitting, setIsSubmitting] = useState(false);
   
   const [formData, setFormData] = useState({
-    studentName: user?.name || '',
-    hostelBlock: user?.hostelBlock || '',
-    roomNumber: user?.roomNumber || '',
+    studentName: profile?.full_name || '',
+    hostelBlock: profile?.hostel_block || '',
+    roomNumber: profile?.room_number || '',
     appliance: '',
     description: '',
   });

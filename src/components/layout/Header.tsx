@@ -6,17 +6,17 @@ import { useNavigate, Link } from 'react-router-dom';
 import nmimsLogo from '@/assets/nmims-logo.png';
 
 export function Header() {
-  const { user, logout } = useAuth();
+  const { user, profile, role, logout } = useAuth();
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    await logout();
     navigate('/login');
   };
 
   const getRoleLabel = () => {
-    switch (user?.role) {
+    switch (role) {
       case 'student':
         return 'Student Portal';
       case 'admin':
@@ -71,7 +71,7 @@ export function Header() {
               {getRoleLabel()}
             </span>
             <div className="text-right">
-              <p className="text-sm font-medium">{user?.name}</p>
+              <p className="text-sm font-medium">{profile?.full_name || 'User'}</p>
               <p className="text-xs opacity-80">{user?.email}</p>
             </div>
             <Button
@@ -104,7 +104,7 @@ export function Header() {
                 </span>
               </div>
               <div className="px-2">
-                <p className="text-sm font-medium">{user?.name}</p>
+                <p className="text-sm font-medium">{profile?.full_name || 'User'}</p>
                 <p className="text-xs opacity-80">{user?.email}</p>
               </div>
               <div className="flex flex-col gap-2">
