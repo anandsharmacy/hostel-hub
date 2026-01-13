@@ -4,29 +4,31 @@ import { useAuth, UserRole } from '@/contexts/AuthContext';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { GraduationCap, Shield, Store } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { GraduationCap, Shield, Store, LogIn, ArrowLeft } from 'lucide-react';
 import { toast } from 'sonner';
 import nmimsLogo from '@/assets/nmims-logo.png';
 
+type LoginView = 'home' | 'student' | 'admin' | 'vendor';
+
 export default function Login() {
-  const [email, setEmail] = useState('');
+  const [sapId, setSapId] = useState('');
   const [password, setPassword] = useState('');
-  const [selectedRole, setSelectedRole] = useState<UserRole | null>(null);
+  const [currentView, setCurrentView] = useState<LoginView>('home');
   const [isLoading, setIsLoading] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
 
   const handleLogin = async (role: UserRole) => {
-    if (!email.trim() || !password.trim()) {
-      toast.error('Please enter both email and password');
+    if (!sapId.trim() || !password.trim()) {
+      toast.error('Please enter both SAP ID and password');
       return;
     }
 
-    setSelectedRole(role);
     setIsLoading(true);
     
     try {
-      const success = await login(email, password, role);
+      const success = await login(sapId, password, role);
       if (success) {
         toast.success('Login successful!');
         switch (role) {
@@ -47,7 +49,6 @@ export default function Login() {
       toast.error('An error occurred. Please try again.');
     } finally {
       setIsLoading(false);
-      setSelectedRole(null);
     }
   };
 
@@ -59,6 +60,32 @@ export default function Login() {
     { label: 'Hostel Application', href: '#' },
     { label: 'Security Scanner', href: '#' },
   ];
+
+  const getRoleTitle = (view: LoginView) => {
+    switch (view) {
+      case 'student':
+        return 'Student Sign In';
+      case 'admin':
+        return 'Admin Sign In';
+      case 'vendor':
+        return 'Vendor Sign In';
+      default:
+        return '';
+    }
+  };
+
+  const getRoleIcon = (view: LoginView) => {
+    switch (view) {
+      case 'student':
+        return <GraduationCap className="w-8 h-8 text-nmims-maroon" />;
+      case 'admin':
+        return <Shield className="w-8 h-8 text-nmims-maroon" />;
+      case 'vendor':
+        return <Store className="w-8 h-8 text-nmims-maroon" />;
+      default:
+        return null;
+    }
+  };
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -93,102 +120,129 @@ export default function Login() {
 
       {/* Main Content with Geometric Background */}
       <main className="flex-1 geometric-bg flex flex-col items-center justify-center px-4 py-12">
-        {/* Large Centered Logo */}
-        <div className="mb-8 animate-fade-in">
-          <img 
-            src={nmimsLogo} 
-            alt="SVKM's NMIMS - Deemed to be University" 
-            className="h-40 md:h-52 w-auto"
-          />
-        </div>
-
-        {/* Title */}
-        <h1 className="text-3xl md:text-4xl font-semibold text-nmims-maroon mb-8 text-center animate-slide-up">
-          Hostel Service Management
-        </h1>
-
-        {/* Login Buttons */}
-        <div className="flex flex-col gap-4 mb-8 animate-slide-up">
-          <button
-            onClick={() => handleLogin('student')}
-            disabled={isLoading}
-            className="nmims-btn"
-          >
-            {isLoading && selectedRole === 'student' ? (
-              <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-            ) : (
-              <GraduationCap className="w-5 h-5" />
-            )}
-            Student Login
-          </button>
-          
-          <button
-            onClick={() => handleLogin('admin')}
-            disabled={isLoading}
-            className="nmims-btn"
-          >
-            {isLoading && selectedRole === 'admin' ? (
-              <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-            ) : (
-              <Shield className="w-5 h-5" />
-            )}
-            Admin Login
-          </button>
-
-          <button
-            onClick={() => handleLogin('vendor')}
-            disabled={isLoading}
-            className="nmims-btn"
-          >
-            {isLoading && selectedRole === 'vendor' ? (
-              <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-            ) : (
-              <Store className="w-5 h-5" />
-            )}
-            Vendor Login
-          </button>
-        </div>
-
-        {/* Demo Credentials Card */}
-        <Card className="w-full max-w-md bg-white/90 backdrop-blur border-0 shadow-lg animate-slide-up">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-lg text-center">Demo Login</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="input-group">
-              <Label htmlFor="email" className="text-sm">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="Enter any email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="bg-white"
+        {currentView === 'home' ? (
+          <>
+            {/* Large Centered Logo */}
+            <div className="mb-8 animate-fade-in">
+              <img 
+                src={nmimsLogo} 
+                alt="SVKM's NMIMS - Deemed to be University" 
+                className="h-40 md:h-52 w-auto"
               />
             </div>
-            <div className="input-group">
-              <Label htmlFor="password" className="text-sm">Password</Label>
-              <Input
-                id="password"
-                type="password"
-                placeholder="Enter any password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="bg-white"
-              />
-            </div>
-            <p className="text-xs text-center text-muted-foreground">
-              Enter any credentials and click a login button above
-            </p>
-          </CardContent>
-        </Card>
 
-        {/* Scrolling Welcome Message */}
-        <div className="w-full max-w-2xl mt-8 overflow-hidden">
-          <p className="text-nmims-maroon font-medium whitespace-nowrap animate-marquee">
-            Welcome to Hostel Service Management Portal | Submit your service requests in advance!
-          </p>
-        </div>
+            {/* Title */}
+            <h1 className="text-3xl md:text-4xl font-semibold text-nmims-maroon mb-8 text-center animate-slide-up">
+              Hostel Service Management
+            </h1>
+
+            {/* Login Buttons */}
+            <div className="flex flex-col gap-4 mb-8 animate-slide-up">
+              <button
+                onClick={() => setCurrentView('student')}
+                className="nmims-btn"
+              >
+                <GraduationCap className="w-5 h-5" />
+                Student Sign In
+              </button>
+              
+              <button
+                onClick={() => setCurrentView('admin')}
+                className="nmims-btn"
+              >
+                <Shield className="w-5 h-5" />
+                Admin Sign In
+              </button>
+
+              <button
+                onClick={() => setCurrentView('vendor')}
+                className="nmims-btn"
+              >
+                <Store className="w-5 h-5" />
+                Vendor Sign In
+              </button>
+            </div>
+
+            {/* Scrolling Welcome Message */}
+            <div className="w-full max-w-2xl mt-8 overflow-hidden">
+              <p className="text-nmims-maroon font-medium whitespace-nowrap animate-marquee">
+                Welcome to Hostel Service Management Portal | Submit your service requests in advance!
+              </p>
+            </div>
+          </>
+        ) : (
+          <>
+            {/* Login Form */}
+            <Card className="w-full max-w-md bg-white/95 backdrop-blur border-0 shadow-xl animate-scale-in">
+              <CardHeader className="pb-4 text-center">
+                <button
+                  onClick={() => setCurrentView('home')}
+                  className="absolute left-4 top-4 p-2 text-muted-foreground hover:text-nmims-maroon transition-colors"
+                >
+                  <ArrowLeft className="w-5 h-5" />
+                </button>
+                <div className="flex justify-center mb-3">
+                  {getRoleIcon(currentView)}
+                </div>
+                <CardTitle className="text-xl text-nmims-maroon">
+                  {getRoleTitle(currentView)}
+                </CardTitle>
+                <p className="text-sm text-muted-foreground mt-1">
+                  Enter your credentials to continue
+                </p>
+              </CardHeader>
+              <CardContent className="space-y-5">
+                <div className="space-y-2">
+                  <Label htmlFor="sapId" className="text-sm font-medium">
+                    SAP ID
+                  </Label>
+                  <Input
+                    id="sapId"
+                    type="text"
+                    placeholder="Enter your SAP ID"
+                    value={sapId}
+                    onChange={(e) => setSapId(e.target.value)}
+                    className="bg-white h-11"
+                    autoComplete="username"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="password" className="text-sm font-medium">
+                    Password
+                  </Label>
+                  <Input
+                    id="password"
+                    type="password"
+                    placeholder="Enter your password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="bg-white h-11"
+                    autoComplete="current-password"
+                  />
+                </div>
+                
+                <Button
+                  onClick={() => handleLogin(currentView as UserRole)}
+                  disabled={isLoading}
+                  className="w-full h-11 bg-nmims-maroon hover:bg-nmims-dark-maroon text-white font-medium"
+                >
+                  {isLoading ? (
+                    <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  ) : (
+                    <>
+                      <LogIn className="w-4 h-4 mr-2" />
+                      Sign In
+                    </>
+                  )}
+                </Button>
+
+                <p className="text-xs text-center text-muted-foreground pt-2">
+                  Demo: Enter any SAP ID and password to login
+                </p>
+              </CardContent>
+            </Card>
+          </>
+        )}
       </main>
 
       {/* Footer */}
