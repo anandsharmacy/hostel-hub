@@ -17,14 +17,14 @@ const timeSlots = [
 ];
 
 export function CleaningRequestForm() {
-  const { user } = useAuth();
+  const { profile } = useAuth();
   const { addCleaningRequest } = useData();
   const [isSubmitting, setIsSubmitting] = useState(false);
   
   const [formData, setFormData] = useState({
-    studentName: user?.name || '',
-    hostelBlock: user?.hostelBlock || '',
-    roomNumber: user?.roomNumber || '',
+    studentName: profile?.full_name || '',
+    hostelBlock: profile?.hostel_block || '',
+    roomNumber: profile?.room_number || '',
     preferredDate: '',
     preferredTime: '',
     notes: '',

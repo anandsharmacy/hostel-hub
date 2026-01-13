@@ -6,18 +6,18 @@ import { Sparkles, Wrench, ShoppingBag, Calendar, MapPin } from 'lucide-react';
 import { format } from 'date-fns';
 
 export function MyRequests() {
-  const { user } = useAuth();
+  const { profile } = useAuth();
   const { cleaningRequests, applianceComplaints, storeOrders } = useData();
 
   // Filter requests by current user (in a real app, this would be done server-side)
   const myCleaningRequests = cleaningRequests.filter(
-    (r) => r.studentName === user?.name || r.roomNumber === user?.roomNumber
+    (r) => r.studentName === profile?.full_name || r.roomNumber === profile?.room_number
   );
   const myApplianceComplaints = applianceComplaints.filter(
-    (c) => c.studentName === user?.name || c.roomNumber === user?.roomNumber
+    (c) => c.studentName === profile?.full_name || c.roomNumber === profile?.room_number
   );
   const myStoreOrders = storeOrders.filter(
-    (o) => o.studentName === user?.name || o.roomNumber === user?.roomNumber
+    (o) => o.studentName === profile?.full_name || o.roomNumber === profile?.room_number
   );
 
   const formatDate = (dateString: string) => {

@@ -47,16 +47,16 @@ interface CartItem {
 }
 
 export function StoreOrderForm() {
-  const { user } = useAuth();
+  const { profile } = useAuth();
   const { addStoreOrder } = useData();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<Category>('Stationery');
   const [cart, setCart] = useState<CartItem[]>([]);
   
   const [formData, setFormData] = useState({
-    studentName: user?.name || '',
-    hostelBlock: user?.hostelBlock || '',
-    roomNumber: user?.roomNumber || '',
+    studentName: profile?.full_name || '',
+    hostelBlock: profile?.hostel_block || '',
+    roomNumber: profile?.room_number || '',
   });
 
   const addToCart = (item: { name: string; price: number }) => {
