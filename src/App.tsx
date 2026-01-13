@@ -8,6 +8,7 @@ import { DataProvider } from "@/contexts/DataContext";
 import Index from "./pages/Index";
 import Login from "./pages/Login";
 import Contact from "./pages/Contact";
+import HostelRules from "./pages/HostelRules";
 import StudentDashboard from "./pages/student/StudentDashboard";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import VendorDashboard from "./pages/vendor/VendorDashboard";
@@ -45,6 +46,7 @@ function AppRoutes() {
       <Route path="/" element={<Index />} />
       <Route path="/login" element={<Login />} />
       <Route path="/contact" element={<Contact />} />
+      <Route path="/hostel-rules" element={<HostelRules />} />
       <Route
         path="/student"
         element={
