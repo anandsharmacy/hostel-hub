@@ -22,6 +22,7 @@ interface AuthContextType {
   login: (email: string, password: string) => Promise<{ success: boolean; error?: string; pendingApproval?: boolean }>;
   signup: (email: string, password: string, fullName: string, role: UserRole, sapId?: string, roomNumber?: string, hostelBlock?: string) => Promise<{ success: boolean; error?: string; pendingApproval?: boolean }>;
   logout: () => Promise<void>;
+  resetPassword: (email: string) => Promise<{ success: boolean; error?: string }>;
   isAuthenticated: boolean;
   isLoading: boolean;
 }
@@ -233,6 +234,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setIsApproved(true);
   };
 
+  const resetPassword = async (email: string): Promise<{ success: boolean; error?: string }> => {
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/reset-password`,
+      });
+
+      if (error) {
+        return { success: false, error: error.message };
+      }
+
+      return { success: true };
+    } catch (error) {
+      return { success: false, error: 'An unexpected error occurred' };
+    }
+  };
+
   return (
     <AuthContext.Provider value={{ 
       user, 
@@ -242,7 +259,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       isApproved,
       login, 
       signup,
-      logout, 
+      logout,
+      resetPassword,
       isAuthenticated: !!user,
       isLoading
     }}>

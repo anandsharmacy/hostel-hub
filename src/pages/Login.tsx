@@ -7,12 +7,12 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import LoadingSpinner from '@/components/LoadingSpinner';
-import { LogIn, UserPlus, ArrowLeft, ShieldCheck } from 'lucide-react';
+import { LogIn, UserPlus, ArrowLeft, ShieldCheck, KeyRound } from 'lucide-react';
 import { toast } from 'sonner';
 import nmimsLogo from '@/assets/nmims-logo.png';
 import { z } from 'zod';
 
-type AuthView = 'home' | 'signin' | 'signup' | 'superuser';
+type AuthView = 'home' | 'signin' | 'signup' | 'superuser' | 'forgot-password';
 
 const loginSchema = z.object({
   email: z.string().email('Please enter a valid email address'),
@@ -39,7 +39,7 @@ export default function Login() {
   const [hostelBlock, setHostelBlock] = useState('');
   const [currentView, setCurrentView] = useState<AuthView>('home');
   const [isLoading, setIsLoading] = useState(false);
-  const { login, signup, isAuthenticated, role, isLoading: authLoading } = useAuth();
+  const { login, signup, resetPassword, isAuthenticated, role, isLoading: authLoading } = useAuth();
   const navigate = useNavigate();
 
   // Redirect authenticated users to their dashboard
@@ -387,6 +387,17 @@ export default function Login() {
                 )}
               </Button>
 
+              <div className="text-center">
+                <button
+                  onClick={() => {
+                    setCurrentView('forgot-password');
+                  }}
+                  className="text-sm text-nmims-maroon hover:underline font-medium"
+                >
+                  Forgot password?
+                </button>
+              </div>
+
               <p className="text-sm text-center text-muted-foreground pt-2">
                 Don't have an account?{' '}
                 <button
@@ -397,6 +408,85 @@ export default function Login() {
                   className="text-nmims-maroon hover:underline font-medium"
                 >
                   Create one
+                </button>
+              </p>
+            </CardContent>
+          </Card>
+        ) : currentView === 'forgot-password' ? (
+          <Card className="w-full max-w-md bg-white/95 backdrop-blur border-0 shadow-xl animate-scale-in">
+            <CardHeader className="pb-4 text-center relative">
+              <button
+                onClick={() => setCurrentView('signin')}
+                className="absolute left-4 top-4 p-2 text-muted-foreground hover:text-nmims-maroon transition-colors"
+              >
+                <ArrowLeft className="w-5 h-5" />
+              </button>
+              <div className="flex justify-center mb-3">
+                <KeyRound className="w-8 h-8 text-nmims-maroon" />
+              </div>
+              <CardTitle className="text-xl text-nmims-maroon">
+                Reset Password
+              </CardTitle>
+              <p className="text-sm text-muted-foreground mt-1">
+                Enter your email to receive a reset link
+              </p>
+            </CardHeader>
+            <CardContent className="space-y-5">
+              <div className="space-y-2">
+                <Label htmlFor="resetEmail" className="text-sm font-medium">
+                  Email
+                </Label>
+                <Input
+                  id="resetEmail"
+                  type="email"
+                  placeholder="Enter your email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="bg-white h-11"
+                  autoComplete="email"
+                />
+              </div>
+              
+              <Button
+                onClick={async () => {
+                  if (!email) {
+                    toast.error('Please enter your email');
+                    return;
+                  }
+                  setIsLoading(true);
+                  const result = await resetPassword(email);
+                  setIsLoading(false);
+                  if (result.success) {
+                    toast.success('Password reset link sent! Check your email.');
+                    setCurrentView('signin');
+                    setEmail('');
+                  } else {
+                    toast.error(result.error || 'Failed to send reset link');
+                  }
+                }}
+                disabled={isLoading}
+                className="w-full h-11 bg-nmims-maroon hover:bg-nmims-dark-maroon text-white font-medium"
+              >
+                {isLoading ? (
+                  <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                ) : (
+                  <>
+                    <KeyRound className="w-4 h-4 mr-2" />
+                    Send Reset Link
+                  </>
+                )}
+              </Button>
+
+              <p className="text-sm text-center text-muted-foreground pt-2">
+                Remember your password?{' '}
+                <button
+                  onClick={() => {
+                    resetForm();
+                    setCurrentView('signin');
+                  }}
+                  className="text-nmims-maroon hover:underline font-medium"
+                >
+                  Sign in
                 </button>
               </p>
             </CardContent>
