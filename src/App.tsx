@@ -15,6 +15,7 @@ import StudentDashboard from "./pages/student/StudentDashboard";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import VendorDashboard from "./pages/vendor/VendorDashboard";
 import SuperUserDashboard from "./pages/superuser/SuperUserDashboard";
+import ResetPassword from "./pages/ResetPassword";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -51,6 +52,7 @@ function AppRoutes() {
       <Route path="/about" element={<About />} />
       <Route path="/contact" element={<Contact />} />
       <Route path="/hostel-rules" element={<HostelRules />} />
+      <Route path="/reset-password" element={<ResetPassword />} />
       <Route
         path="/student"
         element={
