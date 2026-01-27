@@ -145,6 +145,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     hostelBlock?: string
   ): Promise<{ success: boolean; error?: string; pendingApproval?: boolean }> => {
     try {
+      // Security: Prevent self-assignment of super_user role
+      if (userRole === 'super_user') {
+        return { success: false, error: 'Invalid role selection. Super user role cannot be self-assigned.' };
+      }
+
       const redirectUrl = `${window.location.origin}/`;
       
       const { data, error } = await supabase.auth.signUp({
