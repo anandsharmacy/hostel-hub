@@ -23,7 +23,7 @@ const signupSchema = z.object({
   email: z.string().email('Please enter a valid email address'),
   password: z.string().min(6, 'Password must be at least 6 characters'),
   fullName: z.string().min(2, 'Name must be at least 2 characters').max(100, 'Name is too long'),
-  role: z.enum(['student', 'admin', 'vendor', 'super_user']),
+  role: z.enum(['student', 'admin', 'vendor']), // super_user cannot be self-assigned
   sapId: z.string().optional(),
   roomNumber: z.string().optional(),
   hostelBlock: z.string().optional(),
