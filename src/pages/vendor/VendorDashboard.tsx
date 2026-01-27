@@ -1,15 +1,18 @@
+import { useState } from 'react';
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { StatusBadge } from '@/components/StatusBadge';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import { useData, RequestStatus } from '@/contexts/DataContext';
-import { ShoppingBag, Package, Clock, CheckCircle, MapPin, Receipt } from 'lucide-react';
+import { ShoppingBag, Package, Clock, CheckCircle, MapPin, Receipt, Search, X } from 'lucide-react';
 import { format } from 'date-fns';
 import { toast } from 'sonner';
 
 export default function VendorDashboard() {
   const { storeOrders, updateStoreOrderStatus, isLoading } = useData();
+  const [searchQuery, setSearchQuery] = useState('');
 
   const formatDate = (dateString: string) => {
     try {
@@ -32,6 +35,17 @@ export default function VendorDashboard() {
   const pendingOrders = storeOrders.filter((o) => o.status === 'pending').length;
   const inProgressOrders = storeOrders.filter((o) => o.status === 'in-progress').length;
   const completedOrders = storeOrders.filter((o) => o.status === 'completed').length;
+
+  // Filter orders by receipt number search
+  const filteredOrders = storeOrders.filter((order) => {
+    if (!searchQuery.trim()) return true;
+    const query = searchQuery.toLowerCase().trim();
+    return (
+      order.receiptNumber?.toLowerCase().includes(query) ||
+      order.studentName.toLowerCase().includes(query) ||
+      order.roomNumber.toLowerCase().includes(query)
+    );
+  });
 
   if (isLoading) {
     return (
@@ -110,15 +124,41 @@ export default function VendorDashboard() {
         {/* Orders List */}
         <Card className="card-elevated">
           <CardHeader>
-            <CardTitle>Student Orders</CardTitle>
-            <CardDescription>Manage and deliver student orders</CardDescription>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <CardTitle>Student Orders</CardTitle>
+                <CardDescription>Manage and deliver student orders</CardDescription>
+              </div>
+              {/* Search Input */}
+              <div className="relative w-full sm:w-72">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                <Input
+                  placeholder="Search by receipt #, name, room..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-9 pr-9"
+                />
+                {searchQuery && (
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7"
+                    onClick={() => setSearchQuery('')}
+                  >
+                    <X className="w-4 h-4" />
+                  </Button>
+                )}
+              </div>
+            </div>
           </CardHeader>
           <CardContent>
-            {storeOrders.length === 0 ? (
-              <p className="text-center text-muted-foreground py-12">No orders yet</p>
+            {filteredOrders.length === 0 ? (
+              <p className="text-center text-muted-foreground py-12">
+                {searchQuery ? `No orders found matching "${searchQuery}"` : 'No orders yet'}
+              </p>
             ) : (
               <div className="space-y-4">
-                {storeOrders.map((order) => (
+                {filteredOrders.map((order) => (
                   <div
                     key={order.id}
                     className="p-4 border border-border rounded-lg hover:bg-muted/30 transition-colors"
