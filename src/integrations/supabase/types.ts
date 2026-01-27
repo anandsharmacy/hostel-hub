@@ -14,6 +14,39 @@ export type Database = {
   }
   public: {
     Tables: {
+      announcements: {
+        Row: {
+          created_at: string
+          expires_at: string | null
+          id: string
+          is_active: boolean
+          message: string
+          title: string
+          updated_at: string
+          vendor_id: string
+        }
+        Insert: {
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean
+          message: string
+          title: string
+          updated_at?: string
+          vendor_id: string
+        }
+        Update: {
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean
+          message?: string
+          title?: string
+          updated_at?: string
+          vendor_id?: string
+        }
+        Relationships: []
+      }
       appliance_complaints: {
         Row: {
           appliance: string

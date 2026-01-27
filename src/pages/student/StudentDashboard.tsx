@@ -7,6 +7,7 @@ import { ApplianceComplaintForm } from './ApplianceComplaintForm';
 import { StoreOrderForm } from './StoreOrderForm';
 import { MedicineRequestForm } from './MedicineRequestForm';
 import { MyRequests } from './MyRequests';
+import { AnnouncementsBanner } from '@/components/student/AnnouncementsBanner';
 
 export default function StudentDashboard() {
   const [activeTab, setActiveTab] = useState('cleaning');
@@ -18,6 +19,8 @@ export default function StudentDashboard() {
           <h1 className="page-title">Student Dashboard</h1>
           <p className="page-subtitle">Manage your hostel services and requests</p>
         </div>
+
+        <AnnouncementsBanner />
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
           <TabsList className="grid grid-cols-2 md:grid-cols-5 h-auto gap-2 bg-transparent p-0">

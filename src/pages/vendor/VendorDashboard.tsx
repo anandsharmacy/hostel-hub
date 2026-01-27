@@ -7,11 +7,12 @@ import { StatusBadge } from '@/components/StatusBadge';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useData, RequestStatus } from '@/contexts/DataContext';
-import { ShoppingBag, Package, Clock, CheckCircle, MapPin, Receipt, Search, X, Pill, FileText, ExternalLink, Boxes, BarChart3 } from 'lucide-react';
+import { ShoppingBag, Package, Clock, CheckCircle, MapPin, Receipt, Search, X, Pill, FileText, ExternalLink, Boxes, BarChart3, Megaphone } from 'lucide-react';
 import { format } from 'date-fns';
 import { toast } from 'sonner';
 import { InventoryManagement } from './InventoryManagement';
 import { AnalyticsDashboard } from './AnalyticsDashboard';
+import { AnnouncementManager } from './AnnouncementManager';
 
 export default function VendorDashboard() {
   const { storeOrders, medicineRequests, updateStoreOrderStatus, updateMedicineRequestStatus, isLoading } = useData();
@@ -97,7 +98,7 @@ export default function VendorDashboard() {
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid grid-cols-4 w-full max-w-xl">
+          <TabsList className="grid grid-cols-5 w-full max-w-2xl">
             <TabsTrigger value="store" className="flex items-center gap-2">
               <ShoppingBag className="w-4 h-4" />
               <span className="hidden sm:inline">Store</span>
@@ -123,6 +124,10 @@ export default function VendorDashboard() {
             <TabsTrigger value="analytics" className="flex items-center gap-2">
               <BarChart3 className="w-4 h-4" />
               <span className="hidden sm:inline">Analytics</span>
+            </TabsTrigger>
+            <TabsTrigger value="announcements" className="flex items-center gap-2">
+              <Megaphone className="w-4 h-4" />
+              <span className="hidden sm:inline">Announce</span>
             </TabsTrigger>
           </TabsList>
 
@@ -474,6 +479,11 @@ export default function VendorDashboard() {
           {/* Analytics Tab */}
           <TabsContent value="analytics" className="space-y-6">
             <AnalyticsDashboard />
+          </TabsContent>
+
+          {/* Announcements Tab */}
+          <TabsContent value="announcements" className="space-y-6">
+            <AnnouncementManager />
           </TabsContent>
         </Tabs>
       </div>
