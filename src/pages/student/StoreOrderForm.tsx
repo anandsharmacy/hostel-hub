@@ -6,8 +6,9 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { ShoppingBag, Plus, Minus, ShoppingCart, X } from 'lucide-react';
+import { ShoppingBag, Plus, Minus, ShoppingCart, X, Receipt, CheckCircle } from 'lucide-react';
 import { toast } from 'sonner';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 
 const hostelBlocks = ['Block A', 'Block B', 'Block C', 'Block D'];
 
@@ -48,10 +49,12 @@ interface CartItem {
 
 export function StoreOrderForm() {
   const { profile } = useAuth();
-  const { addStoreOrder } = useData();
+  const { addStoreOrder, storeOrders } = useData();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<Category>('Stationery');
   const [cart, setCart] = useState<CartItem[]>([]);
+  const [showReceiptDialog, setShowReceiptDialog] = useState(false);
+  const [lastReceiptNumber, setLastReceiptNumber] = useState<string | null>(null);
   
   const [formData, setFormData] = useState({
     studentName: profile?.full_name || '',
@@ -108,11 +111,26 @@ export function StoreOrderForm() {
     setIsSubmitting(true);
     
     try {
+      const previousOrderCount = storeOrders.length;
       await addStoreOrder({
         ...formData,
         category: selectedCategory,
         items: cart.map(({ name, quantity }) => ({ name, quantity })),
       });
+      
+      // Get the latest order's receipt number (refetch happens in addStoreOrder)
+      // We need to wait a moment for the state to update, so we'll check in a timeout
+      setTimeout(() => {
+        // Find the newest order by checking if we have more orders now
+        const latestOrders = storeOrders;
+        if (latestOrders.length > 0) {
+          const latestOrder = latestOrders[0]; // Orders are sorted by created_at desc
+          if (latestOrder.receiptNumber) {
+            setLastReceiptNumber(latestOrder.receiptNumber);
+            setShowReceiptDialog(true);
+          }
+        }
+      }, 500);
       
       toast.success('Order placed successfully!');
       setCart([]);
@@ -125,10 +143,41 @@ export function StoreOrderForm() {
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-      {/* Store Items */}
-      <div className="lg:col-span-2 space-y-6">
-        <Card className="card-elevated">
+    <>
+      {/* Receipt Confirmation Dialog */}
+      <Dialog open={showReceiptDialog} onOpenChange={setShowReceiptDialog}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-success">
+              <CheckCircle className="w-5 h-5" />
+              Order Placed Successfully!
+            </DialogTitle>
+            <DialogDescription>
+              Your order has been submitted and is being processed.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex flex-col items-center py-6 space-y-4">
+            <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center">
+              <Receipt className="w-8 h-8 text-primary" />
+            </div>
+            <div className="text-center space-y-1">
+              <p className="text-sm text-muted-foreground">Your Receipt Number</p>
+              <p className="text-2xl font-mono font-bold text-primary">{lastReceiptNumber}</p>
+            </div>
+            <p className="text-xs text-muted-foreground text-center max-w-xs">
+              Please save this receipt number for tracking your order. You can also find it in "My Requests".
+            </p>
+          </div>
+          <Button onClick={() => setShowReceiptDialog(false)} className="w-full">
+            Got it!
+          </Button>
+        </DialogContent>
+      </Dialog>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Store Items */}
+        <div className="lg:col-span-2 space-y-6">
+          <Card className="card-elevated">
           <CardHeader>
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-success/10 rounded-lg flex items-center justify-center">
@@ -297,5 +346,6 @@ export function StoreOrderForm() {
         </Card>
       </div>
     </div>
+    </>
   );
 }

@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { StatusBadge } from '@/components/StatusBadge';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import { useData, RequestStatus } from '@/contexts/DataContext';
-import { ShoppingBag, Package, Clock, CheckCircle, MapPin } from 'lucide-react';
+import { ShoppingBag, Package, Clock, CheckCircle, MapPin, Receipt } from 'lucide-react';
 import { format } from 'date-fns';
 import { toast } from 'sonner';
 
@@ -126,6 +126,12 @@ export default function VendorDashboard() {
                     <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-4">
                       <div className="space-y-3 flex-1">
                         <div className="flex items-center gap-2 flex-wrap">
+                          {order.receiptNumber && (
+                            <span className="px-2 py-0.5 bg-primary/10 text-primary rounded text-xs font-mono font-semibold flex items-center gap-1">
+                              <Receipt className="w-3 h-3" />
+                              {order.receiptNumber}
+                            </span>
+                          )}
                           <span className="font-semibold">{order.studentName}</span>
                           <span className="px-2 py-0.5 bg-muted rounded text-xs font-medium">
                             {order.category}

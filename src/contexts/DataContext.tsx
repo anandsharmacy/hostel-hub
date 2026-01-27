@@ -39,6 +39,7 @@ export interface StoreOrder {
   items: { name: string; quantity: number }[];
   status: RequestStatus;
   createdAt: string;
+  receiptNumber: string | null;
 }
 
 interface DataContextType {
@@ -48,7 +49,7 @@ interface DataContextType {
   isLoading: boolean;
   addCleaningRequest: (request: Omit<CleaningRequest, 'id' | 'user_id' | 'status' | 'createdAt'>) => Promise<void>;
   addApplianceComplaint: (complaint: Omit<ApplianceComplaint, 'id' | 'user_id' | 'status' | 'createdAt'>) => Promise<void>;
-  addStoreOrder: (order: Omit<StoreOrder, 'id' | 'user_id' | 'status' | 'createdAt'>) => Promise<void>;
+  addStoreOrder: (order: Omit<StoreOrder, 'id' | 'user_id' | 'status' | 'createdAt' | 'receiptNumber'>) => Promise<void>;
   updateCleaningRequestStatus: (id: string, status: RequestStatus) => Promise<void>;
   updateApplianceComplaintStatus: (id: string, status: RequestStatus) => Promise<void>;
   updateStoreOrderStatus: (id: string, status: RequestStatus) => Promise<void>;
@@ -100,6 +101,7 @@ function mapStoreOrder(row: any): StoreOrder {
     items: row.items as { name: string; quantity: number }[],
     status: row.status as RequestStatus,
     createdAt: row.created_at,
+    receiptNumber: row.receipt_number,
   };
 }
 
@@ -213,7 +215,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
     await refetchData();
   };
 
-  const addStoreOrder = async (order: Omit<StoreOrder, 'id' | 'user_id' | 'status' | 'createdAt'>) => {
+  const addStoreOrder = async (order: Omit<StoreOrder, 'id' | 'user_id' | 'status' | 'createdAt' | 'receiptNumber'>) => {
     if (!user) throw new Error('User not authenticated');
 
     const { error } = await supabase.from('store_orders').insert({
