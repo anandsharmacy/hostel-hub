@@ -7,10 +7,11 @@ import { StatusBadge } from '@/components/StatusBadge';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useData, RequestStatus } from '@/contexts/DataContext';
-import { ShoppingBag, Package, Clock, CheckCircle, MapPin, Receipt, Search, X, Pill, FileText, ExternalLink, Boxes } from 'lucide-react';
+import { ShoppingBag, Package, Clock, CheckCircle, MapPin, Receipt, Search, X, Pill, FileText, ExternalLink, Boxes, BarChart3 } from 'lucide-react';
 import { format } from 'date-fns';
 import { toast } from 'sonner';
 import { InventoryManagement } from './InventoryManagement';
+import { AnalyticsDashboard } from './AnalyticsDashboard';
 
 export default function VendorDashboard() {
   const { storeOrders, medicineRequests, updateStoreOrderStatus, updateMedicineRequestStatus, isLoading } = useData();
@@ -96,7 +97,7 @@ export default function VendorDashboard() {
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid grid-cols-3 w-full max-w-lg">
+          <TabsList className="grid grid-cols-4 w-full max-w-xl">
             <TabsTrigger value="store" className="flex items-center gap-2">
               <ShoppingBag className="w-4 h-4" />
               <span className="hidden sm:inline">Store</span>
@@ -118,6 +119,10 @@ export default function VendorDashboard() {
             <TabsTrigger value="inventory" className="flex items-center gap-2">
               <Boxes className="w-4 h-4" />
               <span className="hidden sm:inline">Inventory</span>
+            </TabsTrigger>
+            <TabsTrigger value="analytics" className="flex items-center gap-2">
+              <BarChart3 className="w-4 h-4" />
+              <span className="hidden sm:inline">Analytics</span>
             </TabsTrigger>
           </TabsList>
 
@@ -464,6 +469,11 @@ export default function VendorDashboard() {
           {/* Inventory Tab */}
           <TabsContent value="inventory" className="space-y-6">
             <InventoryManagement />
+          </TabsContent>
+
+          {/* Analytics Tab */}
+          <TabsContent value="analytics" className="space-y-6">
+            <AnalyticsDashboard />
           </TabsContent>
         </Tabs>
       </div>
