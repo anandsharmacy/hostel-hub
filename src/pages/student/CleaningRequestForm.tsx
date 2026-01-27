@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useData } from '@/contexts/DataContext';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Sparkles, Send, Clock, Info } from 'lucide-react';
 import { toast } from 'sonner';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { supabase } from '@/integrations/supabase/client';
 
 const hostelBlocks = ['Hostel B1', 'Hostel B2', 'Hostel G1', 'Hostel G2'];
 
@@ -55,12 +56,18 @@ const generateTimeSlots = () => {
   return slots;
 };
 
-const timeSlots = generateTimeSlots();
+const allTimeSlots = generateTimeSlots();
+
+interface BlockedSlot {
+  blocked_date: string;
+  blocked_time_slot: string;
+}
 
 export function CleaningRequestForm() {
   const { profile } = useAuth();
   const { addCleaningRequest } = useData();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [blockedSlots, setBlockedSlots] = useState<BlockedSlot[]>([]);
   
   const [formData, setFormData] = useState({
     studentName: profile?.full_name || '',
@@ -71,9 +78,47 @@ export function CleaningRequestForm() {
     notes: '',
   });
 
+  // Fetch blocked slots
+  useEffect(() => {
+    const fetchBlockedSlots = async () => {
+      const { data, error } = await supabase
+        .from('blocked_cleaning_slots')
+        .select('blocked_date, blocked_time_slot');
+      
+      if (!error && data) {
+        setBlockedSlots(data);
+      }
+    };
+    
+    fetchBlockedSlots();
+  }, []);
+
+  // Filter available time slots based on selected date
+  const availableTimeSlots = useMemo(() => {
+    if (!formData.preferredDate) {
+      return allTimeSlots;
+    }
+    
+    const blockedForDate = blockedSlots
+      .filter(slot => slot.blocked_date === formData.preferredDate)
+      .map(slot => slot.blocked_time_slot);
+    
+    return allTimeSlots.filter(slot => !blockedForDate.includes(slot.value));
+  }, [formData.preferredDate, blockedSlots]);
+
+  // Reset time slot if it becomes unavailable when date changes
+  useEffect(() => {
+    if (formData.preferredTime && formData.preferredDate) {
+      const isStillAvailable = availableTimeSlots.some(slot => slot.value === formData.preferredTime);
+      if (!isStillAvailable) {
+        setFormData(prev => ({ ...prev, preferredTime: '' }));
+      }
+    }
+  }, [formData.preferredDate, availableTimeSlots, formData.preferredTime]);
+
   // Get the selected time slot details for display
   const selectedSlot = useMemo(() => {
-    return timeSlots.find(slot => slot.value === formData.preferredTime);
+    return allTimeSlots.find(slot => slot.value === formData.preferredTime);
   }, [formData.preferredTime]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -103,6 +148,9 @@ export function CleaningRequestForm() {
       setIsSubmitting(false);
     }
   };
+
+  const hasBlockedSlotsForDate = formData.preferredDate && 
+    blockedSlots.some(slot => slot.blocked_date === formData.preferredDate);
 
   return (
     <Card className="card-elevated">
@@ -175,21 +223,33 @@ export function CleaningRequestForm() {
               <Select
                 value={formData.preferredTime}
                 onValueChange={(value) => setFormData({ ...formData, preferredTime: value })}
+                disabled={!formData.preferredDate}
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="Select time slot" />
+                  <SelectValue placeholder={formData.preferredDate ? "Select time slot" : "Select a date first"} />
                 </SelectTrigger>
                 <SelectContent className="max-h-[300px]">
-                  {timeSlots.map((slot) => (
-                    <SelectItem key={slot.value} value={slot.value}>
-                      <div className="flex items-center gap-2">
-                        <Clock className="w-3 h-3 text-muted-foreground" />
-                        {slot.label}
-                      </div>
-                    </SelectItem>
-                  ))}
+                  {availableTimeSlots.length === 0 ? (
+                    <div className="px-3 py-2 text-sm text-muted-foreground">
+                      No slots available for this date
+                    </div>
+                  ) : (
+                    availableTimeSlots.map((slot) => (
+                      <SelectItem key={slot.value} value={slot.value}>
+                        <div className="flex items-center gap-2">
+                          <Clock className="w-3 h-3 text-muted-foreground" />
+                          {slot.label}
+                        </div>
+                      </SelectItem>
+                    ))
+                  )}
                 </SelectContent>
               </Select>
+              {hasBlockedSlotsForDate && availableTimeSlots.length < allTimeSlots.length && (
+                <p className="text-xs text-muted-foreground mt-1">
+                  Some time slots are unavailable on this date
+                </p>
+              )}
             </div>
           </div>
 

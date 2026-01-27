@@ -6,8 +6,9 @@ import { Button } from '@/components/ui/button';
 import { StatusBadge } from '@/components/StatusBadge';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import { useData, RequestStatus } from '@/contexts/DataContext';
-import { Sparkles, Wrench, Calendar, MapPin, Clock, CheckCircle } from 'lucide-react';
+import { Sparkles, Wrench, Calendar, MapPin, Clock, CheckCircle, Settings } from 'lucide-react';
 import { format } from 'date-fns';
+import { BlockedSlotsManager } from '@/components/admin/BlockedSlotsManager';
 import { toast } from 'sonner';
 
 export default function AdminDashboard() {
@@ -126,20 +127,30 @@ export default function AdminDashboard() {
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid grid-cols-2 w-full max-w-md h-auto gap-2 bg-transparent p-0">
+          <TabsList className="grid grid-cols-3 w-full max-w-xl h-auto gap-2 bg-transparent p-0">
             <TabsTrigger
               value="cleaning"
               className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground flex items-center gap-2 py-3 px-4 rounded-lg border border-border bg-card"
             >
               <Sparkles className="w-4 h-4" />
-              Cleaning Requests
+              <span className="hidden sm:inline">Cleaning Requests</span>
+              <span className="sm:hidden">Cleaning</span>
             </TabsTrigger>
             <TabsTrigger
               value="appliance"
               className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground flex items-center gap-2 py-3 px-4 rounded-lg border border-border bg-card"
             >
               <Wrench className="w-4 h-4" />
-              Appliance Issues
+              <span className="hidden sm:inline">Appliance Issues</span>
+              <span className="sm:hidden">Appliance</span>
+            </TabsTrigger>
+            <TabsTrigger
+              value="settings"
+              className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground flex items-center gap-2 py-3 px-4 rounded-lg border border-border bg-card"
+            >
+              <Settings className="w-4 h-4" />
+              <span className="hidden sm:inline">Slot Settings</span>
+              <span className="sm:hidden">Settings</span>
             </TabsTrigger>
           </TabsList>
 
@@ -276,6 +287,10 @@ export default function AdminDashboard() {
                 )}
               </CardContent>
             </Card>
+          </TabsContent>
+
+          <TabsContent value="settings" className="animate-slide-up">
+            <BlockedSlotsManager />
           </TabsContent>
         </Tabs>
       </div>
