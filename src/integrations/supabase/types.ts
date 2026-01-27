@@ -131,6 +131,51 @@ export type Database = {
         }
         Relationships: []
       }
+      medicine_requests: {
+        Row: {
+          created_at: string
+          hostel_block: string
+          id: string
+          medicine_name: string | null
+          notes: string | null
+          prescription_url: string | null
+          receipt_number: string | null
+          room_number: string
+          status: string
+          student_name: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          hostel_block: string
+          id?: string
+          medicine_name?: string | null
+          notes?: string | null
+          prescription_url?: string | null
+          receipt_number?: string | null
+          room_number: string
+          status?: string
+          student_name: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          hostel_block?: string
+          id?: string
+          medicine_name?: string | null
+          notes?: string | null
+          prescription_url?: string | null
+          receipt_number?: string | null
+          room_number?: string
+          status?: string
+          student_name?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
