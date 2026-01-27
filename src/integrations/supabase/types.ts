@@ -131,6 +131,42 @@ export type Database = {
         }
         Relationships: []
       }
+      inventory_items: {
+        Row: {
+          category: string
+          created_at: string
+          id: string
+          is_available: boolean
+          low_stock_threshold: number
+          name: string
+          price: number
+          quantity: number
+          updated_at: string
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          id?: string
+          is_available?: boolean
+          low_stock_threshold?: number
+          name: string
+          price: number
+          quantity?: number
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          id?: string
+          is_available?: boolean
+          low_stock_threshold?: number
+          name?: string
+          price?: number
+          quantity?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       medicine_requests: {
         Row: {
           created_at: string
@@ -208,6 +244,44 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      restock_history: {
+        Row: {
+          created_at: string
+          id: string
+          item_id: string
+          new_quantity: number
+          notes: string | null
+          previous_quantity: number
+          restocked_by: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          item_id: string
+          new_quantity: number
+          notes?: string | null
+          previous_quantity: number
+          restocked_by: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          item_id?: string
+          new_quantity?: number
+          notes?: string | null
+          previous_quantity?: number
+          restocked_by?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "restock_history_item_id_fkey"
+            columns: ["item_id"]
+            isOneToOne: false
+            referencedRelation: "inventory_items"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       store_orders: {
         Row: {
