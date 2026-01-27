@@ -42,17 +42,34 @@ export interface StoreOrder {
   receiptNumber: string | null;
 }
 
+export interface MedicineRequest {
+  id: string;
+  user_id: string;
+  studentName: string;
+  roomNumber: string;
+  hostelBlock: string;
+  medicineName: string | null;
+  prescriptionUrl: string | null;
+  notes: string | null;
+  status: RequestStatus;
+  createdAt: string;
+  receiptNumber: string | null;
+}
+
 interface DataContextType {
   cleaningRequests: CleaningRequest[];
   applianceComplaints: ApplianceComplaint[];
   storeOrders: StoreOrder[];
+  medicineRequests: MedicineRequest[];
   isLoading: boolean;
   addCleaningRequest: (request: Omit<CleaningRequest, 'id' | 'user_id' | 'status' | 'createdAt'>) => Promise<void>;
   addApplianceComplaint: (complaint: Omit<ApplianceComplaint, 'id' | 'user_id' | 'status' | 'createdAt'>) => Promise<void>;
   addStoreOrder: (order: Omit<StoreOrder, 'id' | 'user_id' | 'status' | 'createdAt' | 'receiptNumber'>) => Promise<void>;
+  addMedicineRequest: (request: Omit<MedicineRequest, 'id' | 'user_id' | 'status' | 'createdAt' | 'receiptNumber'>) => Promise<void>;
   updateCleaningRequestStatus: (id: string, status: RequestStatus) => Promise<void>;
   updateApplianceComplaintStatus: (id: string, status: RequestStatus) => Promise<void>;
   updateStoreOrderStatus: (id: string, status: RequestStatus) => Promise<void>;
+  updateMedicineRequestStatus: (id: string, status: RequestStatus) => Promise<void>;
   refetchData: () => Promise<void>;
 }
 
@@ -105,11 +122,29 @@ function mapStoreOrder(row: any): StoreOrder {
   };
 }
 
+// Helper to map database row to MedicineRequest
+function mapMedicineRequest(row: any): MedicineRequest {
+  return {
+    id: row.id,
+    user_id: row.user_id,
+    studentName: row.student_name,
+    hostelBlock: row.hostel_block,
+    roomNumber: row.room_number,
+    medicineName: row.medicine_name,
+    prescriptionUrl: row.prescription_url,
+    notes: row.notes,
+    status: row.status as RequestStatus,
+    createdAt: row.created_at,
+    receiptNumber: row.receipt_number,
+  };
+}
+
 export function DataProvider({ children }: { children: ReactNode }) {
   const { user, isAuthenticated } = useAuth();
   const [cleaningRequests, setCleaningRequests] = useState<CleaningRequest[]>([]);
   const [applianceComplaints, setApplianceComplaints] = useState<ApplianceComplaint[]>([]);
   const [storeOrders, setStoreOrders] = useState<StoreOrder[]>([]);
+  const [medicineRequests, setMedicineRequests] = useState<MedicineRequest[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
   const fetchCleaningRequests = useCallback(async () => {
@@ -151,23 +186,38 @@ export function DataProvider({ children }: { children: ReactNode }) {
     return (data || []).map(mapStoreOrder);
   }, []);
 
+  const fetchMedicineRequests = useCallback(async () => {
+    const { data, error } = await supabase
+      .from('medicine_requests')
+      .select('*')
+      .order('created_at', { ascending: false });
+    
+    if (error) {
+      console.error('Error fetching medicine requests:', error);
+      return [];
+    }
+    return (data || []).map(mapMedicineRequest);
+  }, []);
+
   const refetchData = useCallback(async () => {
     if (!isAuthenticated) return;
     
     setIsLoading(true);
     try {
-      const [cleaning, appliance, orders] = await Promise.all([
+      const [cleaning, appliance, orders, medicine] = await Promise.all([
         fetchCleaningRequests(),
         fetchApplianceComplaints(),
         fetchStoreOrders(),
+        fetchMedicineRequests(),
       ]);
       setCleaningRequests(cleaning);
       setApplianceComplaints(appliance);
       setStoreOrders(orders);
+      setMedicineRequests(medicine);
     } finally {
       setIsLoading(false);
     }
-  }, [isAuthenticated, fetchCleaningRequests, fetchApplianceComplaints, fetchStoreOrders]);
+  }, [isAuthenticated, fetchCleaningRequests, fetchApplianceComplaints, fetchStoreOrders, fetchMedicineRequests]);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -177,6 +227,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
       setCleaningRequests([]);
       setApplianceComplaints([]);
       setStoreOrders([]);
+      setMedicineRequests([]);
     }
   }, [isAuthenticated, refetchData]);
 
@@ -232,6 +283,24 @@ export function DataProvider({ children }: { children: ReactNode }) {
     await refetchData();
   };
 
+  const addMedicineRequest = async (request: Omit<MedicineRequest, 'id' | 'user_id' | 'status' | 'createdAt' | 'receiptNumber'>) => {
+    if (!user) throw new Error('User not authenticated');
+
+    const { error } = await supabase.from('medicine_requests').insert({
+      user_id: user.id,
+      student_name: request.studentName,
+      hostel_block: request.hostelBlock,
+      room_number: request.roomNumber,
+      medicine_name: request.medicineName,
+      prescription_url: request.prescriptionUrl,
+      notes: request.notes,
+      status: 'pending',
+    });
+
+    if (error) throw error;
+    await refetchData();
+  };
+
   const updateCleaningRequestStatus = async (id: string, status: RequestStatus) => {
     const { error } = await supabase
       .from('cleaning_requests')
@@ -262,19 +331,32 @@ export function DataProvider({ children }: { children: ReactNode }) {
     await refetchData();
   };
 
+  const updateMedicineRequestStatus = async (id: string, status: RequestStatus) => {
+    const { error } = await supabase
+      .from('medicine_requests')
+      .update({ status })
+      .eq('id', id);
+
+    if (error) throw error;
+    await refetchData();
+  };
+
   return (
     <DataContext.Provider
       value={{
         cleaningRequests,
         applianceComplaints,
         storeOrders,
+        medicineRequests,
         isLoading,
         addCleaningRequest,
         addApplianceComplaint,
         addStoreOrder,
+        addMedicineRequest,
         updateCleaningRequestStatus,
         updateApplianceComplaintStatus,
         updateStoreOrderStatus,
+        updateMedicineRequestStatus,
         refetchData,
       }}
     >

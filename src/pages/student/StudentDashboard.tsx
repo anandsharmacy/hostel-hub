@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Sparkles, Wrench, ShoppingBag, ClipboardList } from 'lucide-react';
+import { Sparkles, Wrench, ShoppingBag, ClipboardList, Pill } from 'lucide-react';
 import { CleaningRequestForm } from './CleaningRequestForm';
 import { ApplianceComplaintForm } from './ApplianceComplaintForm';
 import { StoreOrderForm } from './StoreOrderForm';
+import { MedicineRequestForm } from './MedicineRequestForm';
 import { MyRequests } from './MyRequests';
 
 export default function StudentDashboard() {
@@ -19,7 +20,7 @@ export default function StudentDashboard() {
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid grid-cols-2 md:grid-cols-4 h-auto gap-2 bg-transparent p-0">
+          <TabsList className="grid grid-cols-2 md:grid-cols-5 h-auto gap-2 bg-transparent p-0">
             <TabsTrigger
               value="cleaning"
               className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground flex items-center gap-2 py-3 px-4 rounded-lg border border-border bg-card"
@@ -45,6 +46,14 @@ export default function StudentDashboard() {
               <span className="sm:hidden">Store</span>
             </TabsTrigger>
             <TabsTrigger
+              value="medicine"
+              className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground flex items-center gap-2 py-3 px-4 rounded-lg border border-border bg-card"
+            >
+              <Pill className="w-4 h-4" />
+              <span className="hidden sm:inline">Medicine</span>
+              <span className="sm:hidden">Medicine</span>
+            </TabsTrigger>
+            <TabsTrigger
               value="requests"
               className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground flex items-center gap-2 py-3 px-4 rounded-lg border border-border bg-card"
             >
@@ -64,6 +73,10 @@ export default function StudentDashboard() {
 
           <TabsContent value="store" className="animate-slide-up">
             <StoreOrderForm />
+          </TabsContent>
+
+          <TabsContent value="medicine" className="animate-slide-up">
+            <MedicineRequestForm />
           </TabsContent>
 
           <TabsContent value="requests" className="animate-slide-up">

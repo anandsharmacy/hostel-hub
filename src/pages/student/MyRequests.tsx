@@ -2,11 +2,12 @@ import { useData } from '@/contexts/DataContext';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { StatusBadge } from '@/components/StatusBadge';
 import LoadingSpinner from '@/components/LoadingSpinner';
-import { Sparkles, Wrench, ShoppingBag, Calendar, MapPin, Receipt } from 'lucide-react';
+import { Sparkles, Wrench, ShoppingBag, Calendar, MapPin, Receipt, Pill, FileText, ExternalLink } from 'lucide-react';
 import { format } from 'date-fns';
+import { Button } from '@/components/ui/button';
 
 export function MyRequests() {
-  const { cleaningRequests, applianceComplaints, storeOrders, isLoading } = useData();
+  const { cleaningRequests, applianceComplaints, storeOrders, medicineRequests, isLoading } = useData();
 
   const formatDate = (dateString: string) => {
     try {
@@ -154,6 +155,72 @@ export function MyRequests() {
                     </p>
                   </div>
                   <StatusBadge status={order.status} />
+                </div>
+              ))}
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Medicine Requests */}
+      <Card className="card-elevated">
+        <CardHeader>
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-rose-500/10 rounded-lg flex items-center justify-center">
+              <Pill className="w-5 h-5 text-rose-500" />
+            </div>
+            <div>
+              <CardTitle>Medicine Requests</CardTitle>
+              <CardDescription>{medicineRequests.length} request(s)</CardDescription>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent>
+          {medicineRequests.length === 0 ? (
+            <p className="text-center text-muted-foreground py-8">No medicine requests yet</p>
+          ) : (
+            <div className="space-y-3">
+              {medicineRequests.map((request) => (
+                <div
+                  key={request.id}
+                  className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 bg-muted/50 rounded-lg"
+                >
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      {request.receiptNumber && (
+                        <span className="px-2 py-0.5 bg-primary/10 text-primary rounded text-xs font-mono font-semibold flex items-center gap-1">
+                          <Receipt className="w-3 h-3" />
+                          {request.receiptNumber}
+                        </span>
+                      )}
+                      {request.medicineName && (
+                        <p className="font-medium">{request.medicineName}</p>
+                      )}
+                    </div>
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                      <MapPin className="w-4 h-4" />
+                      <span>{request.hostelBlock}, Room {request.roomNumber}</span>
+                    </div>
+                    {request.prescriptionUrl && (
+                      <Button
+                        variant="link"
+                        size="sm"
+                        className="h-auto p-0 text-xs"
+                        onClick={() => window.open(request.prescriptionUrl!, '_blank')}
+                      >
+                        <FileText className="w-3 h-3 mr-1" />
+                        View Prescription
+                        <ExternalLink className="w-3 h-3 ml-1" />
+                      </Button>
+                    )}
+                    {request.notes && (
+                      <p className="text-sm text-muted-foreground">{request.notes}</p>
+                    )}
+                    <p className="text-xs text-muted-foreground">
+                      Requested: {formatDate(request.createdAt)}
+                    </p>
+                  </div>
+                  <StatusBadge status={request.status} />
                 </div>
               ))}
             </div>
