@@ -2,7 +2,7 @@ import { useData } from '@/contexts/DataContext';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { StatusBadge } from '@/components/StatusBadge';
 import LoadingSpinner from '@/components/LoadingSpinner';
-import { Sparkles, Wrench, ShoppingBag, Calendar, MapPin } from 'lucide-react';
+import { Sparkles, Wrench, ShoppingBag, Calendar, MapPin, Receipt } from 'lucide-react';
 import { format } from 'date-fns';
 
 export function MyRequests() {
@@ -133,7 +133,15 @@ export function MyRequests() {
                   className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 bg-muted/50 rounded-lg"
                 >
                   <div className="space-y-1">
-                    <p className="font-medium">{order.category}</p>
+                    <div className="flex items-center gap-2 flex-wrap">
+                      {order.receiptNumber && (
+                        <span className="px-2 py-0.5 bg-primary/10 text-primary rounded text-xs font-mono font-semibold flex items-center gap-1">
+                          <Receipt className="w-3 h-3" />
+                          {order.receiptNumber}
+                        </span>
+                      )}
+                      <p className="font-medium">{order.category}</p>
+                    </div>
                     <div className="flex items-center gap-2 text-sm text-muted-foreground">
                       <MapPin className="w-4 h-4" />
                       <span>{order.hostelBlock}, Room {order.roomNumber}</span>

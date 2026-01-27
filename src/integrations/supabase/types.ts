@@ -171,6 +171,7 @@ export type Database = {
           hostel_block: string
           id: string
           items: Json
+          receipt_number: string | null
           room_number: string
           status: string
           student_name: string
@@ -183,6 +184,7 @@ export type Database = {
           hostel_block: string
           id?: string
           items?: Json
+          receipt_number?: string | null
           room_number: string
           status?: string
           student_name: string
@@ -195,6 +197,7 @@ export type Database = {
           hostel_block?: string
           id?: string
           items?: Json
+          receipt_number?: string | null
           room_number?: string
           status?: string
           student_name?: string
