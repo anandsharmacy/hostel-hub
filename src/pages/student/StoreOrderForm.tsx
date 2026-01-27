@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useData } from '@/contexts/DataContext';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -6,40 +6,26 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { ShoppingBag, Plus, Minus, ShoppingCart, X, Receipt, CheckCircle } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { ShoppingBag, Plus, Minus, ShoppingCart, X, Receipt, CheckCircle, AlertTriangle } from 'lucide-react';
 import { toast } from 'sonner';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
+import { supabase } from '@/integrations/supabase/client';
 
 const hostelBlocks = ['Block A', 'Block B', 'Block C', 'Block D'];
 
-const storeCategories = {
-  Stationery: [
-    { name: 'Notebook (200 pages)', price: 60 },
-    { name: 'Pen Set (Pack of 5)', price: 50 },
-    { name: 'File Folder', price: 30 },
-    { name: 'Highlighters (Pack of 4)', price: 80 },
-    { name: 'Sticky Notes', price: 40 },
-    { name: 'Stapler', price: 120 },
-  ],
-  Fruits: [
-    { name: 'Apples (1 kg)', price: 180 },
-    { name: 'Bananas (1 dozen)', price: 60 },
-    { name: 'Oranges (1 kg)', price: 120 },
-    { name: 'Grapes (500g)', price: 100 },
-    { name: 'Pomegranate (2 pcs)', price: 150 },
-    { name: 'Mixed Fruit Bowl', price: 200 },
-  ],
-  'Gym Supplements': [
-    { name: 'Protein Bar (Pack of 6)', price: 450 },
-    { name: 'Energy Drink (500ml)', price: 80 },
-    { name: 'Peanut Butter (500g)', price: 320 },
-    { name: 'Protein Shake Mix', price: 1200 },
-    { name: 'BCAA Powder', price: 900 },
-    { name: 'Multivitamin (30 tablets)', price: 350 },
-  ],
-};
+const storeCategories = ['Stationery', 'Fruits', 'Gym Supplements'] as const;
+type Category = typeof storeCategories[number];
 
-type Category = keyof typeof storeCategories;
+interface InventoryItem {
+  id: string;
+  name: string;
+  category: string;
+  quantity: number;
+  price: number;
+  is_available: boolean;
+  low_stock_threshold: number;
+}
 
 interface CartItem {
   name: string;
@@ -55,6 +41,8 @@ export function StoreOrderForm() {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [showReceiptDialog, setShowReceiptDialog] = useState(false);
   const [lastReceiptNumber, setLastReceiptNumber] = useState<string | null>(null);
+  const [inventoryItems, setInventoryItems] = useState<InventoryItem[]>([]);
+  const [isLoadingInventory, setIsLoadingInventory] = useState(true);
   
   const [formData, setFormData] = useState({
     studentName: profile?.full_name || '',
@@ -62,7 +50,52 @@ export function StoreOrderForm() {
     roomNumber: profile?.room_number || '',
   });
 
-  const addToCart = (item: { name: string; price: number }) => {
+  useEffect(() => {
+    const fetchInventory = async () => {
+      setIsLoadingInventory(true);
+      const { data, error } = await supabase
+        .from('inventory_items')
+        .select('*')
+        .in('category', ['Stationery', 'Fruits', 'Gym Supplements'])
+        .eq('is_available', true)
+        .order('name');
+      
+      if (error) {
+        console.error('Error fetching inventory:', error);
+      } else {
+        setInventoryItems(data || []);
+      }
+      setIsLoadingInventory(false);
+    };
+    
+    fetchInventory();
+  }, []);
+
+  const getItemsByCategory = (category: Category) => {
+    return inventoryItems.filter(item => item.category === category);
+  };
+
+  const getStockStatus = (item: InventoryItem) => {
+    if (item.quantity === 0) return { label: 'Out of Stock', color: 'destructive' as const, available: false };
+    if (item.quantity <= item.low_stock_threshold) return { label: `${item.quantity} left`, color: 'secondary' as const, available: true };
+    return { label: 'In Stock', color: 'default' as const, available: true };
+  };
+
+  const addToCart = (item: InventoryItem) => {
+    const stock = getStockStatus(item);
+    if (!stock.available) {
+      toast.error('This item is out of stock');
+      return;
+    }
+    
+    const cartItem = cart.find(i => i.name === item.name);
+    const currentQtyInCart = cartItem?.quantity || 0;
+    
+    if (currentQtyInCart >= item.quantity) {
+      toast.error(`Only ${item.quantity} available in stock`);
+      return;
+    }
+    
     setCart((prev) => {
       const existing = prev.find((i) => i.name === item.name);
       if (existing) {
@@ -70,7 +103,7 @@ export function StoreOrderForm() {
           i.name === item.name ? { ...i, quantity: i.quantity + 1 } : i
         );
       }
-      return [...prev, { ...item, quantity: 1 }];
+      return [...prev, { name: item.name, price: Number(item.price), quantity: 1 }];
     });
     toast.success(`${item.name} added to cart`);
   };
@@ -192,7 +225,7 @@ export function StoreOrderForm() {
           <CardContent>
             {/* Category Tabs */}
             <div className="flex flex-wrap gap-2 mb-6">
-              {(Object.keys(storeCategories) as Category[]).map((category) => (
+              {storeCategories.map((category) => (
                 <Button
                   key={category}
                   variant={selectedCategory === category ? 'default' : 'outline'}
@@ -205,26 +238,56 @@ export function StoreOrderForm() {
             </div>
 
             {/* Items Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {storeCategories[selectedCategory].map((item) => (
-                <div
-                  key={item.name}
-                  className="flex items-center justify-between p-4 bg-muted/50 rounded-lg hover:bg-muted transition-colors"
-                >
-                  <div>
-                    <p className="font-medium text-sm">{item.name}</p>
-                    <p className="text-muted-foreground text-sm">₹{item.price}</p>
-                  </div>
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={() => addToCart(item)}
-                  >
-                    <Plus className="w-4 h-4" />
-                  </Button>
-                </div>
-              ))}
-            </div>
+            {isLoadingInventory ? (
+              <div className="flex items-center justify-center py-12">
+                <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+              </div>
+            ) : getItemsByCategory(selectedCategory).length === 0 ? (
+              <p className="text-center text-muted-foreground py-8">No items available in this category</p>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {getItemsByCategory(selectedCategory).map((item) => {
+                  const stock = getStockStatus(item);
+                  const cartItem = cart.find(i => i.name === item.name);
+                  const cartQty = cartItem?.quantity || 0;
+                  
+                  return (
+                    <div
+                      key={item.id}
+                      className={`flex items-center justify-between p-4 rounded-lg transition-colors ${
+                        stock.available 
+                          ? 'bg-muted/50 hover:bg-muted' 
+                          : 'bg-muted/30 opacity-60'
+                      }`}
+                    >
+                      <div className="space-y-1">
+                        <p className="font-medium text-sm">{item.name}</p>
+                        <div className="flex items-center gap-2">
+                          <span className="text-muted-foreground text-sm">₹{Number(item.price).toFixed(0)}</span>
+                          <Badge variant={stock.color} className="text-xs">
+                            {stock.available && item.quantity <= item.low_stock_threshold && (
+                              <AlertTriangle className="w-3 h-3 mr-1" />
+                            )}
+                            {stock.label}
+                          </Badge>
+                        </div>
+                        {cartQty > 0 && (
+                          <p className="text-xs text-primary font-medium">In cart: {cartQty}</p>
+                        )}
+                      </div>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => addToCart(item)}
+                        disabled={!stock.available || cartQty >= item.quantity}
+                      >
+                        <Plus className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>

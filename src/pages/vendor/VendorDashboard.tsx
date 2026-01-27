@@ -7,9 +7,10 @@ import { StatusBadge } from '@/components/StatusBadge';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useData, RequestStatus } from '@/contexts/DataContext';
-import { ShoppingBag, Package, Clock, CheckCircle, MapPin, Receipt, Search, X, Pill, FileText, ExternalLink } from 'lucide-react';
+import { ShoppingBag, Package, Clock, CheckCircle, MapPin, Receipt, Search, X, Pill, FileText, ExternalLink, Boxes } from 'lucide-react';
 import { format } from 'date-fns';
 import { toast } from 'sonner';
+import { InventoryManagement } from './InventoryManagement';
 
 export default function VendorDashboard() {
   const { storeOrders, medicineRequests, updateStoreOrderStatus, updateMedicineRequestStatus, isLoading } = useData();
@@ -95,10 +96,10 @@ export default function VendorDashboard() {
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid grid-cols-2 w-full max-w-md">
+          <TabsList className="grid grid-cols-3 w-full max-w-lg">
             <TabsTrigger value="store" className="flex items-center gap-2">
               <ShoppingBag className="w-4 h-4" />
-              Store Orders
+              <span className="hidden sm:inline">Store</span>
               {pendingStoreOrders > 0 && (
                 <span className="ml-1 px-1.5 py-0.5 bg-warning text-warning-foreground text-xs rounded-full">
                   {pendingStoreOrders}
@@ -107,12 +108,16 @@ export default function VendorDashboard() {
             </TabsTrigger>
             <TabsTrigger value="medicine" className="flex items-center gap-2">
               <Pill className="w-4 h-4" />
-              Medicine
+              <span className="hidden sm:inline">Medicine</span>
               {pendingMedicineRequests > 0 && (
                 <span className="ml-1 px-1.5 py-0.5 bg-warning text-warning-foreground text-xs rounded-full">
                   {pendingMedicineRequests}
                 </span>
               )}
+            </TabsTrigger>
+            <TabsTrigger value="inventory" className="flex items-center gap-2">
+              <Boxes className="w-4 h-4" />
+              <span className="hidden sm:inline">Inventory</span>
             </TabsTrigger>
           </TabsList>
 
@@ -454,6 +459,11 @@ export default function VendorDashboard() {
                 )}
               </CardContent>
             </Card>
+          </TabsContent>
+
+          {/* Inventory Tab */}
+          <TabsContent value="inventory" className="space-y-6">
+            <InventoryManagement />
           </TabsContent>
         </Tabs>
       </div>
