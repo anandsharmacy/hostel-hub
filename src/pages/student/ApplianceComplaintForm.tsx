@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Wrench, Send } from 'lucide-react';
 import { toast } from 'sonner';
 
-const hostelBlocks = ['Block A', 'Block B', 'Block C', 'Block D'];
+const hostelBlocks = ['Hostel B1', 'Hostel B2', 'Hostel G1', 'Hostel G2'];
 const appliances = [
   { value: 'Fan', label: 'Fan' },
   { value: 'Light', label: 'Light / Tube Light' },
