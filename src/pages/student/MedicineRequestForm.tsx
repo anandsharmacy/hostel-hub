@@ -12,7 +12,7 @@ import { Pill, Upload, FileText, X, Receipt, CheckCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 
-const hostelBlocks = ['Block A', 'Block B', 'Block C', 'Block D'];
+const hostelBlocks = ['Hostel B1', 'Hostel B2', 'Hostel G1', 'Hostel G2'];
 
 export function MedicineRequestForm() {
   const { user, profile } = useAuth();
