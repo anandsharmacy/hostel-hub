@@ -172,8 +172,12 @@ export default function AdminDashboard() {
                               </div>
                               <div className="flex items-center gap-2">
                                 <Calendar className="w-4 h-4" />
-                                <span>{request.preferredDate} at {request.preferredTime}</span>
+                                <span>{request.preferredDate}</span>
                               </div>
+                            </div>
+                            <div className="flex items-center gap-2 text-sm bg-primary/10 text-primary px-3 py-1.5 rounded-md w-fit">
+                              <Clock className="w-4 h-4" />
+                              <span className="font-medium">Expected Arrival: {request.preferredTime}</span>
                             </div>
                             {request.notes && (
                               <p className="text-sm text-muted-foreground bg-muted/50 p-2 rounded">

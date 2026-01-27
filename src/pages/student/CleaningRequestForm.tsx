@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useData } from '@/contexts/DataContext';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -7,14 +7,55 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Sparkles, Send } from 'lucide-react';
+import { Sparkles, Send, Clock, Info } from 'lucide-react';
 import { toast } from 'sonner';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 
 const hostelBlocks = ['Hostel B1', 'Hostel B2', 'Hostel G1', 'Hostel G2'];
-const timeSlots = [
-  '08:00 AM', '09:00 AM', '10:00 AM', '11:00 AM',
-  '12:00 PM', '02:00 PM', '03:00 PM', '04:00 PM', '05:00 PM',
-];
+
+// Generate time slots with 20-minute intervals from 8:00 AM to 5:00 PM
+const generateTimeSlots = () => {
+  const slots: { value: string; label: string; arrivalStart: string; arrivalEnd: string }[] = [];
+  const startHour = 8; // 8:00 AM
+  const endHour = 17; // 5:00 PM
+  const intervalMinutes = 20;
+
+  for (let hour = startHour; hour < endHour; hour++) {
+    for (let minute = 0; minute < 60; minute += intervalMinutes) {
+      // Skip slots that would extend past 5 PM
+      if (hour === endHour - 1 && minute + intervalMinutes > 60) continue;
+      
+      const slotStart = new Date();
+      slotStart.setHours(hour, minute, 0, 0);
+      
+      const slotEnd = new Date(slotStart);
+      slotEnd.setMinutes(slotEnd.getMinutes() + intervalMinutes);
+      
+      const formatTime = (date: Date) => {
+        const h = date.getHours();
+        const m = date.getMinutes();
+        const ampm = h >= 12 ? 'PM' : 'AM';
+        const hour12 = h % 12 || 12;
+        return `${hour12}:${m.toString().padStart(2, '0')} ${ampm}`;
+      };
+      
+      const arrivalStart = formatTime(slotStart);
+      const arrivalEnd = formatTime(slotEnd);
+      const value = `${arrivalStart} - ${arrivalEnd}`;
+      
+      slots.push({
+        value,
+        label: `${arrivalStart} - ${arrivalEnd}`,
+        arrivalStart,
+        arrivalEnd,
+      });
+    }
+  }
+  
+  return slots;
+};
+
+const timeSlots = generateTimeSlots();
 
 export function CleaningRequestForm() {
   const { profile } = useAuth();
@@ -29,6 +70,11 @@ export function CleaningRequestForm() {
     preferredTime: '',
     notes: '',
   });
+
+  // Get the selected time slot details for display
+  const selectedSlot = useMemo(() => {
+    return timeSlots.find(slot => slot.value === formData.preferredTime);
+  }, [formData.preferredTime]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -125,7 +171,7 @@ export function CleaningRequestForm() {
             </div>
             
             <div className="input-group md:col-span-2">
-              <Label htmlFor="preferredTime">Preferred Time *</Label>
+              <Label htmlFor="preferredTime">Preferred Time Slot *</Label>
               <Select
                 value={formData.preferredTime}
                 onValueChange={(value) => setFormData({ ...formData, preferredTime: value })}
@@ -133,16 +179,34 @@ export function CleaningRequestForm() {
                 <SelectTrigger>
                   <SelectValue placeholder="Select time slot" />
                 </SelectTrigger>
-                <SelectContent>
-                  {timeSlots.map((time) => (
-                    <SelectItem key={time} value={time}>
-                      {time}
+                <SelectContent className="max-h-[300px]">
+                  {timeSlots.map((slot) => (
+                    <SelectItem key={slot.value} value={slot.value}>
+                      <div className="flex items-center gap-2">
+                        <Clock className="w-3 h-3 text-muted-foreground" />
+                        {slot.label}
+                      </div>
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
           </div>
+
+          {/* Expected Arrival Time Display */}
+          {selectedSlot && (
+            <Alert className="bg-primary/5 border-primary/20">
+              <Info className="h-4 w-4 text-primary" />
+              <AlertDescription className="text-sm">
+                <span className="font-medium">Expected Arrival Time:</span>{' '}
+                Our cleaning staff will arrive between{' '}
+                <span className="font-semibold text-primary">{selectedSlot.arrivalStart}</span>{' '}
+                and{' '}
+                <span className="font-semibold text-primary">{selectedSlot.arrivalEnd}</span>{' '}
+                on your selected date.
+              </AlertDescription>
+            </Alert>
+          )}
           
           <div className="input-group">
             <Label htmlFor="notes">Additional Notes</Label>
