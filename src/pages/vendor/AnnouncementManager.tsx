@@ -48,6 +48,7 @@ export function AnnouncementManager() {
   const [isLoading, setIsLoading] = useState(true);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingAnnouncement, setEditingAnnouncement] = useState<Announcement | null>(null);
+  const [isSending, setIsSending] = useState(false);
 
   const [formData, setFormData] = useState({
     title: '',
@@ -103,9 +104,31 @@ export function AnnouncementManager() {
     resetForm();
   };
 
+  const sendEmailNotification = async (title: string, message: string) => {
+    try {
+      const { data: sessionData } = await supabase.auth.getSession();
+      if (!sessionData.session) return;
+
+      const response = await supabase.functions.invoke('send-announcement-notification', {
+        body: { title, message },
+      });
+
+      if (response.error) {
+        console.error('Failed to send email notifications:', response.error);
+        toast.error('Announcement created but email notifications failed');
+      } else if (response.data?.emailsSent > 0) {
+        toast.success(`Email sent to ${response.data.emailsSent} students`);
+      }
+    } catch (error) {
+      console.error('Error sending notifications:', error);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user) return;
+
+    setIsSending(true);
 
     const announcementData = {
       title: formData.title.trim(),
@@ -134,10 +157,14 @@ export function AnnouncementManager() {
         toast.error('Failed to create announcement');
       } else {
         toast.success('Announcement created successfully');
+        // Send email notification for new announcements
+        await sendEmailNotification(announcementData.title, announcementData.message);
         handleCloseDialog();
         fetchAnnouncements();
       }
     }
+
+    setIsSending(false);
   };
 
   const handleToggleActive = async (announcement: Announcement) => {
@@ -252,11 +279,11 @@ export function AnnouncementManager() {
                 </p>
               </div>
               <DialogFooter>
-                <Button type="button" variant="outline" onClick={handleCloseDialog}>
+                <Button type="button" variant="outline" onClick={handleCloseDialog} disabled={isSending}>
                   Cancel
                 </Button>
-                <Button type="submit">
-                  {editingAnnouncement ? 'Update' : 'Create'}
+                <Button type="submit" disabled={isSending}>
+                  {isSending ? 'Sending...' : editingAnnouncement ? 'Update' : 'Create & Notify'}
                 </Button>
               </DialogFooter>
             </form>
