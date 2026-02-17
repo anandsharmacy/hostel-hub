@@ -67,40 +67,56 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   useEffect(() => {
-    // Set up auth state listener FIRST
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
+    let mounted = true;
+
+    // Helper to handle data fetching
+    const initializeAuth = async (session: Session | null) => {
+      try {
         setSession(session);
         setUser(session?.user ?? null);
         
         if (session?.user) {
-          // Defer Supabase calls with setTimeout to prevent deadlock
-          setTimeout(() => {
-            fetchUserData(session.user.id);
-          }, 0);
+          await fetchUserData(session.user.id);
         } else {
           setProfile(null);
           setRole(null);
           setIsApproved(true);
         }
-        
-        setIsLoading(false);
+      } catch (error) {
+        console.error('Error during auth initialization:', error);
+      } finally {
+        if (mounted) {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    // Set up auth state listener
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        initializeAuth(session);
       }
     );
 
-    // THEN check for existing session
+    // Check initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      
-      if (session?.user) {
-        fetchUserData(session.user.id);
+      // If we are already handling an auth change event, this might be redundant, 
+      // but safe to call as it just updates state.
+      // However, usually onAuthStateChange fires on mount too. 
+      // We'll rely primarily on onAuthStateChange, but this ensures we catch the initial state if the listener is late.
+      // Actually, onAuthStateChange fires 'INITIAL_SESSION' immediately on subscription if a session exists.
+      // So we can often just rely on that. But to be safe and explicit:
+      if (!session) {
+         // If no session, make sure we stop loading
+         setIsLoading(false);
       }
-      
-      setIsLoading(false);
+      // If there IS a session, the onAuthStateChange will handle it (or has handled it).
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      mounted = false;
+      subscription.unsubscribe();
+    };
   }, []);
 
   const login = async (email: string, password: string): Promise<{ success: boolean; error?: string; pendingApproval?: boolean }> => {
