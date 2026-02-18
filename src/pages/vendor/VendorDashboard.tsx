@@ -13,6 +13,7 @@ import { toast } from 'sonner';
 import { InventoryManagement } from './InventoryManagement';
 import { AnalyticsDashboard } from './AnalyticsDashboard';
 import { AnnouncementManager } from './AnnouncementManager';
+import { supabase } from '@/integrations/supabase/client';
 
 export default function VendorDashboard() {
   const { storeOrders, medicineRequests, updateStoreOrderStatus, updateMedicineRequestStatus, isLoading } = useData();
@@ -245,7 +246,7 @@ export default function VendorDashboard() {
                               </span>
                               <StatusBadge status={order.status} />
                             </div>
-                            
+
                             <div className="flex items-center gap-2 text-sm text-muted-foreground">
                               <MapPin className="w-4 h-4" />
                               <span>{order.hostelBlock}, Room {order.roomNumber}</span>
@@ -267,7 +268,7 @@ export default function VendorDashboard() {
                               Ordered: {formatDate(order.createdAt)}
                             </p>
                           </div>
-                          
+
                           <div className="flex flex-wrap gap-2">
                             {order.status === 'pending' && (
                               <Button
@@ -407,7 +408,7 @@ export default function VendorDashboard() {
                               <span className="font-semibold">{request.studentName}</span>
                               <StatusBadge status={request.status} />
                             </div>
-                            
+
                             <div className="flex items-center gap-2 text-sm text-muted-foreground">
                               <MapPin className="w-4 h-4" />
                               <span>{request.hostelBlock}, Room {request.roomNumber}</span>
@@ -426,7 +427,35 @@ export default function VendorDashboard() {
                                   variant="outline"
                                   size="sm"
                                   className="h-8"
-                                  onClick={() => window.open(request.prescriptionUrl!, '_blank')}
+                                  onClick={async () => {
+                                    try {
+                                      // Extract path from public URL
+                                      // Format: .../prescriptions/user_id/filename.pdf
+                                      const path = request.prescriptionUrl!.split('/prescriptions/')[1];
+                                      if (!path) {
+                                        window.open(request.prescriptionUrl!, '_blank');
+                                        return;
+                                      }
+
+                                      // Try downloading via SDK (authenticated)
+                                      const { data, error } = await supabase.storage
+                                        .from('prescriptions')
+                                        .download(path);
+
+                                      if (error) throw error;
+
+                                      // Create blob URL and open
+                                      const blobUrl = URL.createObjectURL(data);
+                                      window.open(blobUrl, '_blank');
+
+                                      // Clean up blob URL after a delay
+                                      setTimeout(() => URL.revokeObjectURL(blobUrl), 60000);
+                                    } catch (err) {
+                                      console.error('Error downloading prescription:', err);
+                                      // Fallback to public URL if download fails
+                                      window.open(request.prescriptionUrl!, '_blank');
+                                    }
+                                  }}
                                 >
                                   <FileText className="w-4 h-4 mr-2" />
                                   View Prescription
@@ -442,7 +471,7 @@ export default function VendorDashboard() {
                               Requested: {formatDate(request.createdAt)}
                             </p>
                           </div>
-                          
+
                           <div className="flex flex-wrap gap-2">
                             {request.status === 'pending' && (
                               <Button
