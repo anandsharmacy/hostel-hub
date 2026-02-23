@@ -1,7 +1,8 @@
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
-import { LogOut, User, ShieldCheck, Wrench, GraduationCap, Store } from 'lucide-react';
+import { LogOut, User, ShieldCheck, Wrench, GraduationCap, Store, Sun, Moon } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useTheme } from 'next-themes';
 import nmimsLogo from '@/assets/nmims-logo.png';
 
 export function DashboardNavbar() {
@@ -29,7 +30,8 @@ export function DashboardNavbar() {
   };
 
   const { label, icon: RoleIcon } = getRoleConfig();
-
+  const { theme, setTheme } = useTheme();
+  const toggleTheme = () => setTheme(theme === 'dark' ? 'light' : 'dark');
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/80">
       <div className="container mx-auto px-4 flex h-14 items-center justify-between">
@@ -57,6 +59,13 @@ export function DashboardNavbar() {
               {profile?.full_name || 'User'}
             </span>
           </div>
+          <button
+            onClick={toggleTheme}
+            className="p-2 rounded-lg hover:bg-muted transition-colors"
+            aria-label="Toggle dark mode"
+          >
+            {theme === 'dark' ? <Sun className="h-4 w-4 text-foreground" /> : <Moon className="h-4 w-4 text-foreground" />}
+          </button>
           <Button
             variant="ghost"
             size="sm"

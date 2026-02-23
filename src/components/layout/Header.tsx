@@ -1,7 +1,8 @@
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
-import { LogOut, Menu, X } from 'lucide-react';
+import { LogOut, Menu, X, Sun, Moon } from 'lucide-react';
 import { useState } from 'react';
+import { useTheme } from 'next-themes';
 import { useNavigate, Link } from 'react-router-dom';
 import nmimsLogo from '@/assets/nmims-logo.png';
 
@@ -9,6 +10,9 @@ export function Header() {
   const { user, profile, role, logout } = useAuth();
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { theme, setTheme } = useTheme();
+
+  const toggleTheme = () => setTheme(theme === 'dark' ? 'light' : 'dark');
 
   const handleLogout = async () => {
     await logout();
@@ -66,7 +70,14 @@ export function Header() {
           </nav>
 
           {/* Role Badge and User Info - Desktop */}
-          <div className="hidden md:flex items-center gap-4">
+          <div className="hidden md:flex items-center gap-3">
+            <button
+              onClick={toggleTheme}
+              className="p-2 rounded-lg hover:bg-white/10 transition-colors"
+              aria-label="Toggle dark mode"
+            >
+              {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+            </button>
             <span className="px-3 py-1 bg-white/10 rounded-full text-xs font-medium">
               {getRoleLabel()}
             </span>
