@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useData } from '@/contexts/DataContext';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -7,140 +7,73 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Slider } from '@/components/ui/slider';
 import { Sparkles, Send, Clock, Info } from 'lucide-react';
 import { toast } from 'sonner';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { supabase } from '@/integrations/supabase/client';
 
 const hostelBlocks = ['Hostel B1', 'Hostel B2', 'Hostel G1', 'Hostel G2'];
 
-// Generate time slots with 20-minute intervals from 8:00 AM to 5:00 PM
-const generateTimeSlots = () => {
-  const slots: { value: string; label: string; arrivalStart: string; arrivalEnd: string }[] = [];
-  const startHour = 8; // 8:00 AM
-  const endHour = 17; // 5:00 PM
-  const intervalMinutes = 20;
-
-  for (let hour = startHour; hour < endHour; hour++) {
-    for (let minute = 0; minute < 60; minute += intervalMinutes) {
-      // Skip slots that would extend past 5 PM
-      if (hour === endHour - 1 && minute + intervalMinutes > 60) continue;
-      
-      const slotStart = new Date();
-      slotStart.setHours(hour, minute, 0, 0);
-      
-      const slotEnd = new Date(slotStart);
-      slotEnd.setMinutes(slotEnd.getMinutes() + intervalMinutes);
-      
-      const formatTime = (date: Date) => {
-        const h = date.getHours();
-        const m = date.getMinutes();
-        const ampm = h >= 12 ? 'PM' : 'AM';
-        const hour12 = h % 12 || 12;
-        return `${hour12}:${m.toString().padStart(2, '0')} ${ampm}`;
-      };
-      
-      const arrivalStart = formatTime(slotStart);
-      const arrivalEnd = formatTime(slotEnd);
-      const value = `${arrivalStart} - ${arrivalEnd}`;
-      
-      slots.push({
-        value,
-        label: `${arrivalStart} - ${arrivalEnd}`,
-        arrivalStart,
-        arrivalEnd,
-      });
-    }
-  }
-  
-  return slots;
+const formatHour = (hour: number): string => {
+  const ampm = hour >= 12 ? 'PM' : 'AM';
+  const h12 = hour % 12 || 12;
+  return `${h12}:00 ${ampm}`;
 };
-
-const allTimeSlots = generateTimeSlots();
-
-interface BlockedSlot {
-  blocked_date: string;
-  blocked_time_slot: string;
-}
 
 export function CleaningRequestForm() {
   const { profile } = useAuth();
   const { addCleaningRequest } = useData();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [blockedSlots, setBlockedSlots] = useState<BlockedSlot[]>([]);
-  
+  const [availabilityRange, setAvailabilityRange] = useState<number[]>([10, 14]);
+
   const [formData, setFormData] = useState({
     studentName: profile?.full_name || '',
     hostelBlock: profile?.hostel_block || '',
     roomNumber: profile?.room_number || '',
     preferredDate: '',
-    preferredTime: '',
     notes: '',
   });
 
-  // Fetch blocked slots
-  useEffect(() => {
-    const fetchBlockedSlots = async () => {
-      const { data, error } = await supabase
-        .from('blocked_cleaning_slots')
-        .select('blocked_date, blocked_time_slot');
-      
-      if (!error && data) {
-        setBlockedSlots(data);
-      }
-    };
-    
-    fetchBlockedSlots();
-  }, []);
+  const availabilityStart = formatHour(availabilityRange[0]);
+  const availabilityEnd = formatHour(availabilityRange[1]);
 
-  // Filter available time slots based on selected date
-  const availableTimeSlots = useMemo(() => {
-    if (!formData.preferredDate) {
-      return allTimeSlots;
-    }
-    
-    const blockedForDate = blockedSlots
-      .filter(slot => slot.blocked_date === formData.preferredDate)
-      .map(slot => slot.blocked_time_slot);
-    
-    return allTimeSlots.filter(slot => !blockedForDate.includes(slot.value));
-  }, [formData.preferredDate, blockedSlots]);
-
-  // Reset time slot if it becomes unavailable when date changes
-  useEffect(() => {
-    if (formData.preferredTime && formData.preferredDate) {
-      const isStillAvailable = availableTimeSlots.some(slot => slot.value === formData.preferredTime);
-      if (!isStillAvailable) {
-        setFormData(prev => ({ ...prev, preferredTime: '' }));
-      }
-    }
-  }, [formData.preferredDate, availableTimeSlots, formData.preferredTime]);
-
-  // Get the selected time slot details for display
-  const selectedSlot = useMemo(() => {
-    return allTimeSlots.find(slot => slot.value === formData.preferredTime);
-  }, [formData.preferredTime]);
+  const expectedArrival = useMemo(() => {
+    const start = availabilityRange[0];
+    const end = Math.min(start + 2, availabilityRange[1]);
+    return { start: formatHour(start), end: formatHour(end) };
+  }, [availabilityRange]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (!formData.hostelBlock || !formData.roomNumber || !formData.preferredDate || !formData.preferredTime) {
+
+    if (!formData.hostelBlock || !formData.roomNumber || !formData.preferredDate) {
       toast.error('Please fill in all required fields');
       return;
     }
 
     setIsSubmitting(true);
-    
+
     try {
-      await addCleaningRequest(formData);
+      await addCleaningRequest({
+        studentName: formData.studentName,
+        hostelBlock: formData.hostelBlock,
+        roomNumber: formData.roomNumber,
+        preferredDate: formData.preferredDate,
+        preferredTime: `${availabilityStart} - ${availabilityEnd}`,
+        availabilityStart,
+        availabilityEnd,
+        expectedArrivalStart: expectedArrival.start,
+        expectedArrivalEnd: expectedArrival.end,
+        notes: formData.notes,
+      });
       toast.success('Cleaning request submitted successfully!');
-      
+
       setFormData({
         ...formData,
         preferredDate: '',
-        preferredTime: '',
         notes: '',
       });
+      setAvailabilityRange([10, 14]);
     } catch (error) {
       console.error('Error submitting cleaning request:', error);
       toast.error('Failed to submit request. Please try again.');
@@ -148,9 +81,6 @@ export function CleaningRequestForm() {
       setIsSubmitting(false);
     }
   };
-
-  const hasBlockedSlotsForDate = formData.preferredDate && 
-    blockedSlots.some(slot => slot.blocked_date === formData.preferredDate);
 
   return (
     <Card className="card-elevated">
@@ -177,7 +107,7 @@ export function CleaningRequestForm() {
                 placeholder="Enter your name"
               />
             </div>
-            
+
             <div className="input-group">
               <Label htmlFor="hostelBlock">Hostel Block *</Label>
               <Select
@@ -196,7 +126,7 @@ export function CleaningRequestForm() {
                 </SelectContent>
               </Select>
             </div>
-            
+
             <div className="input-group">
               <Label htmlFor="roomNumber">Room Number *</Label>
               <Input
@@ -206,7 +136,7 @@ export function CleaningRequestForm() {
                 placeholder="e.g., 304"
               />
             </div>
-            
+
             <div className="input-group">
               <Label htmlFor="preferredDate">Preferred Date *</Label>
               <Input
@@ -217,57 +147,50 @@ export function CleaningRequestForm() {
                 min={new Date().toISOString().split('T')[0]}
               />
             </div>
-            
-            <div className="input-group md:col-span-2">
-              <Label htmlFor="preferredTime">Preferred Time Slot *</Label>
-              <Select
-                value={formData.preferredTime}
-                onValueChange={(value) => setFormData({ ...formData, preferredTime: value })}
-                disabled={!formData.preferredDate}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder={formData.preferredDate ? "Select time slot" : "Select a date first"} />
-                </SelectTrigger>
-                <SelectContent className="max-h-[300px]">
-                  {availableTimeSlots.length === 0 ? (
-                    <div className="px-3 py-2 text-sm text-muted-foreground">
-                      No slots available for this date
-                    </div>
-                  ) : (
-                    availableTimeSlots.map((slot) => (
-                      <SelectItem key={slot.value} value={slot.value}>
-                        <div className="flex items-center gap-2">
-                          <Clock className="w-3 h-3 text-muted-foreground" />
-                          {slot.label}
-                        </div>
-                      </SelectItem>
-                    ))
-                  )}
-                </SelectContent>
-              </Select>
-              {hasBlockedSlotsForDate && availableTimeSlots.length < allTimeSlots.length && (
-                <p className="text-xs text-muted-foreground mt-1">
-                  Some time slots are unavailable on this date
-                </p>
-              )}
+          </div>
+
+          {/* Availability Slider */}
+          <div className="space-y-4">
+            <Label>Room Availability Window *</Label>
+            <p className="text-sm text-muted-foreground">
+              Select the hours you'll be available in your room (minimum 2 hours)
+            </p>
+            <div className="px-2 pt-2 pb-1">
+              <Slider
+                value={availabilityRange}
+                onValueChange={setAvailabilityRange}
+                min={8}
+                max={17}
+                step={1}
+                minStepsBetweenThumbs={2}
+              />
+            </div>
+            <div className="flex justify-between text-xs text-muted-foreground">
+              <span>8 AM</span>
+              <span>12 PM</span>
+              <span>5 PM</span>
+            </div>
+            <div className="text-center">
+              <span className="inline-flex items-center gap-2 px-4 py-2 bg-muted rounded-lg text-sm font-medium">
+                <Clock className="w-4 h-4 text-primary" />
+                Available: {availabilityStart} – {availabilityEnd}
+              </span>
             </div>
           </div>
 
-          {/* Expected Arrival Time Display */}
-          {selectedSlot && (
-            <Alert className="bg-primary/5 border-primary/20">
-              <Info className="h-4 w-4 text-primary" />
-              <AlertDescription className="text-sm">
-                <span className="font-medium">Expected Arrival Time:</span>{' '}
-                Our cleaning staff will arrive between{' '}
-                <span className="font-semibold text-primary">{selectedSlot.arrivalStart}</span>{' '}
-                and{' '}
-                <span className="font-semibold text-primary">{selectedSlot.arrivalEnd}</span>{' '}
-                on your selected date.
-              </AlertDescription>
-            </Alert>
-          )}
-          
+          {/* Expected Arrival Time */}
+          <Alert className="bg-primary/5 border-primary/20">
+            <Info className="h-4 w-4 text-primary" />
+            <AlertDescription className="text-sm">
+              <span className="font-medium">Expected Arrival Time:</span>{' '}
+              Our cleaning staff may arrive anytime between{' '}
+              <span className="font-semibold text-primary">{expectedArrival.start}</span>{' '}
+              and{' '}
+              <span className="font-semibold text-primary">{expectedArrival.end}</span>{' '}
+              on your selected date.
+            </AlertDescription>
+          </Alert>
+
           <div className="input-group">
             <Label htmlFor="notes">Additional Notes</Label>
             <Textarea
@@ -278,7 +201,7 @@ export function CleaningRequestForm() {
               rows={3}
             />
           </div>
-          
+
           <Button type="submit" className="w-full md:w-auto" disabled={isSubmitting}>
             {isSubmitting ? (
               <span className="flex items-center gap-2">

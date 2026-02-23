@@ -12,6 +12,10 @@ export interface CleaningRequest {
   roomNumber: string;
   preferredDate: string;
   preferredTime: string;
+  availabilityStart: string | null;
+  availabilityEnd: string | null;
+  expectedArrivalStart: string | null;
+  expectedArrivalEnd: string | null;
   notes: string;
   status: RequestStatus;
   createdAt: string;
@@ -85,6 +89,10 @@ function mapCleaningRequest(row: any): CleaningRequest {
     roomNumber: row.room_number,
     preferredDate: row.preferred_date,
     preferredTime: row.preferred_time,
+    availabilityStart: row.availability_start,
+    availabilityEnd: row.availability_end,
+    expectedArrivalStart: row.expected_arrival_start,
+    expectedArrivalEnd: row.expected_arrival_end,
     notes: row.notes || '',
     status: row.status as RequestStatus,
     createdAt: row.created_at,
@@ -241,9 +249,13 @@ export function DataProvider({ children }: { children: ReactNode }) {
       room_number: request.roomNumber,
       preferred_date: request.preferredDate,
       preferred_time: request.preferredTime,
+      availability_start: request.availabilityStart,
+      availability_end: request.availabilityEnd,
+      expected_arrival_start: request.expectedArrivalStart,
+      expected_arrival_end: request.expectedArrivalEnd,
       notes: request.notes,
       status: 'pending',
-    });
+    } as any);
 
     if (error) throw error;
     await refetchData();

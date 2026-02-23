@@ -2,7 +2,7 @@ import { useData } from '@/contexts/DataContext';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { StatusBadge } from '@/components/StatusBadge';
 import LoadingSpinner from '@/components/LoadingSpinner';
-import { Sparkles, Wrench, ShoppingBag, Calendar, MapPin, Receipt, Pill, FileText, ExternalLink } from 'lucide-react';
+import { Sparkles, Wrench, ShoppingBag, Calendar, MapPin, Receipt, Pill, FileText, ExternalLink, Clock } from 'lucide-react';
 import { format } from 'date-fns';
 import { Button } from '@/components/ui/button';
 
@@ -57,8 +57,27 @@ export function MyRequests() {
                     </div>
                     <div className="flex items-center gap-2 text-sm text-muted-foreground">
                       <Calendar className="w-4 h-4" />
-                      <span>{request.preferredDate} at {request.preferredTime}</span>
+                      <span>{request.preferredDate}</span>
                     </div>
+                    {request.expectedArrivalStart && request.expectedArrivalEnd && (
+                      <div className="flex items-center gap-2 text-sm bg-primary/10 text-primary px-3 py-1.5 rounded-md w-fit">
+                        <Clock className="w-4 h-4" />
+                        <span className="font-medium">
+                          Staff may arrive between {request.expectedArrivalStart} – {request.expectedArrivalEnd}
+                        </span>
+                      </div>
+                    )}
+                    {request.availabilityStart && request.availabilityEnd && (
+                      <p className="text-xs text-muted-foreground">
+                        Your availability: {request.availabilityStart} – {request.availabilityEnd}
+                      </p>
+                    )}
+                    {!request.expectedArrivalStart && (
+                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                        <Clock className="w-4 h-4" />
+                        <span>{request.preferredTime}</span>
+                      </div>
+                    )}
                     {request.notes && (
                       <p className="text-sm text-muted-foreground">{request.notes}</p>
                     )}

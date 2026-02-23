@@ -151,7 +151,11 @@ export type Database = {
       }
       cleaning_requests: {
         Row: {
+          availability_end: string | null
+          availability_start: string | null
           created_at: string
+          expected_arrival_end: string | null
+          expected_arrival_start: string | null
           hostel_block: string
           id: string
           notes: string | null
@@ -164,7 +168,11 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          availability_end?: string | null
+          availability_start?: string | null
           created_at?: string
+          expected_arrival_end?: string | null
+          expected_arrival_start?: string | null
           hostel_block: string
           id?: string
           notes?: string | null
@@ -177,7 +185,11 @@ export type Database = {
           user_id: string
         }
         Update: {
+          availability_end?: string | null
+          availability_start?: string | null
           created_at?: string
+          expected_arrival_end?: string | null
+          expected_arrival_start?: string | null
           hostel_block?: string
           id?: string
           notes?: string | null
