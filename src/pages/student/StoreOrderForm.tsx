@@ -25,7 +25,14 @@ interface InventoryItem {
   price: number;
   is_available: boolean;
   low_stock_threshold: number;
+  hostel_section: string;
 }
+
+const getHostelSection = (hostelBlock: string): string => {
+  if (hostelBlock.includes('B1') || hostelBlock.includes('B2')) return 'boys';
+  if (hostelBlock.includes('G1') || hostelBlock.includes('G2')) return 'girls';
+  return 'boys';
+};
 
 interface CartItem {
   name: string;
@@ -50,6 +57,8 @@ export function StoreOrderForm() {
     roomNumber: profile?.room_number || '',
   });
 
+  const hostelSection = getHostelSection(formData.hostelBlock);
+
   useEffect(() => {
     const fetchInventory = async () => {
       setIsLoadingInventory(true);
@@ -58,6 +67,7 @@ export function StoreOrderForm() {
         .select('*')
         .in('category', ['Stationery', 'Fruits', 'Gym Supplements'])
         .eq('is_available', true)
+        .eq('hostel_section', hostelSection)
         .order('name');
       
       if (error) {
@@ -69,7 +79,7 @@ export function StoreOrderForm() {
     };
     
     fetchInventory();
-  }, []);
+  }, [hostelSection]);
 
   const getItemsByCategory = (category: Category) => {
     return inventoryItems.filter(item => item.category === category);
@@ -218,7 +228,11 @@ export function StoreOrderForm() {
               </div>
               <div>
                 <CardTitle>Store Orders</CardTitle>
-                <CardDescription>Order stationery, fruits, and supplements</CardDescription>
+                <CardDescription>
+                  {formData.hostelBlock 
+                    ? `Showing items for ${hostelSection === 'boys' ? 'Boys (B1 & B2)' : 'Girls (G1 & G2)'} section`
+                    : 'Select your hostel block to see available items'}
+                </CardDescription>
               </div>
             </div>
           </CardHeader>
