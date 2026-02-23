@@ -1,6 +1,7 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect, useCallback } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useData } from '@/contexts/DataContext';
+import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -8,16 +9,29 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Slider } from '@/components/ui/slider';
-import { Sparkles, Send, Clock, Info } from 'lucide-react';
+import { Sparkles, Send, Clock, Info, AlertTriangle, Users } from 'lucide-react';
 import { toast } from 'sonner';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
 const hostelBlocks = ['Hostel B1', 'Hostel B2', 'Hostel G1', 'Hostel G2'];
 
 const formatHour = (hour: number): string => {
-  const ampm = hour >= 12 ? 'PM' : 'AM';
-  const h12 = hour % 12 || 12;
-  return `${h12}:00 ${ampm}`;
+  const wholeHour = Math.floor(hour);
+  const minutes = hour % 1 === 0.5 ? '30' : '00';
+  const ampm = wholeHour >= 12 ? 'PM' : 'AM';
+  const h12 = wholeHour % 12 || 12;
+  return `${h12}:${minutes} ${ampm}`;
+};
+
+const parseHourFromTimeString = (time: string): number => {
+  const match = time.match(/(\d+):(\d+)\s*(AM|PM)/i);
+  if (!match) return 0;
+  let hour = parseInt(match[1]);
+  const minutes = parseInt(match[2]);
+  const ampm = match[3].toUpperCase();
+  if (ampm === 'PM' && hour !== 12) hour += 12;
+  if (ampm === 'AM' && hour === 12) hour = 0;
+  return hour + (minutes >= 30 ? 0.5 : 0);
 };
 
 export function CleaningRequestForm() {
@@ -25,6 +39,8 @@ export function CleaningRequestForm() {
   const { addCleaningRequest } = useData();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [availabilityRange, setAvailabilityRange] = useState<number[]>([10, 14]);
+  const [queueCount, setQueueCount] = useState(0);
+  const [isLoadingQueue, setIsLoadingQueue] = useState(false);
 
   const [formData, setFormData] = useState({
     studentName: profile?.full_name || '',
@@ -37,17 +53,84 @@ export function CleaningRequestForm() {
   const availabilityStart = formatHour(availabilityRange[0]);
   const availabilityEnd = formatHour(availabilityRange[1]);
 
+  // Fetch overlapping bookings count
+  const fetchQueueCount = useCallback(async () => {
+    if (!formData.preferredDate) {
+      setQueueCount(0);
+      return;
+    }
+
+    setIsLoadingQueue(true);
+    try {
+      const { data, error } = await supabase
+        .from('cleaning_requests')
+        .select('availability_start, availability_end')
+        .eq('preferred_date', formData.preferredDate)
+        .in('status', ['pending', 'in-progress'])
+        .not('availability_start', 'is', null)
+        .not('availability_end', 'is', null);
+
+      if (error) {
+        console.error('Error fetching queue:', error);
+        setQueueCount(0);
+        return;
+      }
+
+      const studentStart = availabilityRange[0];
+      const studentEnd = availabilityRange[1];
+
+      const overlapping = (data || []).filter((row) => {
+        const rowStart = parseHourFromTimeString(row.availability_start!);
+        const rowEnd = parseHourFromTimeString(row.availability_end!);
+        // Overlap: starts before student ends AND ends after student starts
+        return rowStart < studentEnd && rowEnd > studentStart;
+      });
+
+      setQueueCount(overlapping.length);
+    } catch (err) {
+      console.error('Error:', err);
+      setQueueCount(0);
+    } finally {
+      setIsLoadingQueue(false);
+    }
+  }, [formData.preferredDate, availabilityRange]);
+
+  // Debounced fetch
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      fetchQueueCount();
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [fetchQueueCount]);
+
+  // Calculate expected arrival based on queue position
   const expectedArrival = useMemo(() => {
     const start = availabilityRange[0];
-    const end = Math.min(start + 2, availabilityRange[1]);
-    return { start: formatHour(start), end: formatHour(end) };
-  }, [availabilityRange]);
+    const end = availabilityRange[1];
+    const arrivalStart = start + queueCount * 0.5;
+    const arrivalEnd = arrivalStart + 0.5;
+
+    if (arrivalEnd > end) {
+      return { start: '', end: '', overflow: true };
+    }
+
+    return {
+      start: formatHour(arrivalStart),
+      end: formatHour(arrivalEnd),
+      overflow: false,
+    };
+  }, [availabilityRange, queueCount]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!formData.hostelBlock || !formData.roomNumber || !formData.preferredDate) {
       toast.error('Please fill in all required fields');
+      return;
+    }
+
+    if (expectedArrival.overflow) {
+      toast.error('This time slot is full. Please choose a wider window or different date.');
       return;
     }
 
@@ -178,18 +261,44 @@ export function CleaningRequestForm() {
             </div>
           </div>
 
+          {/* Queue Info */}
+          {formData.preferredDate && (
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <Users className="w-4 h-4" />
+              {isLoadingQueue ? (
+                <span>Checking queue...</span>
+              ) : (
+                <span>
+                  {queueCount === 0
+                    ? "No bookings ahead of you — you're first in line!"
+                    : `${queueCount} booking${queueCount > 1 ? 's' : ''} ahead of you on this date`}
+                </span>
+              )}
+            </div>
+          )}
+
           {/* Expected Arrival Time */}
-          <Alert className="bg-primary/5 border-primary/20">
-            <Info className="h-4 w-4 text-primary" />
-            <AlertDescription className="text-sm">
-              <span className="font-medium">Expected Arrival Time:</span>{' '}
-              Our cleaning staff may arrive anytime between{' '}
-              <span className="font-semibold text-primary">{expectedArrival.start}</span>{' '}
-              and{' '}
-              <span className="font-semibold text-primary">{expectedArrival.end}</span>{' '}
-              on your selected date.
-            </AlertDescription>
-          </Alert>
+          {expectedArrival.overflow ? (
+            <Alert className="bg-destructive/5 border-destructive/20">
+              <AlertTriangle className="h-4 w-4 text-destructive" />
+              <AlertDescription className="text-sm">
+                <span className="font-medium">Time slot full!</span>{' '}
+                There are too many bookings for your selected window. Please choose a wider availability range or a different date.
+              </AlertDescription>
+            </Alert>
+          ) : (
+            <Alert className="bg-primary/5 border-primary/20">
+              <Info className="h-4 w-4 text-primary" />
+              <AlertDescription className="text-sm">
+                <span className="font-medium">Expected Arrival Time:</span>{' '}
+                Our cleaning staff may arrive anytime between{' '}
+                <span className="font-semibold text-primary">{expectedArrival.start}</span>{' '}
+                and{' '}
+                <span className="font-semibold text-primary">{expectedArrival.end}</span>{' '}
+                on your selected date.
+              </AlertDescription>
+            </Alert>
+          )}
 
           <div className="input-group">
             <Label htmlFor="notes">Additional Notes</Label>
@@ -202,7 +311,7 @@ export function CleaningRequestForm() {
             />
           </div>
 
-          <Button type="submit" className="w-full md:w-auto" disabled={isSubmitting}>
+          <Button type="submit" className="w-full md:w-auto" disabled={isSubmitting || expectedArrival.overflow}>
             {isSubmitting ? (
               <span className="flex items-center gap-2">
                 <span className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
