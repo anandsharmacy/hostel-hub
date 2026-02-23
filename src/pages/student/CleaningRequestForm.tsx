@@ -13,7 +13,7 @@ import { Sparkles, Send, Clock, Info, AlertTriangle, Users } from 'lucide-react'
 import { toast } from 'sonner';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
-const hostelBlocks = ['Hostel B1', 'Hostel B2', 'Hostel G1', 'Hostel G2'];
+
 
 const formatHour = (hour: number): string => {
   const wholeHour = Math.floor(hour);
@@ -193,24 +193,8 @@ export function CleaningRequestForm() {
               />
             </div>
 
-            <div className="input-group">
-              <Label htmlFor="hostelBlock">Hostel Block *</Label>
-              <Select
-                value={formData.hostelBlock}
-                onValueChange={(value) => setFormData({ ...formData, hostelBlock: value })}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select block" />
-                </SelectTrigger>
-                <SelectContent>
-                  {hostelBlocks.map((block) => (
-                    <SelectItem key={block} value={block}>
-                      {block}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+
+
 
             <div className="input-group">
               <Label htmlFor="roomNumber">Room Number *</Label>

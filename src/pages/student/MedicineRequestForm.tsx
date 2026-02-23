@@ -6,13 +6,13 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Pill, Upload, FileText, X, Receipt, CheckCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 
-const hostelBlocks = ['Hostel B1', 'Hostel B2', 'Hostel G1', 'Hostel G2'];
+
 
 export function MedicineRequestForm() {
   const { user, profile } = useAuth();
@@ -206,24 +206,8 @@ export function MedicineRequestForm() {
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="input-group">
-                <Label htmlFor="hostelBlock">Hostel Block *</Label>
-                <Select
-                  value={formData.hostelBlock}
-                  onValueChange={(value) => setFormData({ ...formData, hostelBlock: value })}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select block" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {hostelBlocks.map((block) => (
-                      <SelectItem key={block} value={block}>
-                        {block}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
+
+
               
               <div className="input-group">
                 <Label htmlFor="roomNumber">Room Number *</Label>
