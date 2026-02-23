@@ -3,6 +3,7 @@ import { MessageCircle, X, Send, Bot, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useAuth } from '@/contexts/AuthContext';
+import { useData } from '@/contexts/DataContext';
 import { VoiceInput } from './VoiceInput';
 import { streamChat, type ChatMessage } from '@/lib/chatService';
 import { cn } from '@/lib/utils';
@@ -20,6 +21,7 @@ const welcomeMessages: Record<string, string> = {
 
 export function AIChatBot() {
   const { role, session } = useAuth();
+  const { refetchData } = useData();
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState('');
@@ -72,7 +74,11 @@ export function AIChatBot() {
         messages: newMessages,
         token: session.access_token,
         onDelta: upsertAssistant,
-        onDone: () => setIsLoading(false),
+        onDone: () => {
+          setIsLoading(false);
+          // Refetch data so new requests appear in My Requests
+          refetchData();
+        },
         onError: (error) => {
           setMessages((prev) => [
             ...prev,
