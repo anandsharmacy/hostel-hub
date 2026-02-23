@@ -7,7 +7,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import LoadingSpinner from '@/components/LoadingSpinner';
-import { LogIn, UserPlus, ArrowLeft, ShieldCheck, KeyRound } from 'lucide-react';
+import { LogIn, UserPlus, ArrowLeft, ShieldCheck, KeyRound, Sun, Moon } from 'lucide-react';
+import { useTheme } from 'next-themes';
 import { toast } from 'sonner';
 import nmimsLogo from '@/assets/nmims-logo.png';
 import { z } from 'zod';
@@ -37,6 +38,7 @@ type SignupFormValues = z.infer<typeof signupSchema>;
 export default function Login() {
   const [currentView, setCurrentView] = useState<AuthView>('home');
   const { login, signup, resetPassword, isAuthenticated, role, isLoading: authLoading } = useAuth();
+  const { theme, setTheme } = useTheme();
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -204,6 +206,14 @@ export default function Login() {
                 )
               ))}
             </nav>
+
+            <button
+              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+              className="p-2 rounded-lg hover:bg-white/10 transition-colors"
+              aria-label="Toggle dark mode"
+            >
+              {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+            </button>
           </div>
         </div>
       </header>
