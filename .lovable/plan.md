@@ -1,78 +1,81 @@
 
 
-## Rework: Room Availability Sliders + Expected Arrival Time
+## Rework: Dynamic Expected Arrival Based on Queue Position
 
 ### Overview
-Replace the current 20-minute time slot dropdown with a dual-handle hour range slider where students specify when they are available in their room. The system enforces a minimum 2-hour window and tells the student that cleaning staff may arrive anytime within that window (up to 2 hours from the start).
+Instead of always showing "first 2 hours of availability," the expected arrival time will now be calculated based on how many other cleaning bookings already exist for the same date with overlapping time windows. Each cleaning takes approximately 30 minutes, so the student's position in the queue determines when staff will likely arrive.
 
-### How It Will Work (Student Experience)
+### How It Will Work
 
-1. Student picks a date (same as now)
-2. Instead of a time slot dropdown, they see a **dual-handle slider** (8 AM to 5 PM range)
-3. The slider enforces a **minimum 2-hour gap** between start and end
-4. Labels show the selected availability window (e.g., "10:00 AM - 1:00 PM")
-5. Below the slider, a prominent alert says: **"Our cleaning staff may arrive anytime between 10:00 AM and 12:00 PM"** (i.e., up to 2 hours from the start of availability)
-6. The full availability window and the expected arrival window are both saved to the database
+1. Student selects their availability window (e.g., 10 AM - 2 PM) using the existing slider
+2. The system queries the database for all existing pending/in-progress cleaning requests on the same date whose availability overlaps with the student's window
+3. The student's queue position = number of overlapping bookings ahead of them
+4. Expected arrival is calculated as:
+   - **Start**: availability_start + (queue_position x 30 minutes)
+   - **End**: expected_arrival_start + 30 minutes
+   - Capped within the student's availability window
+5. The form shows a live-updating expected arrival time as the student adjusts their date and availability
+6. If the queue is full (arrival would exceed the availability window), a warning is shown
 
-### Database Changes
+### Example
 
-Add 4 new columns to `cleaning_requests`:
-- `availability_start` (text) -- e.g., "10:00 AM"
-- `availability_end` (text) -- e.g., "1:00 PM"  
-- `expected_arrival_start` (text) -- same as availability_start
-- `expected_arrival_end` (text) -- availability_start + 2 hours
-
-The existing `preferred_time` column will store a summary string like "10:00 AM - 1:00 PM" for backward compatibility.
+- Student picks: **10 AM - 2 PM** on March 1st
+- There are already **3 bookings** overlapping that window on March 1st
+- Queue position = 3 (0-indexed: 4th in line)
+- Expected arrival: **11:30 AM - 12:00 PM** (10 AM + 3 x 30 min)
 
 ### Files to Modify
 
-**1. New database migration**
-- Add `availability_start`, `availability_end`, `expected_arrival_start`, `expected_arrival_end` columns to `cleaning_requests`
+**1. `src/pages/student/CleaningRequestForm.tsx`**
+- Add a database query that fetches existing cleaning requests for the selected date
+- Count overlapping bookings (those whose availability window intersects with the student's chosen window, with status pending or in-progress)
+- Dynamically calculate expected arrival based on queue position
+- Show the queue count to the student (e.g., "There are 3 bookings ahead of you")
+- Show a warning if the calculated arrival time falls outside the availability window
+- Re-query whenever the date or availability slider changes
 
-**2. `src/pages/student/CleaningRequestForm.tsx`**
-- Remove the time slot dropdown and related logic (generateTimeSlots, blockedSlots filtering for time)
-- Add a dual-handle Slider component (Radix slider supports multiple thumbs) with range 8-17 (representing hours)
-- Enforce minimum 2-hour gap via the slider's `minStepsBetweenThumbs` prop
-- Display formatted time labels above/below the slider
-- Show the "Expected Arrival" alert: start of availability to start + 2 hours
-- On submit, save the availability window and computed arrival window
+**2. `src/contexts/DataContext.tsx`**
+- No structural changes needed; the form will query the database directly for the count since it needs a filtered, real-time query specific to the form's inputs
 
-**3. `src/contexts/DataContext.tsx`**
-- Update `CleaningRequest` interface to add `availabilityStart`, `availabilityEnd`, `expectedArrivalStart`, `expectedArrivalEnd`
-- Update `mapCleaningRequest` to map the new columns
-- Update `addCleaningRequest` to insert the new fields
+**3. `src/pages/student/MyRequests.tsx`**
+- No changes needed; it already displays expectedArrivalStart and expectedArrivalEnd from the saved data
 
-**4. `src/pages/student/MyRequests.tsx`**
-- Show the expected arrival time window prominently for each cleaning request (e.g., a colored badge: "Staff may arrive between 10:00 AM - 12:00 PM")
-- Show the full availability window as secondary info
-
-**5. `src/pages/admin/AdminDashboard.tsx`**
-- Display both the student's availability window and expected arrival time for each cleaning request
+**4. `src/pages/admin/AdminDashboard.tsx`**
+- Add a display of queue position number alongside the expected arrival time for staff visibility
 
 ### Technical Details
 
-**Slider Configuration:**
-- Range: 8 to 17 (representing 8 AM to 5 PM)
-- Step: 1 (hourly increments)
-- `minStepsBetweenThumbs`: 2 (enforces minimum 2-hour window)
-- Default value: [10, 14] (10 AM - 2 PM)
-
-**Expected Arrival Calculation:**
-- `expectedArrivalStart` = availability start time
-- `expectedArrivalEnd` = availability start + 2 hours (capped at availability end)
-
-**Time Formatting Helper:**
+**Queue Count Query:**
+When the student selects a date and adjusts the slider, the form queries:
 ```text
-hour 8  -> "8:00 AM"
-hour 12 -> "12:00 PM"
-hour 17 -> "5:00 PM"
+SELECT COUNT(*) FROM cleaning_requests
+WHERE preferred_date = [selected_date]
+  AND status IN ('pending', 'in-progress')
+  AND availability_start IS NOT NULL
+  AND availability_end IS NOT NULL
+  -- Overlap check: other booking's window intersects with student's window
 ```
 
-**Migration SQL:**
+The overlap is checked by comparing hour values. Since availability times are stored as text like "10:00 AM", we parse them for comparison.
+
+**Arrival Calculation Logic:**
 ```text
-ALTER TABLE public.cleaning_requests
-ADD COLUMN availability_start text,
-ADD COLUMN availability_end text,
-ADD COLUMN expected_arrival_start text,
-ADD COLUMN expected_arrival_end text;
+queuePosition = number of overlapping bookings
+arrivalStartHour = availabilityStartHour + (queuePosition * 0.5)
+arrivalEndHour = arrivalStartHour + 0.5
+
+if arrivalEndHour > availabilityEndHour:
+  show warning "Your window is full, please choose a wider range or different date"
 ```
+
+**Real-time Updates:**
+- The query re-runs when the student changes the date or moves the slider
+- A debounce is used on slider changes to avoid excessive database calls
+- A loading indicator shows while the count is being fetched
+
+**What the Student Sees:**
+- The availability slider (unchanged)
+- A small info line: "X bookings ahead of you on this date"
+- The expected arrival badge dynamically calculated
+- A warning alert if the window is too crowded
+
