@@ -1,30 +1,35 @@
 
 
-## Remove Hostel Block Selection from Student Forms
+## Show Expected Arrival Time After Submitting Cleaning Request
 
-### Overview
-Instead of asking students to pick their hostel block every time they submit a form, the app will automatically use the hostel block they chose during account registration (stored in their profile).
+### Problem
+When a student submits a cleaning request, they only see a generic "Cleaning request submitted successfully!" toast message. The expected arrival time is calculated and saved, but the student doesn't get immediate confirmation of when to expect the cleaning staff.
 
-### What Changes
+### Solution
+Update the success toast in `CleaningRequestForm.tsx` to include the expected arrival time window.
 
-The hostel block dropdown will be removed from all 4 student forms:
+### Changes
 
-1. **CleaningRequestForm.tsx** -- Remove the hostel block Select dropdown from the grid. The form already initializes `hostelBlock` from `profile?.hostel_block`.
+**`src/pages/student/CleaningRequestForm.tsx`**
+- Modify the `toast.success()` call after successful submission to include the expected arrival time
+- Change from a simple string toast to a rich toast that shows:
+  - "Cleaning request submitted successfully!"
+  - "Staff may arrive between [start] - [end]"
+- Save the expected arrival values before resetting the form state (currently the form resets `startHour`/`endHour` before the toast could reference them, but `expectedArrival.start`/`expectedArrival.end` are captured before the reset)
 
-2. **ApplianceComplaintForm.tsx** -- Same removal. Already initializes from profile.
+### Technical Detail
+The `expectedArrival.start` and `expectedArrival.end` values need to be captured into local variables before the form state is reset, since resetting `startHour`/`endHour` would change the computed `expectedArrival` memo. The toast will use these captured values.
 
-3. **StoreOrderForm.tsx** -- Remove the hostel block Select from the cart sidebar. Already initializes from profile.
+```
+// Before reset:
+const arrivalStart = expectedArrival.start;
+const arrivalEnd = expectedArrival.end;
 
-4. **MedicineRequestForm.tsx** -- Remove the hostel block Select. Already initializes from profile.
+// Then reset form...
 
-### Technical Details
+// Then show toast with saved values:
+toast.success(`Request submitted! Staff may arrive between ${arrivalStart} - ${arrivalEnd}`);
+```
 
-In each file:
-- Remove the `hostelBlocks` array constant (no longer needed)
-- Remove the `<div className="input-group">` block containing the hostel block `<Select>`
-- Remove the `Select`-related imports if no other Select remains in the file
-- The `formData.hostelBlock` state field stays as-is since it is already pre-filled from `profile?.hostel_block` and is used when submitting
-- Adjust grid layouts where needed (e.g., if 2-column grid has an odd number of fields after removal)
-
-No database or backend changes are needed -- the hostel block value still gets submitted with each request, it just comes from the profile automatically.
-
+### Files Modified
+- `src/pages/student/CleaningRequestForm.tsx` (1 file, ~5 lines changed)
