@@ -25,9 +25,12 @@ interface InventoryItem {
   price: number;
   low_stock_threshold: number;
   is_available: boolean;
+  hostel_section: string;
   created_at: string;
   updated_at: string;
 }
+
+type HostelSection = 'boys' | 'girls';
 
 interface RestockHistory {
   id: string;
@@ -48,6 +51,7 @@ export function InventoryManagement() {
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [activeSection, setActiveSection] = useState<HostelSection>('boys');
   const [showRestockDialog, setShowRestockDialog] = useState(false);
   const [showAddDialog, setShowAddDialog] = useState(false);
   const [showHistoryDialog, setShowHistoryDialog] = useState(false);
@@ -61,6 +65,7 @@ export function InventoryManagement() {
     quantity: 0,
     price: 0,
     low_stock_threshold: 5,
+    hostel_section: 'boys' as HostelSection,
   });
 
   const fetchItems = async () => {
@@ -210,6 +215,7 @@ export function InventoryManagement() {
           quantity: newItem.quantity,
           price: newItem.price,
           low_stock_threshold: newItem.low_stock_threshold,
+          hostel_section: newItem.hostel_section,
         });
       
       if (error) throw error;
@@ -222,6 +228,7 @@ export function InventoryManagement() {
         quantity: 0,
         price: 0,
         low_stock_threshold: 5,
+        hostel_section: activeSection,
       });
       await fetchItems();
     } catch (error: any) {
@@ -264,14 +271,15 @@ export function InventoryManagement() {
     const matchesSearch = !searchQuery.trim() || 
       item.name.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCategory = selectedCategory === 'all' || item.category === selectedCategory;
-    return matchesSearch && matchesCategory;
+    const matchesSection = item.hostel_section === activeSection;
+    return matchesSearch && matchesCategory && matchesSection;
   });
 
-  // Stats
-  const totalItems = items.length;
-  const lowStockItems = items.filter(i => i.quantity <= i.low_stock_threshold && i.quantity > 0);
-  const outOfStockItems = items.filter(i => i.quantity === 0);
-  const availableItems = items.filter(i => i.is_available && i.quantity > 0);
+  const sectionItems = items.filter(i => i.hostel_section === activeSection);
+  const totalItems = sectionItems.length;
+  const lowStockItems = sectionItems.filter(i => i.quantity <= i.low_stock_threshold && i.quantity > 0);
+  const outOfStockItems = sectionItems.filter(i => i.quantity === 0);
+  const availableItems = sectionItems.filter(i => i.is_available && i.quantity > 0);
 
   const getStockStatus = (item: InventoryItem) => {
     if (item.quantity === 0) return { label: 'Out of Stock', variant: 'destructive' as const, icon: AlertTriangle };
@@ -289,6 +297,24 @@ export function InventoryManagement() {
 
   return (
     <div className="space-y-6">
+      {/* Section Tabs - Boys / Girls */}
+      <div className="flex gap-2">
+        <Button
+          variant={activeSection === 'boys' ? 'default' : 'outline'}
+          onClick={() => setActiveSection('boys')}
+          className="flex-1 sm:flex-none"
+        >
+          🏠 Boys (B1 & B2)
+        </Button>
+        <Button
+          variant={activeSection === 'girls' ? 'default' : 'outline'}
+          onClick={() => setActiveSection('girls')}
+          className="flex-1 sm:flex-none"
+        >
+          🏠 Girls (G1 & G2)
+        </Button>
+      </div>
+
       {/* Stats Overview */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <Card className="card-elevated">
@@ -378,7 +404,7 @@ export function InventoryManagement() {
               <CardDescription>Manage stock levels and availability</CardDescription>
             </div>
             <div className="flex flex-wrap gap-2">
-              <Button size="sm" onClick={() => setShowAddDialog(true)}>
+              <Button size="sm" onClick={() => { setNewItem(prev => ({ ...prev, hostel_section: activeSection })); setShowAddDialog(true); }}>
                 <Plus className="w-4 h-4 mr-1" />
                 Add Item
               </Button>
@@ -591,6 +617,18 @@ export function InventoryManagement() {
                   {categories.map((cat) => (
                     <SelectItem key={cat} value={cat}>{cat}</SelectItem>
                   ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="input-group">
+              <Label>Hostel Section *</Label>
+              <Select value={newItem.hostel_section} onValueChange={(v) => setNewItem({ ...newItem, hostel_section: v as HostelSection })}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="boys">Boys (B1 & B2)</SelectItem>
+                  <SelectItem value="girls">Girls (G1 & G2)</SelectItem>
                 </SelectContent>
               </Select>
             </div>

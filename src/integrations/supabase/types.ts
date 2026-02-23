@@ -195,6 +195,7 @@ export type Database = {
         Row: {
           category: string
           created_at: string
+          hostel_section: string
           id: string
           is_available: boolean
           low_stock_threshold: number
@@ -206,6 +207,7 @@ export type Database = {
         Insert: {
           category: string
           created_at?: string
+          hostel_section?: string
           id?: string
           is_available?: boolean
           low_stock_threshold?: number
@@ -217,6 +219,7 @@ export type Database = {
         Update: {
           category?: string
           created_at?: string
+          hostel_section?: string
           id?: string
           is_available?: boolean
           low_stock_threshold?: number
