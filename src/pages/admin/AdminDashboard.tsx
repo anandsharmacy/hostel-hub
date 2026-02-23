@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { StatusBadge } from '@/components/StatusBadge';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import { useData, RequestStatus } from '@/contexts/DataContext';
-import { Sparkles, Wrench, Calendar, MapPin, Clock, CheckCircle, Settings } from 'lucide-react';
+import { Sparkles, Wrench, Calendar, MapPin, Clock, CheckCircle, Settings, Users } from 'lucide-react';
 import { format } from 'date-fns';
 import { BlockedSlotsManager } from '@/components/admin/BlockedSlotsManager';
 import { toast } from 'sonner';
@@ -187,9 +187,31 @@ export default function AdminDashboard() {
                               </div>
                             </div>
                             {request.expectedArrivalStart && request.expectedArrivalEnd ? (
-                              <div className="flex items-center gap-2 text-sm bg-primary/10 text-primary px-3 py-1.5 rounded-md w-fit">
-                                <Clock className="w-4 h-4" />
-                                <span className="font-medium">Expected Arrival: {request.expectedArrivalStart} – {request.expectedArrivalEnd}</span>
+                              <div className="flex flex-wrap items-center gap-2">
+                                <div className="flex items-center gap-2 text-sm bg-primary/10 text-primary px-3 py-1.5 rounded-md w-fit">
+                                  <Clock className="w-4 h-4" />
+                                  <span className="font-medium">Expected Arrival: {request.expectedArrivalStart} – {request.expectedArrivalEnd}</span>
+                                </div>
+                                {(() => {
+                                  const queuePos = cleaningRequests.filter(
+                                    (r) =>
+                                      r.id !== request.id &&
+                                      r.preferredDate === request.preferredDate &&
+                                      (r.status === 'pending' || r.status === 'in-progress') &&
+                                      r.createdAt < request.createdAt
+                                  ).length;
+                                  return queuePos > 0 ? (
+                                    <div className="flex items-center gap-1 text-xs text-muted-foreground bg-muted px-2 py-1 rounded">
+                                      <Users className="w-3 h-3" />
+                                      <span>Queue #{queuePos + 1}</span>
+                                    </div>
+                                  ) : (
+                                    <div className="flex items-center gap-1 text-xs text-muted-foreground bg-muted px-2 py-1 rounded">
+                                      <Users className="w-3 h-3" />
+                                      <span>Queue #1</span>
+                                    </div>
+                                  );
+                                })()}
                               </div>
                             ) : (
                               <div className="flex items-center gap-2 text-sm bg-primary/10 text-primary px-3 py-1.5 rounded-md w-fit">
