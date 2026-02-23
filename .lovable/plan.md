@@ -1,29 +1,30 @@
 
-## Fix Dark Mode Input Visibility
 
-### Problem
-In dark mode, input fields on the Login and Reset Password pages have hardcoded `bg-white` backgrounds. Since dark mode sets text color to white/light, typing into these white-background inputs makes the text invisible (white on white).
+## Remove Hostel Block Selection from Student Forms
 
-### Solution
-Replace all hardcoded `bg-white` classes with theme-aware alternatives across the affected files.
+### Overview
+Instead of asking students to pick their hostel block every time they submit a form, the app will automatically use the hostel block they chose during account registration (stored in their profile).
 
-### Changes
+### What Changes
 
-**1. `src/pages/Login.tsx`**
-- Replace all `className="bg-white h-11"` on Input components with `className="bg-background h-11"`
-- Replace `<SelectTrigger className="bg-white h-11">` with `className="bg-background h-11"`
-- Replace all `bg-white/95` on Card components with `bg-card/95` (so cards adapt to dark mode too)
+The hostel block dropdown will be removed from all 4 student forms:
 
-**2. `src/pages/ResetPassword.tsx`**
-- Replace `className="bg-white h-11"` on the two password Input fields with `className="bg-background h-11"`
-- Replace `bg-white/95` on Card components with `bg-card/95`
+1. **CleaningRequestForm.tsx** -- Remove the hostel block Select dropdown from the grid. The form already initializes `hostelBlock` from `profile?.hostel_block`.
 
-**3. `src/pages/About.tsx`**
-- Replace `bg-white/95` on the Card with `bg-card/95`
+2. **ApplianceComplaintForm.tsx** -- Same removal. Already initializes from profile.
 
-### What stays the same
-- The `bg-white/10` classes on header buttons are fine -- those are translucent overlays on the maroon header, not input backgrounds
-- The base Input/Textarea/Select components already use `bg-background` by default; the issue is only where individual pages override with `bg-white`
+3. **StoreOrderForm.tsx** -- Remove the hostel block Select from the cart sidebar. Already initializes from profile.
 
-### Result
-All form inputs and cards will use theme-aware CSS variables, so text will be visible in both light and dark modes.
+4. **MedicineRequestForm.tsx** -- Remove the hostel block Select. Already initializes from profile.
+
+### Technical Details
+
+In each file:
+- Remove the `hostelBlocks` array constant (no longer needed)
+- Remove the `<div className="input-group">` block containing the hostel block `<Select>`
+- Remove the `Select`-related imports if no other Select remains in the file
+- The `formData.hostelBlock` state field stays as-is since it is already pre-filled from `profile?.hostel_block` and is used when submitting
+- Adjust grid layouts where needed (e.g., if 2-column grid has an odd number of fields after removal)
+
+No database or backend changes are needed -- the hostel block value still gets submitted with each request, it just comes from the profile automatically.
+
