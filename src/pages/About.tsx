@@ -58,7 +58,7 @@ export default function About() {
         {/* About Section */}
         <section className="geometric-bg py-12">
           <div className="container mx-auto px-4">
-            <Card className="bg-white/95 backdrop-blur border-0 shadow-xl">
+            <Card className="bg-card/95 backdrop-blur border-0 shadow-xl">
               <CardContent className="pt-8 pb-8">
                 <h1 className="text-2xl md:text-3xl font-bold text-nmims-maroon text-center mb-8">
                   About Us
