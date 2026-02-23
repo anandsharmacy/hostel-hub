@@ -105,7 +105,7 @@ export default function ResetPassword() {
     return (
       <div className="min-h-screen flex flex-col">
         <main className="flex-1 geometric-bg flex flex-col items-center justify-center px-4 py-12">
-          <Card className="w-full max-w-md bg-white/95 backdrop-blur border-0 shadow-xl">
+          <Card className="w-full max-w-md bg-card/95 backdrop-blur border-0 shadow-xl">
             <CardHeader className="pb-4 text-center">
               <div className="flex justify-center mb-3">
                 <KeyRound className="w-8 h-8 text-nmims-maroon" />
@@ -150,7 +150,7 @@ export default function ResetPassword() {
 
       {/* Main Content */}
       <main className="flex-1 geometric-bg flex flex-col items-center justify-center px-4 py-12">
-        <Card className="w-full max-w-md bg-white/95 backdrop-blur border-0 shadow-xl animate-scale-in">
+        <Card className="w-full max-w-md bg-card/95 backdrop-blur border-0 shadow-xl animate-scale-in">
           <CardHeader className="pb-4 text-center">
             <div className="flex justify-center mb-3">
               {isSuccess ? (
@@ -180,7 +180,7 @@ export default function ResetPassword() {
                   placeholder="Enter new password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="bg-white h-11"
+                  className="bg-background h-11"
                   autoComplete="new-password"
                 />
               </div>
@@ -194,7 +194,7 @@ export default function ResetPassword() {
                   placeholder="Confirm new password"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="bg-white h-11"
+                  className="bg-background h-11"
                   autoComplete="new-password"
                 />
               </div>

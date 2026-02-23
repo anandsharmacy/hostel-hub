@@ -279,7 +279,7 @@ export default function Login() {
             </div>
           </>
         ) : currentView === 'superuser' ? (
-          <Card className="w-full max-w-md bg-white/95 backdrop-blur border-0 shadow-xl animate-scale-in">
+          <Card className="w-full max-w-md bg-card/95 backdrop-blur border-0 shadow-xl animate-scale-in">
             <CardHeader className="pb-4 text-center relative">
               <button
                 onClick={() => setCurrentView('home')}
@@ -307,7 +307,7 @@ export default function Login() {
                     id="superEmail"
                     type="email"
                     placeholder="Enter super user email"
-                    className="bg-white h-11"
+                    className="bg-background h-11"
                     autoComplete="email"
                     {...registerSuper('email')}
                   />
@@ -323,7 +323,7 @@ export default function Login() {
                     id="superPassword"
                     type="password"
                     placeholder="Enter your password"
-                    className="bg-white h-11"
+                    className="bg-background h-11"
                     autoComplete="current-password"
                     {...registerSuper('password')}
                   />
@@ -350,7 +350,7 @@ export default function Login() {
             </CardContent>
           </Card>
         ) : currentView === 'signin' ? (
-          <Card className="w-full max-w-md bg-white/95 backdrop-blur border-0 shadow-xl animate-scale-in">
+          <Card className="w-full max-w-md bg-card/95 backdrop-blur border-0 shadow-xl animate-scale-in">
             <CardHeader className="pb-4 text-center relative">
               <button
                 onClick={() => setCurrentView('home')}
@@ -378,7 +378,7 @@ export default function Login() {
                     id="email"
                     type="email"
                     placeholder="Enter your email"
-                    className="bg-white h-11"
+                    className="bg-background h-11"
                     autoComplete="email"
                     {...registerLogin('email')}
                   />
@@ -394,7 +394,7 @@ export default function Login() {
                     id="password"
                     type="password"
                     placeholder="Enter your password"
-                    className="bg-white h-11"
+                    className="bg-background h-11"
                     autoComplete="current-password"
                     {...registerLogin('password')}
                   />
@@ -445,7 +445,7 @@ export default function Login() {
             </CardContent>
           </Card>
         ) : currentView === 'forgot-password' ? (
-          <Card className="w-full max-w-md bg-white/95 backdrop-blur border-0 shadow-xl animate-scale-in">
+          <Card className="w-full max-w-md bg-card/95 backdrop-blur border-0 shadow-xl animate-scale-in">
             <CardHeader className="pb-4 text-center relative">
               <button
                 onClick={() => setCurrentView('signin')}
@@ -474,7 +474,7 @@ export default function Login() {
                   placeholder="Enter your email"
                   value={resetEmail}
                   onChange={(e) => setResetEmail(e.target.value)}
-                  className="bg-white h-11"
+                   className="bg-background h-11"
                   autoComplete="email"
                 />
               </div>
@@ -524,7 +524,7 @@ export default function Login() {
             </CardContent>
           </Card>
         ) : (
-          <Card className="w-full max-w-md bg-white/95 backdrop-blur border-0 shadow-xl animate-scale-in">
+          <Card className="w-full max-w-md bg-card/95 backdrop-blur border-0 shadow-xl animate-scale-in">
             <CardHeader className="pb-4 text-center relative">
               <button
                 onClick={() => setCurrentView('home')}
@@ -552,7 +552,7 @@ export default function Login() {
                     id="fullName"
                     type="text"
                     placeholder="Enter your full name"
-                    className="bg-white h-11"
+                    className="bg-background h-11"
                     autoComplete="name"
                     {...registerSignup('fullName')}
                   />
@@ -569,7 +569,7 @@ export default function Login() {
                     id="signupEmail"
                     type="email"
                     placeholder="Enter your email"
-                    className="bg-white h-11"
+                    className="bg-background h-11"
                     autoComplete="email"
                     {...registerSignup('email')}
                   />
@@ -586,7 +586,7 @@ export default function Login() {
                     id="signupPassword"
                     type="password"
                     placeholder="Create a password"
-                    className="bg-white h-11"
+                    className="bg-background h-11"
                     autoComplete="new-password"
                     {...registerSignup('password')}
                   />
@@ -604,7 +604,7 @@ export default function Login() {
                     control={controlSignup}
                     render={({ field }) => (
                       <Select value={field.value} onValueChange={field.onChange}>
-                        <SelectTrigger className="bg-white h-11">
+                        <SelectTrigger className="bg-background h-11">
                           <SelectValue placeholder="Select your role" />
                         </SelectTrigger>
                         <SelectContent>
@@ -638,7 +638,7 @@ export default function Login() {
                         id="sapId"
                         type="text"
                         placeholder="Enter your SAP ID"
-                        className="bg-white h-11"
+                    className="bg-background h-11"
                         {...registerSignup('sapId')}
                       />
                       {signupErrors.sapId && (
@@ -655,8 +655,8 @@ export default function Login() {
                           id="roomNumber"
                           type="text"
                           placeholder="e.g. 304"
-                          className="bg-white h-11"
-                          {...registerSignup('roomNumber')}
+                          className="bg-background h-11"
+                           {...registerSignup('roomNumber')}
                         />
                         {signupErrors.roomNumber && (
                           <p className="text-sm text-destructive">{signupErrors.roomNumber.message}</p>
@@ -671,10 +671,10 @@ export default function Login() {
                           control={controlSignup}
                           render={({ field }) => (
                             <Select value={field.value || ''} onValueChange={field.onChange}>
-                              <SelectTrigger className="bg-white h-11 z-50">
+                              <SelectTrigger className="bg-background h-11 z-50">
                                 <SelectValue placeholder="Select hostel block" />
                               </SelectTrigger>
-                              <SelectContent className="bg-white z-50">
+                              <SelectContent className="bg-popover z-50">
                                 <SelectItem value="Hostel B1">Hostel B1</SelectItem>
                                 <SelectItem value="Hostel B2">Hostel B2</SelectItem>
                                 <SelectItem value="Hostel G1">Hostel G1</SelectItem>
