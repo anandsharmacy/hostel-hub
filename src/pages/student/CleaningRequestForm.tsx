@@ -150,13 +150,16 @@ export function CleaningRequestForm() {
         expectedArrivalEnd: expectedArrival.end,
         notes: formData.notes,
       });
-      toast.success('Cleaning request submitted successfully!');
+      const arrivalStart = expectedArrival.start;
+      const arrivalEnd = expectedArrival.end;
 
       setFormData({
         ...formData,
         preferredDate: '',
         notes: '',
       });
+
+      toast.success(`Request submitted! Staff may arrive between ${arrivalStart} – ${arrivalEnd}`);
       setStartHour(10);
       setEndHour(14);
     } catch (error) {
