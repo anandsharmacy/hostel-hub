@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Slider } from '@/components/ui/slider';
+import { FlipTimePicker } from '@/components/student/FlipTimePicker';
 import { Sparkles, Send, Clock, Info, AlertTriangle, Users } from 'lucide-react';
 import { toast } from 'sonner';
 import { Alert, AlertDescription } from '@/components/ui/alert';
@@ -38,7 +38,8 @@ export function CleaningRequestForm() {
   const { profile } = useAuth();
   const { addCleaningRequest } = useData();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [availabilityRange, setAvailabilityRange] = useState<number[]>([10, 14]);
+  const [startHour, setStartHour] = useState(10);
+  const [endHour, setEndHour] = useState(14);
   const [queueCount, setQueueCount] = useState(0);
   const [isLoadingQueue, setIsLoadingQueue] = useState(false);
 
@@ -50,8 +51,8 @@ export function CleaningRequestForm() {
     notes: '',
   });
 
-  const availabilityStart = formatHour(availabilityRange[0]);
-  const availabilityEnd = formatHour(availabilityRange[1]);
+  const availabilityStart = formatHour(startHour);
+  const availabilityEnd = formatHour(endHour);
 
   // Fetch overlapping bookings count
   const fetchQueueCount = useCallback(async () => {
@@ -76,8 +77,8 @@ export function CleaningRequestForm() {
         return;
       }
 
-      const studentStart = availabilityRange[0];
-      const studentEnd = availabilityRange[1];
+      const studentStart = startHour;
+      const studentEnd = endHour;
 
       const overlapping = (data || []).filter((row) => {
         const rowStart = parseHourFromTimeString(row.availability_start!);
@@ -93,7 +94,7 @@ export function CleaningRequestForm() {
     } finally {
       setIsLoadingQueue(false);
     }
-  }, [formData.preferredDate, availabilityRange]);
+  }, [formData.preferredDate, startHour, endHour]);
 
   // Debounced fetch
   useEffect(() => {
@@ -105,8 +106,8 @@ export function CleaningRequestForm() {
 
   // Calculate expected arrival based on queue position
   const expectedArrival = useMemo(() => {
-    const start = availabilityRange[0];
-    const end = availabilityRange[1];
+    const start = startHour;
+    const end = endHour;
     const arrivalStart = start + queueCount * 0.5;
     const arrivalEnd = arrivalStart + 0.5;
 
@@ -119,7 +120,7 @@ export function CleaningRequestForm() {
       end: formatHour(arrivalEnd),
       overflow: false,
     };
-  }, [availabilityRange, queueCount]);
+  }, [startHour, endHour, queueCount]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -156,7 +157,8 @@ export function CleaningRequestForm() {
         preferredDate: '',
         notes: '',
       });
-      setAvailabilityRange([10, 14]);
+      setStartHour(10);
+      setEndHour(14);
     } catch (error) {
       console.error('Error submitting cleaning request:', error);
       toast.error('Failed to submit request. Please try again.');
@@ -232,26 +234,33 @@ export function CleaningRequestForm() {
             </div>
           </div>
 
-          {/* Availability Slider */}
           <div className="space-y-4">
             <Label>Room Availability Window *</Label>
             <p className="text-sm text-muted-foreground">
-              Select the hours you'll be available in your room (minimum 2 hours)
+              Select the start and end hours you'll be available (minimum 2 hours apart)
             </p>
-            <div className="px-2 pt-2 pb-1">
-              <Slider
-                value={availabilityRange}
-                onValueChange={setAvailabilityRange}
+            <div className="flex flex-wrap items-end justify-center gap-8 py-4">
+              <FlipTimePicker
+                label="Start"
+                hour={startHour}
+                onChange={(h) => {
+                  setStartHour(h);
+                  if (endHour - h < 2) setEndHour(Math.min(h + 2, 17));
+                }}
                 min={8}
-                max={17}
-                step={1}
-                minStepsBetweenThumbs={2}
+                max={15}
               />
-            </div>
-            <div className="flex justify-between text-xs text-muted-foreground">
-              <span>8 AM</span>
-              <span>12 PM</span>
-              <span>5 PM</span>
+              <span className="text-xl font-bold text-muted-foreground pb-6">to</span>
+              <FlipTimePicker
+                label="End"
+                hour={endHour}
+                onChange={(h) => {
+                  setEndHour(h);
+                  if (h - startHour < 2) setStartHour(Math.max(h - 2, 8));
+                }}
+                min={10}
+                max={17}
+              />
             </div>
             <div className="text-center">
               <span className="inline-flex items-center gap-2 px-4 py-2 bg-muted rounded-lg text-sm font-medium">
