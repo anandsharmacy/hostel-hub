@@ -6,7 +6,6 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import { LogIn, UserPlus, ArrowLeft, ShieldCheck, KeyRound } from 'lucide-react';
 import { toast } from 'sonner';
@@ -661,37 +660,17 @@ export default function Login() {
                           name="hostelBlock"
                           control={controlSignup}
                           render={({ field }) => (
-                            <ToggleGroup
-                              type="single"
-                              value={field.value || ''}
-                              onValueChange={(val) => { if (val) field.onChange(val); }}
-                              className="justify-start gap-2"
-                            >
-                              <ToggleGroupItem
-                                value="Hostel B1"
-                                className="border px-4 h-10 rounded-md data-[state=on]:bg-nmims-maroon data-[state=on]:text-white"
-                              >
-                                B1
-                              </ToggleGroupItem>
-                              <ToggleGroupItem
-                                value="Hostel B2"
-                                className="border px-4 h-10 rounded-md data-[state=on]:bg-nmims-maroon data-[state=on]:text-white"
-                              >
-                                B2
-                              </ToggleGroupItem>
-                              <ToggleGroupItem
-                                value="Hostel G1"
-                                className="border px-4 h-10 rounded-md data-[state=on]:bg-nmims-maroon data-[state=on]:text-white"
-                              >
-                                G1
-                              </ToggleGroupItem>
-                              <ToggleGroupItem
-                                value="Hostel G2"
-                                className="border px-4 h-10 rounded-md data-[state=on]:bg-nmims-maroon data-[state=on]:text-white"
-                              >
-                                G2
-                              </ToggleGroupItem>
-                            </ToggleGroup>
+                            <Select value={field.value || ''} onValueChange={field.onChange}>
+                              <SelectTrigger className="bg-white h-11 z-50">
+                                <SelectValue placeholder="Select hostel block" />
+                              </SelectTrigger>
+                              <SelectContent className="bg-white z-50">
+                                <SelectItem value="Hostel B1">Hostel B1</SelectItem>
+                                <SelectItem value="Hostel B2">Hostel B2</SelectItem>
+                                <SelectItem value="Hostel G1">Hostel G1</SelectItem>
+                                <SelectItem value="Hostel G2">Hostel G2</SelectItem>
+                              </SelectContent>
+                            </Select>
                           )}
                         />
                         {signupErrors.hostelBlock && (
