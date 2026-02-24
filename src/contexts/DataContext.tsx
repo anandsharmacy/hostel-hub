@@ -29,6 +29,7 @@ export interface ApplianceComplaint {
   hostelBlock: string;
   appliance: string;
   description: string;
+  imageUrl: string | null;
   status: RequestStatus;
   createdAt: string;
 }
@@ -109,6 +110,7 @@ function mapApplianceComplaint(row: any): ApplianceComplaint {
     roomNumber: row.room_number,
     appliance: row.appliance,
     description: row.description,
+    imageUrl: row.image_url || null,
     status: row.status as RequestStatus,
     createdAt: row.created_at,
   };
@@ -271,8 +273,9 @@ export function DataProvider({ children }: { children: ReactNode }) {
       room_number: complaint.roomNumber,
       appliance: complaint.appliance,
       description: complaint.description,
+      image_url: complaint.imageUrl,
       status: 'pending',
-    });
+    } as any);
 
     if (error) throw error;
     await refetchData();

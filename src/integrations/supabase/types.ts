@@ -54,6 +54,7 @@ export type Database = {
           description: string
           hostel_block: string
           id: string
+          image_url: string | null
           room_number: string
           status: string
           student_name: string
@@ -66,6 +67,7 @@ export type Database = {
           description: string
           hostel_block: string
           id?: string
+          image_url?: string | null
           room_number: string
           status?: string
           student_name: string
@@ -78,6 +80,7 @@ export type Database = {
           description?: string
           hostel_block?: string
           id?: string
+          image_url?: string | null
           room_number?: string
           status?: string
           student_name?: string
