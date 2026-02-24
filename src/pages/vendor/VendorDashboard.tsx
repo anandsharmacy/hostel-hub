@@ -7,13 +7,14 @@ import { StatusBadge } from '@/components/StatusBadge';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useData, RequestStatus } from '@/contexts/DataContext';
-import { ShoppingBag, Package, Clock, CheckCircle, MapPin, Receipt, Search, X, Pill, FileText, ExternalLink, Boxes, BarChart3, Megaphone } from 'lucide-react';
+import { ShoppingBag, Package, Clock, CheckCircle, MapPin, Receipt, Search, X, Pill, FileText, ExternalLink, Boxes, BarChart3, Megaphone, Bell } from 'lucide-react';
 import { format } from 'date-fns';
 import { toast } from 'sonner';
 import { InventoryManagement } from './InventoryManagement';
 import { AnalyticsDashboard } from './AnalyticsDashboard';
 import { AnnouncementManager } from './AnnouncementManager';
 import { supabase } from '@/integrations/supabase/client';
+import { NotificationsSection } from '@/components/shared/NotificationsSection';
 
 export default function VendorDashboard() {
   const { storeOrders, medicineRequests, updateStoreOrderStatus, updateMedicineRequestStatus, isLoading } = useData();
@@ -99,7 +100,7 @@ export default function VendorDashboard() {
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid grid-cols-5 w-full max-w-2xl">
+          <TabsList className="grid grid-cols-6 w-full max-w-3xl">
             <TabsTrigger value="store" className="flex items-center gap-2">
               <ShoppingBag className="w-4 h-4" />
               <span className="hidden sm:inline">Store</span>
@@ -129,6 +130,10 @@ export default function VendorDashboard() {
             <TabsTrigger value="announcements" className="flex items-center gap-2">
               <Megaphone className="w-4 h-4" />
               <span className="hidden sm:inline">Announce</span>
+            </TabsTrigger>
+            <TabsTrigger value="notifications" className="flex items-center gap-2">
+              <Bell className="w-4 h-4" />
+              <span className="hidden sm:inline">Notifications</span>
             </TabsTrigger>
           </TabsList>
 
@@ -513,6 +518,11 @@ export default function VendorDashboard() {
           {/* Announcements Tab */}
           <TabsContent value="announcements" className="space-y-6">
             <AnnouncementManager />
+          </TabsContent>
+
+          {/* Notifications Tab */}
+          <TabsContent value="notifications" className="space-y-6">
+            <NotificationsSection role="vendors" />
           </TabsContent>
         </Tabs>
       </div>
