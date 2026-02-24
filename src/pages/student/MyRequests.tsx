@@ -2,7 +2,7 @@ import { useData } from '@/contexts/DataContext';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { StatusBadge } from '@/components/StatusBadge';
 import LoadingSpinner from '@/components/LoadingSpinner';
-import { Sparkles, Wrench, ShoppingBag, Calendar, MapPin, Receipt, Pill, FileText, ExternalLink, Clock } from 'lucide-react';
+import { Sparkles, Wrench, ShoppingBag, Calendar, MapPin, Receipt, Pill, FileText, ExternalLink, Clock, ImageIcon } from 'lucide-react';
 import { format } from 'date-fns';
 import { Button } from '@/components/ui/button';
 
@@ -120,6 +120,15 @@ export function MyRequests() {
                       <span>{complaint.hostelBlock}, Room {complaint.roomNumber}</span>
                     </div>
                     <p className="text-sm text-muted-foreground">{complaint.description}</p>
+                    {complaint.imageUrl && (
+                      <a href={complaint.imageUrl} target="_blank" rel="noopener noreferrer" className="block mt-2">
+                        <img
+                          src={complaint.imageUrl}
+                          alt="Appliance issue"
+                          className="w-24 h-24 object-cover rounded-lg border border-border hover:opacity-80 transition-opacity"
+                        />
+                      </a>
+                    )}
                   </div>
                   <StatusBadge status={complaint.status} />
                 </div>
