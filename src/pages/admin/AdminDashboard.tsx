@@ -6,9 +6,10 @@ import { Button } from '@/components/ui/button';
 import { StatusBadge } from '@/components/StatusBadge';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import { useData, RequestStatus } from '@/contexts/DataContext';
-import { Sparkles, Wrench, Calendar, MapPin, Clock, CheckCircle, Settings, Users } from 'lucide-react';
+import { Sparkles, Wrench, Calendar, MapPin, Clock, CheckCircle, Settings, Users, Megaphone } from 'lucide-react';
 import { format } from 'date-fns';
 import { BlockedSlotsManager } from '@/components/admin/BlockedSlotsManager';
+import { AdminAnnouncementManager } from '@/components/admin/AdminAnnouncementManager';
 import { toast } from 'sonner';
 
 export default function AdminDashboard() {
@@ -127,7 +128,7 @@ export default function AdminDashboard() {
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid grid-cols-3 w-full max-w-xl h-auto gap-2 bg-transparent p-0">
+          <TabsList className="grid grid-cols-4 w-full max-w-2xl h-auto gap-2 bg-transparent p-0">
             <TabsTrigger
               value="cleaning"
               className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground flex items-center gap-2 py-3 px-4 rounded-lg border border-border bg-card"
@@ -151,6 +152,14 @@ export default function AdminDashboard() {
               <Settings className="w-4 h-4" />
               <span className="hidden sm:inline">Slot Settings</span>
               <span className="sm:hidden">Settings</span>
+            </TabsTrigger>
+            <TabsTrigger
+              value="announcements"
+              className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground flex items-center gap-2 py-3 px-4 rounded-lg border border-border bg-card"
+            >
+              <Megaphone className="w-4 h-4" />
+              <span className="hidden sm:inline">Announcements</span>
+              <span className="sm:hidden">Announce</span>
             </TabsTrigger>
           </TabsList>
 
@@ -325,6 +334,10 @@ export default function AdminDashboard() {
 
           <TabsContent value="settings" className="animate-slide-up">
             <BlockedSlotsManager />
+          </TabsContent>
+
+          <TabsContent value="announcements" className="animate-slide-up">
+            <AdminAnnouncementManager />
           </TabsContent>
         </Tabs>
       </div>

@@ -24,8 +24,9 @@ export function AnnouncementsBanner() {
     const fetchAnnouncements = async () => {
       const { data, error } = await supabase
         .from('announcements')
-        .select('id, title, message, created_at, expires_at')
+        .select('id, title, message, created_at, expires_at, target_audience')
         .eq('is_active', true)
+        .in('target_audience', ['students', 'both'])
         .order('created_at', { ascending: false });
 
       if (!error && data) {
