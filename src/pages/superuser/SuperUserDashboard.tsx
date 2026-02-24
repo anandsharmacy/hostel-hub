@@ -46,6 +46,9 @@ export default function SuperUserDashboard() {
 
   const handleApprove = async (request: ApprovalRequest) => {
     try {
+      // Get current user for audit trail
+      const { data: { user: currentUser } } = await supabase.auth.getUser();
+
       // Update user_roles to set approved = true
       const { error: roleError } = await supabase
         .from('user_roles')
@@ -54,12 +57,13 @@ export default function SuperUserDashboard() {
 
       if (roleError) throw roleError;
 
-      // Update approval_requests status
+      // Update approval_requests status with audit trail
       const { error: requestError } = await supabase
         .from('approval_requests')
         .update({ 
           status: 'approved',
           approved_at: new Date().toISOString(),
+          approved_by: currentUser?.id,
         })
         .eq('id', request.id);
 
