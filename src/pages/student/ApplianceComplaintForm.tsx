@@ -1,13 +1,14 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useData } from '@/contexts/DataContext';
+import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Wrench, Send } from 'lucide-react';
+import { Wrench, Send, ImagePlus, X } from 'lucide-react';
 import { toast } from 'sonner';
 
 
@@ -25,6 +26,10 @@ export function ApplianceComplaintForm() {
   const { addApplianceComplaint } = useData();
   const [isSubmitting, setIsSubmitting] = useState(false);
   
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   const [formData, setFormData] = useState({
     studentName: profile?.full_name || '',
     hostelBlock: profile?.hostel_block || '',
@@ -32,6 +37,33 @@ export function ApplianceComplaintForm() {
     appliance: '',
     description: '',
   });
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error('Image must be less than 5MB');
+      return;
+    }
+    setImageFile(file);
+    setImagePreview(URL.createObjectURL(file));
+  };
+
+  const removeImage = () => {
+    setImageFile(null);
+    setImagePreview(null);
+    if (fileInputRef.current) fileInputRef.current.value = '';
+  };
+
+  const uploadImage = async (userId: string): Promise<string | null> => {
+    if (!imageFile) return null;
+    const ext = imageFile.name.split('.').pop();
+    const path = `${userId}/${Date.now()}.${ext}`;
+    const { error } = await supabase.storage.from('appliance-images').upload(path, imageFile);
+    if (error) throw error;
+    const { data: urlData } = supabase.storage.from('appliance-images').getPublicUrl(path);
+    return urlData.publicUrl;
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -44,7 +76,8 @@ export function ApplianceComplaintForm() {
     setIsSubmitting(true);
     
     try {
-      await addApplianceComplaint(formData);
+      const imageUrl = await uploadImage(profile?.user_id || '');
+      await addApplianceComplaint({ ...formData, imageUrl });
       toast.success('Complaint submitted successfully!');
       
       setFormData({
@@ -52,6 +85,7 @@ export function ApplianceComplaintForm() {
         appliance: '',
         description: '',
       });
+      removeImage();
     } catch (error) {
       console.error('Error submitting complaint:', error);
       toast.error('Failed to submit complaint. Please try again.');
@@ -128,6 +162,41 @@ export function ApplianceComplaintForm() {
               placeholder="Describe the issue in detail..."
               rows={4}
             />
+          </div>
+
+          <div className="input-group">
+            <Label>Upload Image (optional)</Label>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              onChange={handleImageChange}
+              className="hidden"
+            />
+            {imagePreview ? (
+              <div className="relative w-fit">
+                <img src={imagePreview} alt="Preview" className="w-40 h-40 object-cover rounded-lg border border-border" />
+                <Button
+                  type="button"
+                  variant="destructive"
+                  size="icon"
+                  className="absolute -top-2 -right-2 h-6 w-6"
+                  onClick={removeImage}
+                >
+                  <X className="w-3 h-3" />
+                </Button>
+              </div>
+            ) : (
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => fileInputRef.current?.click()}
+                className="flex items-center gap-2"
+              >
+                <ImagePlus className="w-4 h-4" />
+                Add Photo
+              </Button>
+            )}
           </div>
           
           <Button type="submit" className="w-full md:w-auto" disabled={isSubmitting}>
