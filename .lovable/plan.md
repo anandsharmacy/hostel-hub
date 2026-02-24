@@ -1,155 +1,102 @@
 
-
-## AI Chatbot with Voice Commands and Action Execution
+## Add Announcements to Admin Dashboard with Target Audience Selection
 
 ### Overview
-Add a floating AI chatbot to all dashboard pages that can:
-- Answer questions about hostel services based on the user's role
-- Execute real actions via voice or text: book cleaning requests, place store orders, file appliance complaints, and request medicine
-- Use the browser's built-in Web Speech API for voice input (free, no setup required)
-- Stream AI responses for a real-time feel
+Add an "Announcements" tab to the Administration Dashboard, allowing admins to create and manage announcements targeted at either **Students**, **Vendors**, or **Both**. The existing vendor announcement system will also be updated to respect the new audience targeting.
 
-### How It Works
+### Database Changes
 
-1. A floating chat button appears in the bottom-right corner of every dashboard
-2. Clicking it opens a chat panel where users can type or tap a microphone button to speak
-3. The AI understands natural language like:
-   - "Book a room cleaning for tomorrow between 10 AM and 2 PM"
-   - "Order 2 notebooks and 1 pen from the store"
-   - "My AC is not working, please file a complaint"
-   - "I need paracetamol"
-4. The AI uses tool-calling to extract structured data from the request, then executes the action via the backend
-5. The AI confirms the action with details (e.g., expected arrival time for cleaning)
+**1. Add `target_audience` column to `announcements` table**
+- New column: `target_audience` (text, NOT NULL, default `'students'`)
+- Valid values: `'students'`, `'vendors'`, `'both'`
 
-### Architecture
+**2. Rename `vendor_id` to `created_by`** -- Actually, keep `vendor_id` as-is for backward compatibility, but make it nullable so admins (who aren't vendors) can also create announcements. Add a new `created_by_role` column (text) to distinguish who created it.
 
-**Backend -- 2 Edge Functions:**
+Alternatively (simpler approach): Keep `vendor_id` but allow admins to use it too -- just store the admin's user ID in `vendor_id`. This avoids schema complexity.
 
-1. **`supabase/functions/chat/index.ts`** -- Conversational AI
-   - Uses Lovable AI Gateway with `google/gemini-3-flash-preview` model
-   - Role-specific system prompts (student, admin, vendor, super_user)
-   - Tool-calling for action execution with these tools:
-     - `book_cleaning` -- params: preferred_date, start_hour, end_hour, notes
-     - `order_store_items` -- params: items (array of name + quantity), category
-     - `file_appliance_complaint` -- params: appliance, description
-     - `request_medicine` -- params: medicine_name, notes
-     - `check_my_requests` -- returns summary of recent requests
-   - When a tool call is detected, the function executes the database operation using the user's auth token (respecting RLS) and returns the result to the AI for a natural confirmation message
-   - Streams the final response back to the client
-   - Handles 429/402 rate limit errors
+**3. Update RLS Policies**
+- Allow admins to INSERT announcements (with check for admin role)
+- Allow admins to UPDATE their own announcements
+- Allow admins to DELETE their own announcements
+- Update student SELECT policy to only show announcements where `target_audience` is `'students'` or `'both'`
+- Add vendor SELECT policy for announcements where `target_audience` is `'vendors'` or `'both'`
 
-2. **`supabase/functions/chat-action/index.ts`** -- Action Executor
-   - Receives tool call parameters + user auth token
-   - Executes the actual database inserts (cleaning_requests, store_orders, appliance_complaints, medicine_requests)
-   - Computes expected arrival time for cleaning (same queue logic as the form)
-   - Fetches available inventory items for store orders
-   - Returns structured results back to the chat function
+### Frontend Changes
 
-**Frontend -- 3 New Files:**
+**1. New Admin Announcement Manager Component**
+- Create `src/components/admin/AdminAnnouncementManager.tsx`
+- Reuse the same UI pattern as the existing `AnnouncementManager` from the vendor dashboard
+- Add a **Target Audience** selector (radio group or select dropdown) with options: "Students", "Vendors", "Both"
+- Admin sees all announcements they created, with audience badges
+- Full CRUD: create, edit, toggle active/inactive, delete
 
-1. **`src/components/chat/AIChatBot.tsx`** -- Main floating chat component
-   - Floating action button with message icon
-   - Expandable chat panel with message history
-   - Text input field + microphone button
-   - Markdown rendering for AI responses
-   - Typing/streaming indicator
-   - Role-aware welcome message
-   - Action confirmation cards (showing what was booked/ordered)
+**2. Update Admin Dashboard (`src/pages/admin/AdminDashboard.tsx`)**
+- Add a 4th tab: "Announcements" with a Megaphone icon
+- Render the new `AdminAnnouncementManager` component in the tab content
 
-2. **`src/components/chat/VoiceInput.tsx`** -- Voice input component
-   - Uses the Web Speech API (`webkitSpeechRecognition` / `SpeechRecognition`)
-   - Microphone button with visual feedback (pulsing animation when listening)
-   - Auto-sends the transcribed text to the chat
-   - Graceful fallback message if browser doesn't support speech recognition
+**3. Update Student Announcements Banner (`src/components/student/AnnouncementsBanner.tsx`)**
+- Add filter for `target_audience` in the query: fetch where `target_audience` is `'students'` or `'both'`
 
-3. **`src/lib/chatService.ts`** -- Streaming client helper
-   - SSE parser for token-by-token rendering
-   - Error handling for rate limits (429) and payment (402)
-
-**Modified File:**
-
-4. **`src/components/layout/DashboardLayout.tsx`** -- Add `<AIChatBot />` so it appears on all dashboard pages
-
-### Tool-Calling Flow (for actions)
-
-```text
-User says: "Book cleaning for Feb 25, available 10 AM to 2 PM"
-                |
-                v
-    Edge function sends to AI with tools defined
-                |
-                v
-    AI returns tool_call: book_cleaning({
-      preferred_date: "2025-02-25",
-      start_hour: 10,
-      end_hour: 14,
-      notes: ""
-    })
-                |
-                v
-    Edge function executes: INSERT into cleaning_requests
-    + computes queue position and expected arrival
-                |
-                v
-    Returns result to AI: "Cleaning booked. Queue position: 3.
-    Expected arrival: 11:30 AM - 12:00 PM"
-                |
-                v
-    AI generates friendly confirmation message
-    streamed back to user
-```
-
-### Voice Input Flow
-
-```text
-User taps microphone button
-        |
-        v
-Browser requests mic permission (first time only)
-        |
-        v
-Speech Recognition starts listening
-(pulsing animation on mic button)
-        |
-        v
-User speaks: "Order two notebooks"
-        |
-        v
-Browser transcribes to text
-        |
-        v
-Text auto-populates chat input and sends
-        |
-        v
-Normal chat flow continues (AI processes, executes action)
-```
-
-### Role-Specific Behavior
-
-| Role | Available Actions | Welcome Message |
-|------|-------------------|-----------------|
-| Student | Book cleaning, order items, file complaints, request medicine, check requests | "Hi! I can help you book cleaning, order from the store, or file complaints. Try speaking or typing!" |
-| Admin | Check all requests, view summaries | "Hello! I can help you review and manage service requests." |
-| Vendor | Check orders, view inventory status | "Hi! I can help you with order management and inventory." |
-| Super User | View system status | "Hello! I can assist with system oversight and user management." |
+**4. Add Vendor Announcements Banner**
+- Show announcements targeted at vendors on the Vendor Dashboard (where `target_audience` is `'vendors'` or `'both'` and created by admins)
 
 ### Technical Details
 
-- **Model**: `google/gemini-3-flash-preview` (fast, good at tool-calling)
-- **Streaming**: SSE-based token streaming for real-time responses
-- **Auth**: User's JWT token is forwarded to the edge function, which creates a Supabase client with that token to respect RLS policies
-- **Voice**: Web Speech API (works in Chrome, Edge, Safari; shows fallback in Firefox)
-- **Chat history**: In-memory only (resets on page refresh, no database storage needed)
-- **No new database tables**: All actions use existing tables with existing RLS policies
-- **No new API keys**: Uses pre-configured `LOVABLE_API_KEY` for AI gateway
+**Migration SQL:**
+```sql
+-- Add target_audience column
+ALTER TABLE public.announcements
+  ADD COLUMN target_audience text NOT NULL DEFAULT 'students';
 
-### Files Summary
+-- Admin INSERT policy
+CREATE POLICY "Admins can insert announcements"
+  ON public.announcements FOR INSERT
+  WITH CHECK (has_role(auth.uid(), 'admin'::app_role));
 
-| File | Action |
-|------|--------|
-| `supabase/functions/chat/index.ts` | Create |
-| `src/lib/chatService.ts` | Create |
-| `src/components/chat/AIChatBot.tsx` | Create |
-| `src/components/chat/VoiceInput.tsx` | Create |
-| `src/components/layout/DashboardLayout.tsx` | Modify (add chatbot) |
+-- Admin UPDATE policy
+CREATE POLICY "Admins can update own announcements"
+  ON public.announcements FOR UPDATE
+  USING (has_role(auth.uid(), 'admin'::app_role) AND auth.uid() = vendor_id);
 
+-- Admin DELETE policy
+CREATE POLICY "Admins can delete own announcements"
+  ON public.announcements FOR DELETE
+  USING (has_role(auth.uid(), 'admin'::app_role) AND auth.uid() = vendor_id);
+
+-- Update student SELECT to filter by audience
+DROP POLICY "Students can view active announcements" ON public.announcements;
+CREATE POLICY "Students can view active announcements"
+  ON public.announcements FOR SELECT
+  USING (
+    has_role(auth.uid(), 'student'::app_role)
+    AND is_active = true
+    AND (expires_at IS NULL OR expires_at > now())
+    AND (target_audience IN ('students', 'both'))
+  );
+
+-- Add vendor SELECT for targeted announcements
+CREATE POLICY "Vendors can view targeted announcements"
+  ON public.announcements FOR SELECT
+  USING (
+    has_role(auth.uid(), 'vendor'::app_role)
+    AND is_active = true
+    AND (expires_at IS NULL OR expires_at > now())
+    AND (target_audience IN ('vendors', 'both'))
+  );
+```
+
+**Admin Announcement Manager** will mirror the vendor's `AnnouncementManager` component with these additions:
+- A target audience selector in the create/edit dialog (radio group: Students / Vendors / Both)
+- Audience badge on each announcement card showing who it targets
+- Stores admin's `auth.uid()` in the `vendor_id` field (reusing the existing column)
+
+**Files to create:**
+- `src/components/admin/AdminAnnouncementManager.tsx`
+
+**Files to modify:**
+- `src/pages/admin/AdminDashboard.tsx` -- add 4th tab
+- `src/components/student/AnnouncementsBanner.tsx` -- filter by target audience
+- `src/pages/vendor/VendorDashboard.tsx` -- add announcements banner for vendor-targeted messages
+
+**Database migration:**
+- One new migration adding the column and updating RLS policies
