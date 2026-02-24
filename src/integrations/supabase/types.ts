@@ -21,6 +21,7 @@ export type Database = {
           id: string
           is_active: boolean
           message: string
+          target_audience: string
           title: string
           updated_at: string
           vendor_id: string
@@ -31,6 +32,7 @@ export type Database = {
           id?: string
           is_active?: boolean
           message: string
+          target_audience?: string
           title: string
           updated_at?: string
           vendor_id: string
@@ -41,6 +43,7 @@ export type Database = {
           id?: string
           is_active?: boolean
           message?: string
+          target_audience?: string
           title?: string
           updated_at?: string
           vendor_id?: string
