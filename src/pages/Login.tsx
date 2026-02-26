@@ -27,6 +27,7 @@ const signupSchema = z.object({
   password: z.string().min(6, 'Password must be at least 6 characters'),
   fullName: z.string().min(2, 'Name must be at least 2 characters').max(100, 'Name is too long'),
   role: z.enum(['student', 'admin', 'vendor']),
+  gender: z.enum(['male', 'female']).optional(),
   sapId: z.string().optional(),
   roomNumber: z.string().optional(),
   hostelBlock: z.string().optional(),
@@ -68,6 +69,7 @@ export default function Login() {
     handleSubmit: handleSubmitSignup,
     control: controlSignup,
     watch,
+    setValue: setSignupValue,
     formState: { errors: signupErrors },
     reset: resetSignupForm
   } = useForm<SignupFormValues>({
@@ -78,6 +80,14 @@ export default function Login() {
   });
 
   const selectedRole = watch('role');
+  const selectedGender = watch('gender');
+
+  // Reset hostel block when gender changes for students
+  useEffect(() => {
+    if (selectedRole === 'student') {
+      setSignupValue('hostelBlock', '');
+    }
+  }, [selectedGender, selectedRole, setSignupValue]);
 
   // Redirect authenticated users to their dashboard
   useEffect(() => {
@@ -628,6 +638,29 @@ export default function Login() {
                   </div>
                 )}
 
+                {/* Gender selector for all roles */}
+                <div className="space-y-2">
+                  <Label className="text-sm font-medium">Gender</Label>
+                  <Controller
+                    name="gender"
+                    control={controlSignup}
+                    render={({ field }) => (
+                      <Select value={field.value || ''} onValueChange={field.onChange}>
+                        <SelectTrigger className="bg-background h-11">
+                          <SelectValue placeholder="Select gender" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="male">Male</SelectItem>
+                          <SelectItem value="female">Female</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    )}
+                  />
+                  {signupErrors.gender && (
+                    <p className="text-sm text-destructive">{signupErrors.gender.message}</p>
+                  )}
+                </div>
+
                 {selectedRole === 'student' && (
                   <>
                     <div className="space-y-2">
@@ -638,7 +671,7 @@ export default function Login() {
                         id="sapId"
                         type="text"
                         placeholder="Enter your SAP ID"
-                    className="bg-background h-11"
+                        className="bg-background h-11"
                         {...registerSignup('sapId')}
                       />
                       {signupErrors.sapId && (
@@ -656,7 +689,7 @@ export default function Login() {
                           type="text"
                           placeholder="e.g. 304"
                           className="bg-background h-11"
-                           {...registerSignup('roomNumber')}
+                          {...registerSignup('roomNumber')}
                         />
                         {signupErrors.roomNumber && (
                           <p className="text-sm text-destructive">{signupErrors.roomNumber.message}</p>
@@ -670,15 +703,27 @@ export default function Login() {
                           name="hostelBlock"
                           control={controlSignup}
                           render={({ field }) => (
-                            <Select value={field.value || ''} onValueChange={field.onChange}>
+                            <Select
+                              value={field.value || ''}
+                              onValueChange={field.onChange}
+                              disabled={!selectedGender}
+                            >
                               <SelectTrigger className="bg-background h-11 z-50">
-                                <SelectValue placeholder="Select hostel block" />
+                                <SelectValue placeholder={selectedGender ? "Select hostel block" : "Select gender first"} />
                               </SelectTrigger>
                               <SelectContent className="bg-popover z-50">
-                                <SelectItem value="Hostel B1">Hostel B1</SelectItem>
-                                <SelectItem value="Hostel B2">Hostel B2</SelectItem>
-                                <SelectItem value="Hostel G1">Hostel G1</SelectItem>
-                                <SelectItem value="Hostel G2">Hostel G2</SelectItem>
+                                {selectedGender === 'male' && (
+                                  <>
+                                    <SelectItem value="Hostel B1">Hostel B1</SelectItem>
+                                    <SelectItem value="Hostel B2">Hostel B2</SelectItem>
+                                  </>
+                                )}
+                                {selectedGender === 'female' && (
+                                  <>
+                                    <SelectItem value="Hostel G1">Hostel G1</SelectItem>
+                                    <SelectItem value="Hostel G2">Hostel G2</SelectItem>
+                                  </>
+                                )}
                               </SelectContent>
                             </Select>
                           )}
