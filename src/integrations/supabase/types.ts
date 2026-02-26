@@ -248,6 +248,104 @@ export type Database = {
         }
         Relationships: []
       }
+      laundry_order_items: {
+        Row: {
+          cloth_type: string
+          id: string
+          is_special: boolean
+          order_id: string
+          quantity: number
+          unit_price: number
+        }
+        Insert: {
+          cloth_type: string
+          id?: string
+          is_special?: boolean
+          order_id: string
+          quantity?: number
+          unit_price?: number
+        }
+        Update: {
+          cloth_type?: string
+          id?: string
+          is_special?: boolean
+          order_id?: string
+          quantity?: number
+          unit_price?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "laundry_order_items_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "laundry_orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      laundry_orders: {
+        Row: {
+          checked_in_at: string
+          checked_out_at: string | null
+          cleaning_type: string
+          contact_number: string
+          hostel_block: string
+          id: string
+          sap_id: string
+          status: string
+          student_name: string
+          total_amount: number
+          user_id: string
+        }
+        Insert: {
+          checked_in_at?: string
+          checked_out_at?: string | null
+          cleaning_type?: string
+          contact_number: string
+          hostel_block: string
+          id?: string
+          sap_id: string
+          status?: string
+          student_name: string
+          total_amount?: number
+          user_id: string
+        }
+        Update: {
+          checked_in_at?: string
+          checked_out_at?: string | null
+          cleaning_type?: string
+          contact_number?: string
+          hostel_block?: string
+          id?: string
+          sap_id?: string
+          status?: string
+          student_name?: string
+          total_amount?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
+      laundry_settings: {
+        Row: {
+          created_at: string
+          id: string
+          revenue_pin: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          revenue_pin: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          revenue_pin?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       medicine_requests: {
         Row: {
           created_at: string
