@@ -367,6 +367,80 @@ export type Database = {
           },
         ]
       }
+      salon_chairs: {
+        Row: {
+          barber_id: string | null
+          barber_name: string | null
+          chair_number: number
+          created_at: string
+          hostel_block: string
+          id: string
+          is_active: boolean
+          updated_at: string
+        }
+        Insert: {
+          barber_id?: string | null
+          barber_name?: string | null
+          chair_number: number
+          created_at?: string
+          hostel_block: string
+          id?: string
+          is_active?: boolean
+          updated_at?: string
+        }
+        Update: {
+          barber_id?: string | null
+          barber_name?: string | null
+          chair_number?: number
+          created_at?: string
+          hostel_block?: string
+          id?: string
+          is_active?: boolean
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      salon_queue: {
+        Row: {
+          chair_id: string
+          completed_at: string | null
+          id: string
+          joined_at: string
+          position: number
+          status: string
+          student_id: string
+          student_name: string
+        }
+        Insert: {
+          chair_id: string
+          completed_at?: string | null
+          id?: string
+          joined_at?: string
+          position: number
+          status?: string
+          student_id: string
+          student_name: string
+        }
+        Update: {
+          chair_id?: string
+          completed_at?: string | null
+          id?: string
+          joined_at?: string
+          position?: number
+          status?: string
+          student_id?: string
+          student_name?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "salon_queue_chair_id_fkey"
+            columns: ["chair_id"]
+            isOneToOne: false
+            referencedRelation: "salon_chairs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       store_orders: {
         Row: {
           category: string
