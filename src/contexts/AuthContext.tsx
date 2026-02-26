@@ -11,6 +11,7 @@ interface Profile {
   sap_id: string | null;
   room_number: string | null;
   hostel_block: string | null;
+  gender: string | null;
 }
 
 interface AuthContextType {
@@ -20,7 +21,7 @@ interface AuthContextType {
   role: UserRole | null;
   isApproved: boolean;
   login: (email: string, password: string) => Promise<{ success: boolean; error?: string; pendingApproval?: boolean }>;
-  signup: (email: string, password: string, fullName: string, role: UserRole, sapId?: string, roomNumber?: string, hostelBlock?: string) => Promise<{ success: boolean; error?: string; pendingApproval?: boolean }>;
+  signup: (email: string, password: string, fullName: string, role: UserRole, sapId?: string, roomNumber?: string, hostelBlock?: string, gender?: string) => Promise<{ success: boolean; error?: string; pendingApproval?: boolean }>;
   logout: () => Promise<void>;
   resetPassword: (email: string) => Promise<{ success: boolean; error?: string }>;
   isAuthenticated: boolean;
@@ -158,7 +159,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     userRole: UserRole,
     sapId?: string,
     roomNumber?: string,
-    hostelBlock?: string
+    hostelBlock?: string,
+    gender?: string
   ): Promise<{ success: boolean; error?: string; pendingApproval?: boolean }> => {
     try {
       // Security: Prevent self-assignment of super_user role
@@ -190,6 +192,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             sap_id: sapId || null,
             room_number: roomNumber || null,
             hostel_block: hostelBlock || null,
+            gender: gender || null,
           });
 
         if (profileError) {

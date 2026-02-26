@@ -297,6 +297,7 @@ export type Database = {
         Row: {
           created_at: string
           full_name: string
+          gender: string | null
           hostel_block: string | null
           id: string
           room_number: string | null
@@ -307,6 +308,7 @@ export type Database = {
         Insert: {
           created_at?: string
           full_name: string
+          gender?: string | null
           hostel_block?: string | null
           id?: string
           room_number?: string | null
@@ -317,6 +319,7 @@ export type Database = {
         Update: {
           created_at?: string
           full_name?: string
+          gender?: string | null
           hostel_block?: string | null
           id?: string
           room_number?: string | null
