@@ -2,20 +2,37 @@
 
 ## Problem
 
-The Salon tab shows only the mirror with no chairs beneath it. This happens because the student's `hostel_block` in their profile (e.g. "Block B", "B", "B2") doesn't match the `salon_chairs` table values ("Hostel B1", "Hostel B2", etc.), so the query returns zero chairs.
+Cleaning requests store whatever `hostel_block` value comes from the student's profile (e.g. "Block B", "B", "B2", "block B"). The admin sees these raw values instead of the standardized "Hostel B1" / "Hostel B2" naming.
 
-## Fix: `src/components/student/SalonQueueView.tsx`
+## Fix
 
-1. **Add a hostel block mapping function** that normalizes the student's profile `hostel_block` value to match the salon_chairs naming:
-   - "B", "Block B", "block B", "B1" → "Hostel B1"
-   - "B2" → "Hostel B2"  
-   - "G1", "Hostel G1" → "Hostel G1"
-   - etc.
-   - Since B1 and B2 share a "B" block concept, if the value is ambiguous (just "B" or "Block B"), default to "Hostel B1" (or show both B1 and B2 salons).
+**1. Create a shared hostel normalization utility** (`src/lib/hostelUtils.ts`)
+- A function `normalizeHostelDisplay(raw: string): string` that maps common variants to proper names:
+  - "B", "Block B", "block B" → "Hostel B1" (default for ambiguous "B")
+  - "B1" → "Hostel B1", "B2" → "Hostel B2"
+  - "G", "Block G" → "Hostel G1"
+  - "G1" → "Hostel G1", "G2" → "Hostel G2"
+  - Already correct values like "Hostel B1" pass through unchanged
 
-2. **Ensure 3 chairs always render** even when no barber is assigned — each chair shows the `Armchair` icon, chair number, and "Vacant" or barber name, matching the reference layout (mirror on top, 3 chairs below with icons).
+**2. Update `src/pages/admin/AdminDashboard.tsx`**
+- Import `normalizeHostelDisplay`
+- In cleaning request display (line 192), replace `{request.hostelBlock}` with `{normalizeHostelDisplay(request.hostelBlock)}`
+- Same for appliance complaint display (line 299)
 
-3. **Fallback**: If the mapping can't determine a hostel, show a message asking the student to update their profile with a valid hostel block value.
+**3. Update `src/pages/student/CleaningRequestForm.tsx`**
+- Normalize the hostel block before saving, so future requests store the proper name
+- `hostelBlock: normalizeHostelDisplay(formData.hostelBlock)`
 
-This is a single-file change to `SalonQueueView.tsx`.
+**4. Update other student forms** (ApplianceComplaintForm, StoreOrderForm, MedicineRequestForm)
+- Same normalization at submission time for consistency
+
+This ensures both existing and new requests display properly in the admin view.
+
+### Files changed
+- `src/lib/hostelUtils.ts` (new)
+- `src/pages/admin/AdminDashboard.tsx`
+- `src/pages/student/CleaningRequestForm.tsx`
+- `src/pages/student/ApplianceComplaintForm.tsx`
+- `src/pages/student/StoreOrderForm.tsx`
+- `src/pages/student/MedicineRequestForm.tsx`
 
