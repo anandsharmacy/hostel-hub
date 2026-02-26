@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, useEffect, ReactNode } from
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 
-export type UserRole = 'student' | 'admin' | 'vendor' | 'super_user';
+export type UserRole = 'student' | 'admin' | 'vendor' | 'super_user' | 'barber';
 
 interface Profile {
   id: string;
@@ -139,7 +139,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           .eq('user_id', data.user.id)
           .maybeSingle();
 
-        if (roleData && (roleData.role === 'admin' || roleData.role === 'vendor') && !roleData.approved) {
+        if (roleData && (roleData.role === 'admin' || roleData.role === 'vendor' || roleData.role === 'barber') && !roleData.approved) {
           // Sign out the user if not approved
           await supabase.auth.signOut();
           return { success: false, error: 'Your account is pending approval by Super User', pendingApproval: true };
@@ -201,7 +201,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
 
         // Admin and vendor accounts need approval, students are auto-approved
-        const needsApproval = userRole === 'admin' || userRole === 'vendor';
+        const needsApproval = userRole === 'admin' || userRole === 'vendor' || userRole === 'barber';
         
         // Create role with approval status
         const { error: roleError } = await supabase

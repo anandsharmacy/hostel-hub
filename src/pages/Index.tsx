@@ -19,6 +19,9 @@ const Index = () => {
         case 'vendor':
           navigate('/vendor');
           break;
+        case 'barber':
+          navigate('/barber');
+          break;
       }
     } else {
       navigate('/login');
