@@ -135,7 +135,8 @@ export default function Login() {
         data.role,
         data.sapId,
         data.roomNumber,
-        data.hostelBlock
+        data.hostelBlock,
+        data.gender
       );
 
       if (result.success) {
