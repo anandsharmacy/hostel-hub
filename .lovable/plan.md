@@ -1,20 +1,24 @@
 
 
-## Fix: Appliance Image URL Storage
+## Rework Signup Form: Add Gender Field with Conditional Hostel Blocks
 
-### Root Cause
-The `ApplianceComplaintForm` stores the full public URL in the database. When the admin dashboard calls `createSignedUrl()` with that full URL as a path, it produces a malformed double-prefixed URL, causing 404.
+### Changes to `src/pages/Login.tsx`
 
-### Changes
+1. **Add `gender` field to signup schema** — Add `gender: z.enum(['male', 'female']).optional()` to the Zod schema
 
-**1. `src/pages/student/ApplianceComplaintForm.tsx`** — Store only the relative path
-- Change `uploadImage` to return `path` (e.g., `userId/timestamp.png`) instead of calling `getPublicUrl` and returning the full URL
+2. **Watch gender value** — Add `watch('gender')` alongside existing `watch('role')`
 
-**2. `src/pages/admin/AdminDashboard.tsx`** — Handle both legacy full URLs and new paths
-- If `complaint.imageUrl` starts with `http`, open it directly (legacy data)
-- Otherwise, generate a signed URL from the storage path (new data)
+3. **Add Gender selector for all roles** — After the role selector, show a "Gender" select (Male / Female) for Student, Vendor, and Admin
 
-**3. `src/pages/student/MyRequests.tsx`** — Same dual handling if appliance images are displayed there
+4. **Conditional hostel block options for Students** — When role is Student:
+   - If gender is Male: show only Hostel B1, Hostel B2
+   - If gender is Female: show only Hostel G1, Hostel G2
+   - Reset hostel block value when gender changes
 
-No database or migration changes needed.
+5. **For Vendor/Admin** — Gender field is shown but hostel block is not displayed (existing behavior preserved)
+
+6. **Reset logic** — When gender changes, clear the hostel block selection to prevent invalid combinations
+
+### No database or backend changes needed
+Gender is only used for form filtering; it is not stored in the database.
 
