@@ -49,7 +49,7 @@ export function LaundryRevenueTracker() {
 
   const fetchRevenue = async () => {
     const { data: orders } = await supabase
-      .from('laundry_orders')
+      .from('laundry_vendor_orders' as any)
       .select('total_amount, cleaning_type')
       .eq('status', 'checked_out') as any;
 

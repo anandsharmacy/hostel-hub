@@ -42,7 +42,7 @@ export function LaundryCheckOutForm() {
     setIsSearching(true);
     try {
       let query = supabase
-        .from('laundry_orders')
+        .from('laundry_vendor_orders' as any)
         .select('*')
         .eq('status', 'checked_in') as any;
 
@@ -73,8 +73,8 @@ export function LaundryCheckOutForm() {
     setCheckingOut(orderId);
     try {
       const { error } = await supabase
-        .from('laundry_orders')
-        .update({ status: 'checked_out', checked_out_at: new Date().toISOString() } as any)
+        .from('laundry_vendor_orders' as any)
+        .update({ status: 'checked_out', checked_out_at: new Date().toISOString() })
         .eq('id', orderId);
 
       if (error) throw error;

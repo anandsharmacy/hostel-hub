@@ -33,11 +33,14 @@ function getUnitPrice(cleaningType: string, clothType: string): number {
     return SPECIAL_ITEMS.includes(clothType) ? 100 : 50;
   }
   if (cleaningType === 'wash_and_iron') return 15;
-  return 7; // wash_only or iron_only
+  return 7;
 }
 
 export function LaundryCheckInForm() {
-  const { user, profile } = useAuth();
+  const { user } = useAuth();
+  const [studentName, setStudentName] = useState('');
+  const [sapId, setSapId] = useState('');
+  const [hostelBlock, setHostelBlock] = useState('');
   const [contactNumber, setContactNumber] = useState('');
   const [cleaningType, setCleaningType] = useState('wash_only');
   const [items, setItems] = useState<ClothItem[]>([{ cloth_type: '', quantity: 1 }]);
@@ -62,11 +65,23 @@ export function LaundryCheckInForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!user || !profile) return;
+    if (!user) return;
 
     const validItems = items.filter(i => i.cloth_type && i.quantity > 0);
     if (validItems.length === 0) {
       toast.error('Please add at least one clothing item');
+      return;
+    }
+    if (!studentName.trim()) {
+      toast.error('Please enter student name');
+      return;
+    }
+    if (!sapId.trim()) {
+      toast.error('Please enter SAP ID');
+      return;
+    }
+    if (!hostelBlock.trim()) {
+      toast.error('Please enter hostel block');
       return;
     }
     if (!contactNumber.trim()) {
@@ -77,17 +92,17 @@ export function LaundryCheckInForm() {
     setIsSubmitting(true);
     try {
       const { data: order, error: orderError } = await supabase
-        .from('laundry_orders')
+        .from('laundry_vendor_orders' as any)
         .insert({
           user_id: user.id,
-          student_name: profile.full_name,
-          sap_id: profile.sap_id || '',
-          hostel_block: profile.hostel_block || '',
+          student_name: studentName,
+          sap_id: sapId,
+          hostel_block: hostelBlock,
           contact_number: contactNumber,
           cleaning_type: cleaningType,
           total_amount: totalAmount,
           status: 'checked_in',
-        } as any)
+        })
         .select()
         .single();
 
@@ -102,13 +117,16 @@ export function LaundryCheckInForm() {
       }));
 
       const { error: itemsError } = await supabase
-        .from('laundry_order_items')
-        .insert(orderItems as any);
+        .from('laundry_vendor_order_items' as any)
+        .insert(orderItems);
 
       if (itemsError) throw itemsError;
 
       toast.success('Laundry checked in successfully!');
       setItems([{ cloth_type: '', quantity: 1 }]);
+      setStudentName('');
+      setSapId('');
+      setHostelBlock('');
       setContactNumber('');
       setCleaningType('wash_only');
     } catch (error: any) {
@@ -130,16 +148,31 @@ export function LaundryCheckInForm() {
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label>Name</Label>
-              <Input value={profile?.full_name || ''} disabled />
+              <Label>Student Name</Label>
+              <Input
+                value={studentName}
+                onChange={e => setStudentName(e.target.value)}
+                placeholder="Enter student name"
+                required
+              />
             </div>
             <div className="space-y-2">
               <Label>SAP ID</Label>
-              <Input value={profile?.sap_id || ''} disabled />
+              <Input
+                value={sapId}
+                onChange={e => setSapId(e.target.value)}
+                placeholder="Enter SAP ID"
+                required
+              />
             </div>
             <div className="space-y-2">
               <Label>Hostel Block</Label>
-              <Input value={profile?.hostel_block || ''} disabled />
+              <Input
+                value={hostelBlock}
+                onChange={e => setHostelBlock(e.target.value)}
+                placeholder="Enter hostel block"
+                required
+              />
             </div>
             <div className="space-y-2">
               <Label>Contact Number</Label>
