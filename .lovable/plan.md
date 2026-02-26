@@ -1,20 +1,26 @@
 
 
-## Plan: Copy Boys Inventory to Girls Section
+## Plan: Add Medical Section to Store Orders
 
-### Problem
-The `inventory_items` table has a unique constraint on `(name, category)` only — it does not include `hostel_section`. This means inserting the same item names for the "girls" section will fail with a duplicate key error.
+### Current State
+- The `storeCategories` array in `StoreOrderForm.tsx` only includes `['Stationery', 'Fruits', 'Gym Supplements']`
+- A "Medicine" category already exists in the database (Sanitary Pad is already there for girls)
+- The inventory query on line 69 filters to only those 3 categories, excluding Medicine items
 
-### Solution (2 steps)
+### Changes
 
-**Step 1: Database migration — Update the unique constraint**
-- Drop existing constraint: `inventory_items_name_category_key UNIQUE (name, category)`
-- Add new constraint: `inventory_items_name_category_section_key UNIQUE (name, category, hostel_section)`
-- This allows the same item to exist in both "boys" and "girls" sections
+**Step 1: Add medical items to database (data insert)**
+Insert items into `inventory_items` for both boys and girls sections:
+- Sanitary Pads (girls only, already exists)
+- Hot Water Bag — both sections
+- Band-Aid (Pack of 10) — both sections
+- Cotton Roll — both sections
+- ORS Sachets (Pack of 5) — both sections
+- Ice Pack — both sections
 
-**Step 2: Insert data — Clone boys items to girls**
-- Use the data insertion tool to copy all 40 "boys" items into the "girls" section with the same name, category, quantity, price, thresholds, and availability
-- Uses `ON CONFLICT DO NOTHING` to safely skip any that might already exist
+**Step 2: Update `StoreOrderForm.tsx`**
+- Add `'Medicine'` to the `storeCategories` array (line 18)
+- Update the inventory query `.in('category', ...)` filter to include `'Medicine'` (line 69)
 
-No code changes are needed — the app already filters inventory by `hostel_section` and supports both sections.
+No other file changes needed — the rest of the component is fully dynamic.
 
