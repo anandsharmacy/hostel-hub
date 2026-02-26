@@ -15,7 +15,7 @@ import { normalizeHostelDisplay } from '@/lib/hostelUtils';
 
 
 
-const storeCategories = ['Stationery', 'Fruits', 'Gym Supplements'] as const;
+const storeCategories = ['Stationery', 'Fruits', 'Gym Supplements', 'Medicine'] as const;
 type Category = typeof storeCategories[number];
 
 interface InventoryItem {
@@ -66,7 +66,7 @@ export function StoreOrderForm() {
       const { data, error } = await supabase
         .from('inventory_items')
         .select('*')
-        .in('category', ['Stationery', 'Fruits', 'Gym Supplements'])
+        .in('category', ['Stationery', 'Fruits', 'Gym Supplements', 'Medicine'])
         .eq('is_available', true)
         .eq('hostel_section', hostelSection)
         .order('name');
