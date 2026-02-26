@@ -17,6 +17,7 @@ import AdminDashboard from "./pages/admin/AdminDashboard";
 import VendorDashboard from "./pages/vendor/VendorDashboard";
 import SuperUserDashboard from "./pages/superuser/SuperUserDashboard";
 import BarberDashboard from "./pages/barber/BarberDashboard";
+import LaundryDashboard from "./pages/laundry/LaundryDashboard";
 import ResetPassword from "./pages/ResetPassword";
 import NotFound from "./pages/NotFound";
 
@@ -92,6 +93,14 @@ function AppRoutes() {
         element={
           <ProtectedRoute allowedRoles={['barber']}>
             <BarberDashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/laundry"
+        element={
+          <ProtectedRoute allowedRoles={['laundry']}>
+            <LaundryDashboard />
           </ProtectedRoute>
         }
       />
