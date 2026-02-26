@@ -88,11 +88,8 @@ export function MedicineRequestForm() {
       
       if (uploadError) throw uploadError;
       
-      const { data } = supabase.storage
-        .from('prescriptions')
-        .getPublicUrl(fileName);
-      
-      return data.publicUrl;
+      // Store just the file path (not a public URL) since bucket is private
+      return fileName;
     } catch (error) {
       console.error('Error uploading prescription:', error);
       toast.error('Failed to upload prescription');

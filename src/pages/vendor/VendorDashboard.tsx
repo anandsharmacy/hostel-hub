@@ -434,31 +434,18 @@ export default function VendorDashboard() {
                                   className="h-8"
                                   onClick={async () => {
                                     try {
-                                      // Extract path from public URL
-                                      // Format: .../prescriptions/user_id/filename.pdf
-                                      const path = request.prescriptionUrl!.split('/prescriptions/')[1];
-                                      if (!path) {
-                                        window.open(request.prescriptionUrl!, '_blank');
-                                        return;
-                                      }
-
-                                      // Try downloading via SDK (authenticated)
+                                      // prescriptionUrl stores the file path; generate a signed URL
+                                      const filePath = request.prescriptionUrl!.includes('/prescriptions/')
+                                        ? request.prescriptionUrl!.split('/prescriptions/')[1]
+                                        : request.prescriptionUrl!;
                                       const { data, error } = await supabase.storage
                                         .from('prescriptions')
-                                        .download(path);
-
+                                        .createSignedUrl(filePath, 300); // 5 min expiry
                                       if (error) throw error;
-
-                                      // Create blob URL and open
-                                      const blobUrl = URL.createObjectURL(data);
-                                      window.open(blobUrl, '_blank');
-
-                                      // Clean up blob URL after a delay
-                                      setTimeout(() => URL.revokeObjectURL(blobUrl), 60000);
+                                      window.open(data.signedUrl, '_blank');
                                     } catch (err) {
-                                      console.error('Error downloading prescription:', err);
-                                      // Fallback to public URL if download fails
-                                      window.open(request.prescriptionUrl!, '_blank');
+                                      console.error('Error accessing prescription:', err);
+                                      toast.error('Unable to open prescription');
                                     }
                                   }}
                                 >
