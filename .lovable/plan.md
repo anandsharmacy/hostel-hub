@@ -1,44 +1,20 @@
 
 
-## Add Notifications Section to Student and Vendor Dashboards
+## Fix: Appliance Image URL Storage
 
-### Overview
-Add a dedicated "Notifications" tab to both the Student Dashboard and Vendor Dashboard that displays all announcements in a full list view (not just the dismissible banner). This gives users a persistent place to review all current announcements.
+### Root Cause
+The `ApplianceComplaintForm` stores the full public URL in the database. When the admin dashboard calls `createSignedUrl()` with that full URL as a path, it produces a malformed double-prefixed URL, causing 404.
 
-### What Changes
+### Changes
 
-**1. Create a shared Notifications component**
-- New file: `src/components/shared/NotificationsSection.tsx`
-- Accepts a `role` prop (`'students'` | `'vendors'`) to fetch the correct announcements
-- Fetches active, non-expired announcements from the database filtered by `target_audience` (matching the role or `'both'`)
-- Displays announcements as a scrollable list of cards, each showing the title, message, and date
-- Shows an empty state when there are no announcements
+**1. `src/pages/student/ApplianceComplaintForm.tsx`** — Store only the relative path
+- Change `uploadImage` to return `path` (e.g., `userId/timestamp.png`) instead of calling `getPublicUrl` and returning the full URL
 
-**2. Update Student Dashboard**
-- Add a 6th tab: "Notifications" with a Bell icon
-- Render the `NotificationsSection` component with `role="students"`
+**2. `src/pages/admin/AdminDashboard.tsx`** — Handle both legacy full URLs and new paths
+- If `complaint.imageUrl` starts with `http`, open it directly (legacy data)
+- Otherwise, generate a signed URL from the storage path (new data)
 
-**3. Update Vendor Dashboard**
-- Add a 6th tab: "Notifications" with a Bell icon
-- Render the `NotificationsSection` component with `role="vendors"`
+**3. `src/pages/student/MyRequests.tsx`** — Same dual handling if appliance images are displayed there
 
-### Technical Details
-
-**New file: `src/components/shared/NotificationsSection.tsx`**
-- Queries `announcements` table with filters: `is_active = true`, `target_audience IN [role, 'both']`
-- Client-side filters out expired announcements
-- Each announcement rendered as a Card with Megaphone icon, title, date badge, and full message text
-- Loading state with spinner, empty state with friendly message
-
-**Modified file: `src/pages/student/StudentDashboard.tsx`**
-- Import `Bell` from lucide-react and `NotificationsSection`
-- Add "Notifications" TabsTrigger and TabsContent
-- Grid changes from `grid-cols-5` to accommodate 6 tabs (`grid-cols-3 md:grid-cols-6`)
-
-**Modified file: `src/pages/vendor/VendorDashboard.tsx`**
-- Import `Bell` from lucide-react and `NotificationsSection`
-- Add "Notifications" TabsTrigger and TabsContent
-- Grid changes from `grid-cols-5` to `grid-cols-6`
-
-No database changes needed -- the existing `announcements` table and RLS policies already support filtering by `target_audience` for both students and vendors.
+No database or migration changes needed.
 
