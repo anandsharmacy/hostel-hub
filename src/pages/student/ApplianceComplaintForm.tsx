@@ -61,8 +61,7 @@ export function ApplianceComplaintForm() {
     const path = `${userId}/${Date.now()}.${ext}`;
     const { error } = await supabase.storage.from('appliance-images').upload(path, imageFile);
     if (error) throw error;
-    const { data: urlData } = supabase.storage.from('appliance-images').getPublicUrl(path);
-    return urlData.publicUrl;
+    return path;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {

@@ -123,13 +123,31 @@ export function MyRequests() {
                     </div>
                     <p className="text-sm text-muted-foreground">{complaint.description}</p>
                     {complaint.imageUrl && (
-                      <a href={complaint.imageUrl} target="_blank" rel="noopener noreferrer" className="block mt-2">
-                        <img
-                          src={complaint.imageUrl}
-                          alt="Appliance issue"
-                          className="w-24 h-24 object-cover rounded-lg border border-border hover:opacity-80 transition-opacity"
-                        />
-                      </a>
+                      <Button
+                        variant="link"
+                        size="sm"
+                        className="h-auto p-0 text-xs"
+                        onClick={async () => {
+                          try {
+                            if (complaint.imageUrl!.startsWith('http')) {
+                              window.open(complaint.imageUrl!, '_blank');
+                              return;
+                            }
+                            const { data, error } = await supabase.storage
+                              .from('appliance-images')
+                              .createSignedUrl(complaint.imageUrl!, 300);
+                            if (error) throw error;
+                            window.open(data.signedUrl, '_blank');
+                          } catch (err) {
+                            console.error('Error accessing image:', err);
+                            toast.error('Unable to open image');
+                          }
+                        }}
+                      >
+                        <ImageIcon className="w-3 h-3 mr-1" />
+                        View Image
+                        <ExternalLink className="w-3 h-3 ml-1" />
+                      </Button>
                     )}
                   </div>
                   <StatusBadge status={complaint.status} />
