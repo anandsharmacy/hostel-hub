@@ -26,7 +26,7 @@ const signupSchema = z.object({
   email: z.string().email('Please enter a valid email address'),
   password: z.string().min(6, 'Password must be at least 6 characters'),
   fullName: z.string().min(2, 'Name must be at least 2 characters').max(100, 'Name is too long'),
-  role: z.enum(['student', 'admin', 'vendor', 'barber']),
+  role: z.enum(['student', 'admin', 'vendor', 'barber', 'laundry']),
   gender: z.enum(['male', 'female']).optional(),
   sapId: z.string().optional(),
   roomNumber: z.string().optional(),
@@ -104,6 +104,9 @@ export default function Login() {
           break;
         case 'barber':
           navigate('/barber');
+          break;
+        case 'laundry':
+          navigate('/laundry');
           break;
         case 'super_user':
           navigate('/super-user');
@@ -626,6 +629,7 @@ export default function Login() {
                           <SelectItem value="admin">Administrator</SelectItem>
                           <SelectItem value="vendor">Store Vendor</SelectItem>
                           <SelectItem value="barber">Barber</SelectItem>
+                          <SelectItem value="laundry">Laundry Owner</SelectItem>
                         </SelectContent>
                       </Select>
                     )}
@@ -635,10 +639,10 @@ export default function Login() {
                   )}
                 </div>
 
-                {(selectedRole === 'admin' || selectedRole === 'vendor' || selectedRole === 'barber') && (
+                {(selectedRole === 'admin' || selectedRole === 'vendor' || selectedRole === 'barber' || selectedRole === 'laundry') && (
                   <div className="p-3 bg-warning/10 border border-warning/30 rounded-lg">
                     <p className="text-xs text-warning-foreground">
-                      <strong>Note:</strong> {selectedRole === 'barber' ? 'Barber' : 'Admin and Vendor'} accounts require Super User approval before you can login.
+                      <strong>Note:</strong> {selectedRole === 'barber' ? 'Barber' : selectedRole === 'laundry' ? 'Laundry Owner' : 'Admin and Vendor'} accounts require Super User approval before you can login.
                     </p>
                   </div>
                 )}
