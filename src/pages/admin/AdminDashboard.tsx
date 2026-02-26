@@ -7,6 +7,7 @@ import { StatusBadge } from '@/components/StatusBadge';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import { useData, RequestStatus } from '@/contexts/DataContext';
 import { Sparkles, Wrench, Calendar, MapPin, Clock, CheckCircle, Settings, Users, Megaphone, ImageIcon, ExternalLink } from 'lucide-react';
+import { normalizeHostelDisplay } from '@/lib/hostelUtils';
 import { supabase } from '@/integrations/supabase/client';
 import { format } from 'date-fns';
 import { BlockedSlotsManager } from '@/components/admin/BlockedSlotsManager';
@@ -189,7 +190,7 @@ export default function AdminDashboard() {
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm text-muted-foreground">
                               <div className="flex items-center gap-2">
                                 <MapPin className="w-4 h-4" />
-                                <span>{request.hostelBlock}, Room {request.roomNumber}</span>
+                                <span>{normalizeHostelDisplay(request.hostelBlock)}, Room {request.roomNumber}</span>
                               </div>
                               <div className="flex items-center gap-2">
                                 <Calendar className="w-4 h-4" />
@@ -296,7 +297,7 @@ export default function AdminDashboard() {
                             <p className="font-medium text-sm">{complaint.studentName}</p>
                             <div className="flex items-center gap-2 text-sm text-muted-foreground">
                               <MapPin className="w-4 h-4" />
-                              <span>{complaint.hostelBlock}, Room {complaint.roomNumber}</span>
+                              <span>{normalizeHostelDisplay(complaint.hostelBlock)}, Room {complaint.roomNumber}</span>
                             </div>
                             <p className="text-sm text-muted-foreground bg-muted/50 p-2 rounded">
                               {complaint.description}

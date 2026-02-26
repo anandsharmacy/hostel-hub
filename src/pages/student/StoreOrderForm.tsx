@@ -11,6 +11,7 @@ import { ShoppingBag, Plus, Minus, ShoppingCart, X, Receipt, CheckCircle, AlertT
 import { toast } from 'sonner';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { supabase } from '@/integrations/supabase/client';
+import { normalizeHostelDisplay } from '@/lib/hostelUtils';
 
 
 
@@ -157,6 +158,7 @@ export function StoreOrderForm() {
       const previousOrderCount = storeOrders.length;
       await addStoreOrder({
         ...formData,
+        hostelBlock: normalizeHostelDisplay(formData.hostelBlock),
         category: selectedCategory,
         items: cart.map(({ name, quantity }) => ({ name, quantity })),
       });
