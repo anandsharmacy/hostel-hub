@@ -1,35 +1,20 @@
 
 
-## Plan: Dedicated Laundry Tables & Editable Student Fields
+## Plan: Copy Boys Inventory to Girls Section
 
 ### Problem
-1. The current `laundry_orders` table's INSERT policy only allows students (`auth.uid() = user_id`), so laundry owners can't insert orders.
-2. The check-in form auto-fills Name, SAP ID, and Hostel Block from the logged-in user's profile and disables them — but the laundry owner should manually enter the student's details.
+The `inventory_items` table has a unique constraint on `(name, category)` only — it does not include `hostel_section`. This means inserting the same item names for the "girls" section will fail with a duplicate key error.
 
-### Approach
-Rather than fighting with shared RLS policies, create dedicated tables for the laundry owner role and update the forms.
+### Solution (2 steps)
 
-### Database Migration
-Create two new tables owned by the laundry role:
+**Step 1: Database migration — Update the unique constraint**
+- Drop existing constraint: `inventory_items_name_category_key UNIQUE (name, category)`
+- Add new constraint: `inventory_items_name_category_section_key UNIQUE (name, category, hostel_section)`
+- This allows the same item to exist in both "boys" and "girls" sections
 
-- **`laundry_vendor_orders`** — same columns as `laundry_orders` but `user_id` = the laundry owner (not the student). RLS: laundry role can INSERT, SELECT, UPDATE.
-- **`laundry_vendor_order_items`** — same columns as `laundry_order_items`, FK to new orders table. RLS: laundry role can INSERT, SELECT.
+**Step 2: Insert data — Clone boys items to girls**
+- Use the data insertion tool to copy all 40 "boys" items into the "girls" section with the same name, category, quantity, price, thresholds, and availability
+- Uses `ON CONFLICT DO NOTHING` to safely skip any that might already exist
 
-### Code Changes
-
-**1. `src/pages/student/LaundryCheckInForm.tsx`**
-- Make Name, SAP ID, and Hostel Block **editable text inputs** (remove `disabled`, remove auto-fill from `profile`)
-- Add local state for `studentName`, `sapId`, `hostelBlock`
-- Insert into `laundry_vendor_orders` and `laundry_vendor_order_items` instead of the old tables
-- Set `user_id` to the logged-in laundry owner's ID
-
-**2. `src/pages/student/LaundryCheckOutForm.tsx`**
-- Query from `laundry_vendor_orders` instead of `laundry_orders`
-- Update status in `laundry_vendor_orders`
-
-**3. `src/components/student/LaundryRevenueTracker.tsx`**
-- Query revenue data from `laundry_vendor_orders` instead of `laundry_orders`
-
-**4. `src/integrations/supabase/types.ts`**
-- Will be auto-updated after migration
+No code changes are needed — the app already filters inventory by `hostel_section` and supports both sections.
 
