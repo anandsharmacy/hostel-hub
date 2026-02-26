@@ -6,7 +6,8 @@ import { Button } from '@/components/ui/button';
 import { StatusBadge } from '@/components/StatusBadge';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import { useData, RequestStatus } from '@/contexts/DataContext';
-import { Sparkles, Wrench, Calendar, MapPin, Clock, CheckCircle, Settings, Users, Megaphone } from 'lucide-react';
+import { Sparkles, Wrench, Calendar, MapPin, Clock, CheckCircle, Settings, Users, Megaphone, ImageIcon, ExternalLink } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
 import { format } from 'date-fns';
 import { BlockedSlotsManager } from '@/components/admin/BlockedSlotsManager';
 import { AdminAnnouncementManager } from '@/components/admin/AdminAnnouncementManager';
@@ -300,6 +301,32 @@ export default function AdminDashboard() {
                             <p className="text-sm text-muted-foreground bg-muted/50 p-2 rounded">
                               {complaint.description}
                             </p>
+                            {complaint.imageUrl && (
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                className="w-fit"
+                                onClick={async () => {
+                                  try {
+                                    const { data, error } = await supabase.storage
+                                      .from('appliance-images')
+                                      .createSignedUrl(complaint.imageUrl!, 300);
+                                    if (error) throw error;
+                                    window.open(data.signedUrl, '_blank');
+                                  } catch {
+                                    // Fallback: try as public URL
+                                    const { data } = supabase.storage
+                                      .from('appliance-images')
+                                      .getPublicUrl(complaint.imageUrl!);
+                                    window.open(data.publicUrl, '_blank');
+                                  }
+                                }}
+                              >
+                                <ImageIcon className="w-4 h-4" />
+                                View Image
+                                <ExternalLink className="w-3 h-3" />
+                              </Button>
+                            )}
                             <p className="text-xs text-muted-foreground">
                               Submitted: {formatDate(complaint.createdAt)}
                             </p>
