@@ -21,7 +21,7 @@ interface AuthContextType {
   role: UserRole | null;
   isApproved: boolean;
   login: (email: string, password: string) => Promise<{ success: boolean; error?: string; pendingApproval?: boolean }>;
-  signup: (email: string, password: string, fullName: string, role: UserRole, sapId?: string, roomNumber?: string, hostelBlock?: string, gender?: string) => Promise<{ success: boolean; error?: string; pendingApproval?: boolean }>;
+  signup: (email: string, password: string, fullName: string, role: UserRole, sapId?: string, roomNumber?: string, hostelBlock?: string, gender?: string) => Promise<{ success: boolean; error?: string; pendingApproval?: boolean; userId?: string }>;
   logout: () => Promise<void>;
   resetPassword: (email: string) => Promise<{ success: boolean; error?: string }>;
   isAuthenticated: boolean;
@@ -161,7 +161,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     roomNumber?: string,
     hostelBlock?: string,
     gender?: string
-  ): Promise<{ success: boolean; error?: string; pendingApproval?: boolean }> => {
+  ): Promise<{ success: boolean; error?: string; pendingApproval?: boolean; userId?: string }> => {
     try {
       // Security: Prevent self-assignment of super_user role
       if (userRole === 'super_user') {
@@ -238,12 +238,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           
           return { 
             success: true, 
-            pendingApproval: true 
+            pendingApproval: true,
+            userId: data.user.id,
           };
         }
       }
 
-      return { success: true };
+      return { success: true, userId: data.user?.id };
     } catch (error) {
       return { success: false, error: 'An unexpected error occurred' };
     }

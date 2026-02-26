@@ -31,6 +31,15 @@ const signupSchema = z.object({
   sapId: z.string().optional(),
   roomNumber: z.string().optional(),
   hostelBlock: z.string().optional(),
+  revenuePin: z.string().optional(),
+}).refine((data) => {
+  if (data.role === 'laundry') {
+    return data.revenuePin && /^\d{4}$/.test(data.revenuePin);
+  }
+  return true;
+}, {
+  message: 'Please enter a 4-digit PIN for revenue tracker access',
+  path: ['revenuePin'],
 });
 
 type LoginFormValues = z.infer<typeof loginSchema>;
@@ -146,6 +155,15 @@ export default function Login() {
       );
 
       if (result.success) {
+        // If laundry role, save the revenue PIN
+        if (data.role === 'laundry' && data.revenuePin && result.userId) {
+          const { supabase } = await import('@/integrations/supabase/client');
+          await supabase.from('laundry_settings').insert({
+            user_id: result.userId,
+            revenue_pin: data.revenuePin,
+          } as any);
+        }
+
         if (result.pendingApproval) {
           toast.success('Account created! Your request has been sent to the Super User for approval.');
           setCurrentView('home');
@@ -644,6 +662,30 @@ export default function Login() {
                     <p className="text-xs text-warning-foreground">
                       <strong>Note:</strong> {selectedRole === 'barber' ? 'Barber' : selectedRole === 'laundry' ? 'Laundry Owner' : 'Admin and Vendor'} accounts require Super User approval before you can login.
                     </p>
+                  </div>
+                )}
+
+                {selectedRole === 'laundry' && (
+                  <div className="space-y-2">
+                    <Label htmlFor="revenuePin" className="text-sm font-medium">
+                      Revenue Tracker PIN (4 digits)
+                    </Label>
+                    <Input
+                      id="revenuePin"
+                      type="password"
+                      maxLength={4}
+                      placeholder="Enter 4-digit PIN"
+                      className="bg-background h-11"
+                      {...registerSignup('revenuePin')}
+                      onChange={(e) => {
+                        const val = e.target.value.replace(/\D/g, '');
+                        setSignupValue('revenuePin', val);
+                      }}
+                    />
+                    <p className="text-xs text-muted-foreground">This PIN will be used to access your revenue tracker.</p>
+                    {signupErrors.revenuePin && (
+                      <p className="text-sm text-destructive">{signupErrors.revenuePin.message}</p>
+                    )}
                   </div>
                 )}
 
