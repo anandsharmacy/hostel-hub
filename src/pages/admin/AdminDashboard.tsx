@@ -308,17 +308,17 @@ export default function AdminDashboard() {
                                 className="w-fit"
                                 onClick={async () => {
                                   try {
+                                    if (complaint.imageUrl!.startsWith('http')) {
+                                      window.open(complaint.imageUrl!, '_blank');
+                                      return;
+                                    }
                                     const { data, error } = await supabase.storage
                                       .from('appliance-images')
                                       .createSignedUrl(complaint.imageUrl!, 300);
                                     if (error) throw error;
                                     window.open(data.signedUrl, '_blank');
                                   } catch {
-                                    // Fallback: try as public URL
-                                    const { data } = supabase.storage
-                                      .from('appliance-images')
-                                      .getPublicUrl(complaint.imageUrl!);
-                                    window.open(data.publicUrl, '_blank');
+                                    toast.error('Unable to open image');
                                   }
                                 }}
                               >
