@@ -25,19 +25,36 @@ interface QueueEntry {
   status: string;
 }
 
+function normalizeHostelBlock(raw: string | null | undefined): string[] {
+  if (!raw) return [];
+  const val = raw.trim().toLowerCase().replace(/\s+/g, ' ');
+  // Already in correct format
+  if (/^hostel [bg]\d$/i.test(raw.trim())) return [raw.trim()];
+  // "B1", "B2", "G1", "G2"
+  const match = val.match(/^([bg])(\d)$/);
+  if (match) return [`Hostel ${match[1].toUpperCase()}${match[2]}`];
+  // "Block B1", "Block G2", etc.
+  const blockMatch = val.match(/^block\s+([bg])(\d)$/);
+  if (blockMatch) return [`Hostel ${blockMatch[1].toUpperCase()}${blockMatch[2]}`];
+  // Ambiguous: "B", "Block B" → show both B1 and B2
+  if (val === 'b' || val === 'block b') return ['Hostel B1', 'Hostel B2'];
+  if (val === 'g' || val === 'block g') return ['Hostel G1', 'Hostel G2'];
+  return [];
+}
+
 export function SalonQueueView() {
   const { user, profile } = useAuth();
   const [chairs, setChairs] = useState<SalonChair[]>([]);
   const [queue, setQueue] = useState<QueueEntry[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const hostelBlock = profile?.hostel_block;
+  const hostelBlocks = normalizeHostelBlock(profile?.hostel_block);
 
   const fetchData = async () => {
-    if (!hostelBlock) { setLoading(false); return; }
+    if (hostelBlocks.length === 0) { setLoading(false); return; }
 
     const [chairsRes, queueRes] = await Promise.all([
-      supabase.from('salon_chairs').select('*').eq('hostel_block', hostelBlock).order('chair_number'),
+      supabase.from('salon_chairs').select('*').in('hostel_block', hostelBlocks).order('chair_number'),
       supabase.from('salon_queue').select('*').in('status', ['waiting', 'in_service']).order('position'),
     ]);
     if (chairsRes.data) setChairs(chairsRes.data as SalonChair[]);
@@ -55,7 +72,7 @@ export function SalonQueueView() {
       .subscribe();
 
     return () => { supabase.removeChannel(channel); };
-  }, [hostelBlock]);
+  }, [hostelBlocks.join(',')]);
 
   const myQueueEntry = queue.find(q => q.student_id === user?.id && q.status === 'waiting');
 
@@ -85,11 +102,13 @@ export function SalonQueueView() {
     else toast.success('Left the queue');
   };
 
-  if (!hostelBlock) {
+  if (hostelBlocks.length === 0) {
     return (
       <Card>
         <CardContent className="py-8 text-center text-muted-foreground">
-          Your hostel block is not set. Please update your profile.
+          {profile?.hostel_block
+            ? `Could not match "${profile.hostel_block}" to a salon. Please update your hostel block (e.g. "Hostel B1").`
+            : 'Your hostel block is not set. Please update your profile.'}
         </CardContent>
       </Card>
     );
@@ -107,7 +126,7 @@ export function SalonQueueView() {
     <div className="space-y-6">
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg">{hostelBlock} Salon</CardTitle>
+          <CardTitle className="text-lg">{hostelBlocks.join(' & ')} Salon</CardTitle>
         </CardHeader>
         <CardContent>
           {/* Mirror visual */}
