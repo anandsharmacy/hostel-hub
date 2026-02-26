@@ -12,6 +12,7 @@ import { FlipTimePicker } from '@/components/student/FlipTimePicker';
 import { Sparkles, Send, Clock, Info, AlertTriangle, Users } from 'lucide-react';
 import { toast } from 'sonner';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { normalizeHostelDisplay } from '@/lib/hostelUtils';
 
 
 
@@ -140,7 +141,7 @@ export function CleaningRequestForm() {
     try {
       await addCleaningRequest({
         studentName: formData.studentName,
-        hostelBlock: formData.hostelBlock,
+        hostelBlock: normalizeHostelDisplay(formData.hostelBlock),
         roomNumber: formData.roomNumber,
         preferredDate: formData.preferredDate,
         preferredTime: `${availabilityStart} - ${availabilityEnd}`,
