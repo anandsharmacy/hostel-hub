@@ -1,10 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
 import { Lock, IndianRupee, TrendingUp } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
@@ -26,54 +25,10 @@ interface RevenueData {
 
 export function LaundryRevenueTracker() {
   const { user } = useAuth();
-  const [hasPin, setHasPin] = useState<boolean | null>(null);
   const [isUnlocked, setIsUnlocked] = useState(false);
   const [pin, setPin] = useState('');
-  const [confirmPin, setConfirmPin] = useState('');
-  const [isSettingPin, setIsSettingPin] = useState(false);
   const [revenue, setRevenue] = useState<RevenueData | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    checkPin();
-  }, [user]);
-
-  const checkPin = async () => {
-    if (!user) return;
-    const { data } = await supabase
-      .from('laundry_settings')
-      .select('id')
-      .eq('user_id', user.id)
-      .maybeSingle() as any;
-    setHasPin(!!data);
-    setLoading(false);
-  };
-
-  const handleSetPin = async () => {
-    if (pin.length !== 4 || !/^\d{4}$/.test(pin)) {
-      toast.error('PIN must be exactly 4 digits');
-      return;
-    }
-    if (pin !== confirmPin) {
-      toast.error('PINs do not match');
-      return;
-    }
-    setIsSettingPin(true);
-    try {
-      const { error } = await supabase
-        .from('laundry_settings')
-        .insert({ user_id: user!.id, revenue_pin: pin } as any);
-      if (error) throw error;
-      setHasPin(true);
-      toast.success('Revenue PIN set successfully!');
-      setPin('');
-      setConfirmPin('');
-    } catch (error: any) {
-      toast.error(error.message || 'Failed to set PIN');
-    } finally {
-      setIsSettingPin(false);
-    }
-  };
+  const [loading, setLoading] = useState(false);
 
   const handleUnlock = async () => {
     if (!user) return;
@@ -120,34 +75,6 @@ export function LaundryRevenueTracker() {
   };
 
   if (loading) return <div className="text-center py-8 text-muted-foreground">Loading...</div>;
-
-  // Set PIN for first time
-  if (!hasPin) {
-    return (
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Lock className="w-5 h-5" />
-            Set Revenue PIN
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4 max-w-sm">
-          <p className="text-sm text-muted-foreground">Set a 4-digit PIN to protect your revenue data.</p>
-          <div className="space-y-2">
-            <Label>PIN (4 digits)</Label>
-            <Input type="password" maxLength={4} value={pin} onChange={e => setPin(e.target.value.replace(/\D/g, ''))} placeholder="••••" />
-          </div>
-          <div className="space-y-2">
-            <Label>Confirm PIN</Label>
-            <Input type="password" maxLength={4} value={confirmPin} onChange={e => setConfirmPin(e.target.value.replace(/\D/g, ''))} placeholder="••••" />
-          </div>
-          <Button onClick={handleSetPin} disabled={isSettingPin}>
-            {isSettingPin ? 'Setting...' : 'Set PIN'}
-          </Button>
-        </CardContent>
-      </Card>
-    );
-  }
 
   // Enter PIN to unlock
   if (!isUnlocked) {
