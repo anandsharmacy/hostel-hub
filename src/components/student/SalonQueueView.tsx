@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { Armchair, Users, LogOut } from 'lucide-react';
+import { Users, LogOut, User } from 'lucide-react';
 
 interface SalonChair {
   id: string;
@@ -28,18 +28,48 @@ interface QueueEntry {
 function normalizeHostelBlock(raw: string | null | undefined): string[] {
   if (!raw) return [];
   const val = raw.trim().toLowerCase().replace(/\s+/g, ' ');
-  // Already in correct format
   if (/^hostel [bg]\d$/i.test(raw.trim())) return [raw.trim()];
-  // "B1", "B2", "G1", "G2"
   const match = val.match(/^([bg])(\d)$/);
   if (match) return [`Hostel ${match[1].toUpperCase()}${match[2]}`];
-  // "Block B1", "Block G2", etc.
   const blockMatch = val.match(/^block\s+([bg])(\d)$/);
   if (blockMatch) return [`Hostel ${blockMatch[1].toUpperCase()}${blockMatch[2]}`];
-  // Ambiguous: "B", "Block B" → show both B1 and B2
   if (val === 'b' || val === 'block b') return ['Hostel B1', 'Hostel B2'];
   if (val === 'g' || val === 'block g') return ['Hostel G1', 'Hostel G2'];
   return [];
+}
+
+/** Determine the pair of hostels to show (B1+B2 or G1+G2) */
+function getHostelPair(blocks: string[]): string[] {
+  if (blocks.some(b => b.includes('B'))) return ['Hostel B1', 'Hostel B2'];
+  if (blocks.some(b => b.includes('G'))) return ['Hostel G1', 'Hostel G2'];
+  return blocks;
+}
+
+function ChairSVG({ occupied, facing }: { occupied: boolean; facing: 'down' | 'up' }) {
+  // Simple salon chair illustration
+  const flip = facing === 'up';
+  return (
+    <svg viewBox="0 0 80 90" className="w-16 h-18 mx-auto" style={{ transform: flip ? 'scaleY(-1)' : undefined }}>
+      {/* Head rest / back */}
+      <ellipse cx="40" cy="20" rx="28" ry="16" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-muted-foreground" />
+      {/* Arm rests */}
+      <rect x="6" y="14" width="8" height="14" rx="3" fill="none" stroke="currentColor" strokeWidth="2" className="text-muted-foreground" />
+      <rect x="66" y="14" width="8" height="14" rx="3" fill="none" stroke="currentColor" strokeWidth="2" className="text-muted-foreground" />
+      {/* Seat */}
+      <path d="M18 36 Q18 50 24 52 L56 52 Q62 50 62 36" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-muted-foreground" />
+      {/* Base */}
+      <rect x="25" y="54" width="30" height="6" rx="3" fill="none" stroke="currentColor" strokeWidth="2" className="text-muted-foreground" />
+      {/* Person head if occupied */}
+      {occupied && (
+        <>
+          <circle cx="40" cy="10" r="9" fill="none" stroke="currentColor" strokeWidth="2" className="text-primary" />
+          {/* Ears */}
+          <ellipse cx="31" cy="12" rx="3" ry="4" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-primary" />
+          <ellipse cx="49" cy="12" rx="3" ry="4" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-primary" />
+        </>
+      )}
+    </svg>
+  );
 }
 
 export function SalonQueueView() {
@@ -49,12 +79,13 @@ export function SalonQueueView() {
   const [loading, setLoading] = useState(true);
 
   const hostelBlocks = normalizeHostelBlock(profile?.hostel_block);
+  const hostelPair = getHostelPair(hostelBlocks);
 
   const fetchData = async () => {
-    if (hostelBlocks.length === 0) { setLoading(false); return; }
+    if (hostelPair.length === 0) { setLoading(false); return; }
 
     const [chairsRes, queueRes] = await Promise.all([
-      supabase.from('salon_chairs').select('*').in('hostel_block', hostelBlocks).order('chair_number'),
+      supabase.from('salon_chairs').select('*').in('hostel_block', hostelPair).order('chair_number'),
       supabase.from('salon_queue').select('*').in('status', ['waiting', 'in_service']).order('position'),
     ]);
     if (chairsRes.data) setChairs(chairsRes.data as SalonChair[]);
@@ -72,7 +103,7 @@ export function SalonQueueView() {
       .subscribe();
 
     return () => { supabase.removeChannel(channel); };
-  }, [hostelBlocks.join(',')]);
+  }, [hostelPair.join(',')]);
 
   const myQueueEntry = queue.find(q => q.student_id === user?.id && q.status === 'waiting');
 
@@ -102,7 +133,7 @@ export function SalonQueueView() {
     else toast.success('Left the queue');
   };
 
-  if (hostelBlocks.length === 0) {
+  if (hostelPair.length === 0) {
     return (
       <Card>
         <CardContent className="py-8 text-center text-muted-foreground">
@@ -125,60 +156,92 @@ export function SalonQueueView() {
   return (
     <div className="space-y-6">
       <Card>
-        <CardHeader>
-          <CardTitle className="text-lg">{hostelBlocks.join(' & ')} Salon</CardTitle>
+        <CardHeader className="pb-2">
+          <CardTitle className="text-lg">Salon Layout</CardTitle>
         </CardHeader>
-        <CardContent>
-          {/* Mirror visual */}
-          <div className="bg-gradient-to-b from-muted/80 to-muted/30 rounded-t-xl p-3 text-center border border-b-0">
-            <span className="text-xs font-medium tracking-widest uppercase text-muted-foreground">Mirror</span>
+        <CardContent className="space-y-0">
+          {/* Mirror bar */}
+          <div className="bg-foreground rounded-md h-6 flex items-center justify-center mb-6">
+            <span className="text-xs font-semibold tracking-widest uppercase text-background">Mirror</span>
           </div>
 
-          {/* Chairs */}
-          <div className="grid grid-cols-3 border rounded-b-xl overflow-hidden">
-            {chairs.map(chair => {
-              const chairQueue = queue.filter(q => q.chair_id === chair.id && q.status === 'waiting');
-              const inService = queue.find(q => q.chair_id === chair.id && q.status === 'in_service');
-              const isMyQueue = myQueueEntry?.chair_id === chair.id;
-              const myPosition = isMyQueue ? myQueueEntry?.position : null;
+          {/* Hostel rows */}
+          <div className="space-y-8">
+            {hostelPair.map((hostel, idx) => {
+              const hostelChairs = chairs.filter(c => c.hostel_block === hostel);
+              // Pad to 3 chairs for layout consistency
+              const displayChairs = hostelChairs.length > 0 ? hostelChairs : Array.from({ length: 3 }, (_, i) => ({
+                id: `empty-${hostel}-${i}`,
+                hostel_block: hostel,
+                chair_number: i + 1,
+                barber_id: null,
+                barber_name: null,
+                is_active: false,
+              } as SalonChair));
 
               return (
-                <div key={chair.id} className="p-4 text-center space-y-3 border-r last:border-r-0">
-                  <Armchair className={`w-10 h-10 mx-auto ${chair.is_active ? 'text-primary' : 'text-muted-foreground/40'}`} />
-                  <div>
-                    <div className="text-xs text-muted-foreground mb-1">Chair {chair.chair_number}</div>
-                    <div className="font-semibold text-sm truncate">
-                      {chair.is_active ? chair.barber_name : 'Vacant'}
+                <div key={hostel} className="flex items-start gap-4">
+                  {/* Hostel label */}
+                  <div className="flex-shrink-0 w-24 pt-6">
+                    <div className="border border-border rounded px-2 py-1 text-center">
+                      <span className="text-xs font-bold tracking-wide">
+                        {hostel.replace('Hostel ', 'HOSTEL:')}
+                      </span>
                     </div>
                   </div>
 
-                  {chair.is_active && (
-                    <>
-                      <div className="flex items-center justify-center gap-1 text-xs text-muted-foreground">
-                        <Users className="w-3 h-3" />
-                        <span>{chairQueue.length} waiting</span>
-                      </div>
+                  {/* Chairs row */}
+                  <div className="flex-1 grid grid-cols-3 gap-4">
+                    {displayChairs.map(chair => {
+                      const chairQueue = queue.filter(q => q.chair_id === chair.id && q.status === 'waiting');
+                      const inService = queue.find(q => q.chair_id === chair.id && q.status === 'in_service');
+                      const isOccupied = !!inService || chair.is_active;
+                      const isMyQueue = myQueueEntry?.chair_id === chair.id;
+                      const myPosition = isMyQueue ? myQueueEntry?.position : null;
 
-                      {isMyQueue && (
-                        <div className="space-y-2">
-                          <Badge variant="default">Position #{myPosition}</Badge>
-                          <Button size="sm" variant="destructive" className="w-full text-xs" onClick={leaveQueue}>
-                            <LogOut className="w-3 h-3 mr-1" /> Leave Queue
-                          </Button>
+                      return (
+                        <div key={chair.id} className="flex flex-col items-center space-y-2">
+                          {/* Chair illustration */}
+                          <ChairSVG occupied={!!inService} facing="down" />
+
+                          {/* Chair number */}
+                          <div className="border border-border rounded px-4 py-1 text-center min-w-[60px]">
+                            <span className="font-semibold text-sm">{chair.chair_number}.</span>
+                          </div>
+
+                          {/* Barber name */}
+                          <div className="text-xs text-muted-foreground truncate max-w-full text-center">
+                            {chair.is_active ? chair.barber_name : 'Vacant'}
+                          </div>
+
+                          {/* Queue info & actions */}
+                          {chair.is_active && (
+                            <div className="flex flex-col items-center gap-1">
+                              <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                                <Users className="w-3 h-3" />
+                                <span>{chairQueue.length} waiting</span>
+                              </div>
+
+                              {isMyQueue && (
+                                <div className="space-y-1 text-center">
+                                  <Badge variant="default" className="text-xs">#{myPosition}</Badge>
+                                  <Button size="sm" variant="destructive" className="w-full text-xs h-7" onClick={leaveQueue}>
+                                    <LogOut className="w-3 h-3 mr-1" /> Leave
+                                  </Button>
+                                </div>
+                              )}
+
+                              {!isMyQueue && !myQueueEntry && (
+                                <Button size="sm" className="text-xs h-7" onClick={() => joinQueue(chair.id)}>
+                                  Join Queue
+                                </Button>
+                              )}
+                            </div>
+                          )}
                         </div>
-                      )}
-
-                      {!isMyQueue && !myQueueEntry && (
-                        <Button size="sm" className="w-full text-xs" onClick={() => joinQueue(chair.id)}>
-                          Join Queue
-                        </Button>
-                      )}
-                    </>
-                  )}
-
-                  {!chair.is_active && (
-                    <span className="text-xs text-muted-foreground">Not available</span>
-                  )}
+                      );
+                    })}
+                  </div>
                 </div>
               );
             })}
