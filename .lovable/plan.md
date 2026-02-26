@@ -1,20 +1,35 @@
 
 
-## Plan: Add Revenue PIN during Laundry Owner Signup
+## Plan: Dedicated Laundry Tables & Editable Student Fields
 
-When a user selects "Laundry Owner" as their role during account creation, show an additional 4-digit PIN field. This PIN gets saved to `laundry_settings` after successful signup.
+### Problem
+1. The current `laundry_orders` table's INSERT policy only allows students (`auth.uid() = user_id`), so laundry owners can't insert orders.
+2. The check-in form auto-fills Name, SAP ID, and Hostel Block from the logged-in user's profile and disables them — but the laundry owner should manually enter the student's details.
 
-### Changes
+### Approach
+Rather than fighting with shared RLS policies, create dedicated tables for the laundry owner role and update the forms.
 
-**1. Modify `src/pages/Login.tsx`**
-- Add `revenuePin` field to the signup schema (conditionally required when role is `laundry`, must be exactly 4 digits)
-- Add a PIN input field that appears only when "Laundry Owner" role is selected, below the role selector (near the approval warning)
-- In `onSignupSubmit`, after successful account creation for laundry role, insert the PIN into `laundry_settings` table before signing out
+### Database Migration
+Create two new tables owned by the laundry role:
 
-**2. Modify `src/components/student/LaundryRevenueTracker.tsx`**
-- Remove the "Set PIN" flow (first-time setup screen) since PIN is now collected at signup
-- The component will always show the "Enter PIN to unlock" screen when locked, since PIN is guaranteed to exist for laundry users
+- **`laundry_vendor_orders`** — same columns as `laundry_orders` but `user_id` = the laundry owner (not the student). RLS: laundry role can INSERT, SELECT, UPDATE.
+- **`laundry_vendor_order_items`** — same columns as `laundry_order_items`, FK to new orders table. RLS: laundry role can INSERT, SELECT.
 
-### No database changes needed
-The `laundry_settings` table already exists with the correct schema (`user_id`, `revenue_pin`).
+### Code Changes
+
+**1. `src/pages/student/LaundryCheckInForm.tsx`**
+- Make Name, SAP ID, and Hostel Block **editable text inputs** (remove `disabled`, remove auto-fill from `profile`)
+- Add local state for `studentName`, `sapId`, `hostelBlock`
+- Insert into `laundry_vendor_orders` and `laundry_vendor_order_items` instead of the old tables
+- Set `user_id` to the logged-in laundry owner's ID
+
+**2. `src/pages/student/LaundryCheckOutForm.tsx`**
+- Query from `laundry_vendor_orders` instead of `laundry_orders`
+- Update status in `laundry_vendor_orders`
+
+**3. `src/components/student/LaundryRevenueTracker.tsx`**
+- Query revenue data from `laundry_vendor_orders` instead of `laundry_orders`
+
+**4. `src/integrations/supabase/types.ts`**
+- Will be auto-updated after migration
 
