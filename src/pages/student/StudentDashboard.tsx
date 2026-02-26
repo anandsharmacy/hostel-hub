@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Button } from '@/components/ui/button';
-import { Sparkles, Wrench, ShoppingBag, ClipboardList, Pill, Bell, Scissors, Shirt } from 'lucide-react';
+import { Sparkles, Wrench, ShoppingBag, ClipboardList, Pill, Bell, Scissors } from 'lucide-react';
 import { CleaningRequestForm } from './CleaningRequestForm';
 import { ApplianceComplaintForm } from './ApplianceComplaintForm';
 import { StoreOrderForm } from './StoreOrderForm';
@@ -11,13 +10,9 @@ import { MyRequests } from './MyRequests';
 import { AnnouncementsBanner } from '@/components/student/AnnouncementsBanner';
 import { NotificationsSection } from '@/components/shared/NotificationsSection';
 import { SalonQueueView } from '@/components/student/SalonQueueView';
-import { LaundryCheckInForm } from './LaundryCheckInForm';
-import { LaundryCheckOutForm } from './LaundryCheckOutForm';
-import { LaundryRevenueTracker } from '@/components/student/LaundryRevenueTracker';
 
 export default function StudentDashboard() {
   const [activeTab, setActiveTab] = useState('cleaning');
-  const [laundrySubTab, setLaundrySubTab] = useState('checkin');
 
   return (
     <DashboardLayout>
@@ -30,7 +25,7 @@ export default function StudentDashboard() {
         <AnnouncementsBanner />
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid grid-cols-2 md:grid-cols-8 h-auto gap-2 bg-transparent p-0">
+          <TabsList className="grid grid-cols-2 md:grid-cols-7 h-auto gap-2 bg-transparent p-0">
             <TabsTrigger
               value="cleaning"
               className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground flex items-center gap-2 py-3 px-4 rounded-lg border border-border bg-card"
@@ -80,14 +75,6 @@ export default function StudentDashboard() {
               <span className="sm:hidden">Salon</span>
             </TabsTrigger>
             <TabsTrigger
-              value="laundry"
-              className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground flex items-center gap-2 py-3 px-4 rounded-lg border border-border bg-card"
-            >
-              <Shirt className="w-4 h-4" />
-              <span className="hidden sm:inline">Laundry</span>
-              <span className="sm:hidden">Laundry</span>
-            </TabsTrigger>
-            <TabsTrigger
               value="notifications"
               className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground flex items-center gap-2 py-3 px-4 rounded-lg border border-border bg-card"
             >
@@ -119,30 +106,6 @@ export default function StudentDashboard() {
 
           <TabsContent value="salon" className="animate-slide-up">
             <SalonQueueView />
-          </TabsContent>
-
-          <TabsContent value="laundry" className="animate-slide-up">
-            <div className="space-y-4">
-              <div className="flex gap-2">
-                {([
-                  { key: 'checkin', label: 'Check-In' },
-                  { key: 'checkout', label: 'Check-Out' },
-                  { key: 'revenue', label: 'Revenue' },
-                ] as const).map(tab => (
-                  <Button
-                    key={tab.key}
-                    variant={laundrySubTab === tab.key ? 'default' : 'outline'}
-                    size="sm"
-                    onClick={() => setLaundrySubTab(tab.key)}
-                  >
-                    {tab.label}
-                  </Button>
-                ))}
-              </div>
-              {laundrySubTab === 'checkin' && <LaundryCheckInForm />}
-              {laundrySubTab === 'checkout' && <LaundryCheckOutForm />}
-              {laundrySubTab === 'revenue' && <LaundryRevenueTracker />}
-            </div>
           </TabsContent>
 
           <TabsContent value="notifications" className="animate-slide-up">
