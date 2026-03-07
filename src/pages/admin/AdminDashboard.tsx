@@ -6,7 +6,10 @@ import { Button } from '@/components/ui/button';
 import { StatusBadge } from '@/components/StatusBadge';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import { useData, RequestStatus } from '@/contexts/DataContext';
-import { Sparkles, Wrench, Calendar, MapPin, Clock, CheckCircle, Settings, Users, Megaphone } from 'lucide-react';
+import { Sparkles, Wrench, Calendar, MapPin, Clock, CheckCircle, Settings, Users, Megaphone, ImageIcon, ExternalLink, Filter } from 'lucide-react';
+import { normalizeHostelDisplay } from '@/lib/hostelUtils';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { supabase } from '@/integrations/supabase/client';
 import { format } from 'date-fns';
 import { BlockedSlotsManager } from '@/components/admin/BlockedSlotsManager';
 import { AdminAnnouncementManager } from '@/components/admin/AdminAnnouncementManager';
@@ -14,6 +17,7 @@ import { toast } from 'sonner';
 
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState('cleaning');
+  const [hostelFilter, setHostelFilter] = useState<string>('all');
   const {
     cleaningRequests,
     applianceComplaints,
@@ -166,15 +170,38 @@ export default function AdminDashboard() {
           <TabsContent value="cleaning" className="animate-slide-up">
             <Card className="card-elevated">
               <CardHeader>
-                <CardTitle>Room Cleaning Requests</CardTitle>
-                <CardDescription>Manage and update cleaning request status</CardDescription>
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                  <div>
+                    <CardTitle>Room Cleaning Requests</CardTitle>
+                    <CardDescription>Manage and update cleaning request status</CardDescription>
+                  </div>
+                  <Select value={hostelFilter} onValueChange={setHostelFilter}>
+                    <SelectTrigger className="w-[180px]">
+                      <Filter className="w-4 h-4 mr-2" />
+                      <SelectValue placeholder="Filter by hostel" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Hostels</SelectItem>
+                      <SelectItem value="Hostel B1">Hostel B1</SelectItem>
+                      <SelectItem value="Hostel B2">Hostel B2</SelectItem>
+                      <SelectItem value="Hostel G1">Hostel G1</SelectItem>
+                      <SelectItem value="Hostel G2">Hostel G2</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
               </CardHeader>
               <CardContent>
-                {cleaningRequests.length === 0 ? (
-                  <p className="text-center text-muted-foreground py-12">No cleaning requests</p>
+                {(() => {
+                  const filtered = hostelFilter === 'all'
+                    ? cleaningRequests
+                    : cleaningRequests.filter(r => normalizeHostelDisplay(r.hostelBlock) === hostelFilter);
+                  return filtered.length === 0 ? (
+                  <p className="text-center text-muted-foreground py-12">
+                    {hostelFilter === 'all' ? 'No cleaning requests' : `No cleaning requests for ${hostelFilter}`}
+                  </p>
                 ) : (
                   <div className="space-y-4">
-                    {cleaningRequests.map((request) => (
+                    {filtered.map((request) => (
                       <div
                         key={request.id}
                         className="p-4 border border-border rounded-lg hover:bg-muted/30 transition-colors"
@@ -188,7 +215,7 @@ export default function AdminDashboard() {
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm text-muted-foreground">
                               <div className="flex items-center gap-2">
                                 <MapPin className="w-4 h-4" />
-                                <span>{request.hostelBlock}, Room {request.roomNumber}</span>
+                                <span>{normalizeHostelDisplay(request.hostelBlock)}, Room {request.roomNumber}</span>
                               </div>
                               <div className="flex items-center gap-2">
                                 <Calendar className="w-4 h-4" />
@@ -265,7 +292,8 @@ export default function AdminDashboard() {
                       </div>
                     ))}
                   </div>
-                )}
+                );
+                })()}
               </CardContent>
             </Card>
           </TabsContent>
@@ -295,11 +323,37 @@ export default function AdminDashboard() {
                             <p className="font-medium text-sm">{complaint.studentName}</p>
                             <div className="flex items-center gap-2 text-sm text-muted-foreground">
                               <MapPin className="w-4 h-4" />
-                              <span>{complaint.hostelBlock}, Room {complaint.roomNumber}</span>
+                              <span>{normalizeHostelDisplay(complaint.hostelBlock)}, Room {complaint.roomNumber}</span>
                             </div>
                             <p className="text-sm text-muted-foreground bg-muted/50 p-2 rounded">
                               {complaint.description}
                             </p>
+                            {complaint.imageUrl && (
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                className="w-fit"
+                                onClick={async () => {
+                                  try {
+                                    if (complaint.imageUrl!.startsWith('http')) {
+                                      window.open(complaint.imageUrl!, '_blank');
+                                      return;
+                                    }
+                                    const { data, error } = await supabase.storage
+                                      .from('appliance-images')
+                                      .createSignedUrl(complaint.imageUrl!, 300);
+                                    if (error) throw error;
+                                    window.open(data.signedUrl, '_blank');
+                                  } catch {
+                                    toast.error('Unable to open image');
+                                  }
+                                }}
+                              >
+                                <ImageIcon className="w-4 h-4" />
+                                View Image
+                                <ExternalLink className="w-3 h-3" />
+                              </Button>
+                            )}
                             <p className="text-xs text-muted-foreground">
                               Submitted: {formatDate(complaint.createdAt)}
                             </p>

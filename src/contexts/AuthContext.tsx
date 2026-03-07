@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, useEffect, ReactNode } from
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 
-export type UserRole = 'student' | 'admin' | 'vendor' | 'super_user';
+export type UserRole = 'student' | 'admin' | 'vendor' | 'super_user' | 'barber' | 'laundry';
 
 interface Profile {
   id: string;
@@ -11,6 +11,7 @@ interface Profile {
   sap_id: string | null;
   room_number: string | null;
   hostel_block: string | null;
+  gender: string | null;
 }
 
 interface AuthContextType {
@@ -20,7 +21,7 @@ interface AuthContextType {
   role: UserRole | null;
   isApproved: boolean;
   login: (email: string, password: string) => Promise<{ success: boolean; error?: string; pendingApproval?: boolean }>;
-  signup: (email: string, password: string, fullName: string, role: UserRole, sapId?: string, roomNumber?: string, hostelBlock?: string) => Promise<{ success: boolean; error?: string; pendingApproval?: boolean }>;
+  signup: (email: string, password: string, fullName: string, role: UserRole, sapId?: string, roomNumber?: string, hostelBlock?: string, gender?: string) => Promise<{ success: boolean; error?: string; pendingApproval?: boolean; userId?: string }>;
   logout: () => Promise<void>;
   resetPassword: (email: string) => Promise<{ success: boolean; error?: string }>;
   isAuthenticated: boolean;
@@ -138,7 +139,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           .eq('user_id', data.user.id)
           .maybeSingle();
 
-        if (roleData && (roleData.role === 'admin' || roleData.role === 'vendor') && !roleData.approved) {
+        if (roleData && (roleData.role === 'admin' || roleData.role === 'vendor' || roleData.role === 'barber' || roleData.role === 'laundry') && !roleData.approved) {
           // Sign out the user if not approved
           await supabase.auth.signOut();
           return { success: false, error: 'Your account is pending approval by Super User', pendingApproval: true };
@@ -158,8 +159,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     userRole: UserRole,
     sapId?: string,
     roomNumber?: string,
-    hostelBlock?: string
-  ): Promise<{ success: boolean; error?: string; pendingApproval?: boolean }> => {
+    hostelBlock?: string,
+    gender?: string
+  ): Promise<{ success: boolean; error?: string; pendingApproval?: boolean; userId?: string }> => {
     try {
       // Security: Prevent self-assignment of super_user role
       if (userRole === 'super_user') {
@@ -190,6 +192,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             sap_id: sapId || null,
             room_number: roomNumber || null,
             hostel_block: hostelBlock || null,
+            gender: gender || null,
           });
 
         if (profileError) {
@@ -198,7 +201,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
 
         // Admin and vendor accounts need approval, students are auto-approved
-        const needsApproval = userRole === 'admin' || userRole === 'vendor';
+        const needsApproval = userRole === 'admin' || userRole === 'vendor' || userRole === 'barber' || userRole === 'laundry';
         
         // Create role with approval status
         const { error: roleError } = await supabase
@@ -235,12 +238,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           
           return { 
             success: true, 
-            pendingApproval: true 
+            pendingApproval: true,
+            userId: data.user.id,
           };
         }
       }
 
-      return { success: true };
+      return { success: true, userId: data.user?.id };
     } catch (error) {
       return { success: false, error: 'An unexpected error occurred' };
     }

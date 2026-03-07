@@ -26,10 +26,20 @@ const signupSchema = z.object({
   email: z.string().email('Please enter a valid email address'),
   password: z.string().min(6, 'Password must be at least 6 characters'),
   fullName: z.string().min(2, 'Name must be at least 2 characters').max(100, 'Name is too long'),
-  role: z.enum(['student', 'admin', 'vendor']),
+  role: z.enum(['student', 'admin', 'vendor', 'barber', 'laundry']),
+  gender: z.enum(['male', 'female']).optional(),
   sapId: z.string().optional(),
   roomNumber: z.string().optional(),
   hostelBlock: z.string().optional(),
+  revenuePin: z.string().optional(),
+}).refine((data) => {
+  if (data.role === 'laundry') {
+    return data.revenuePin && /^\d{4}$/.test(data.revenuePin);
+  }
+  return true;
+}, {
+  message: 'Please enter a 4-digit PIN for revenue tracker access',
+  path: ['revenuePin'],
 });
 
 type LoginFormValues = z.infer<typeof loginSchema>;
@@ -68,6 +78,7 @@ export default function Login() {
     handleSubmit: handleSubmitSignup,
     control: controlSignup,
     watch,
+    setValue: setSignupValue,
     formState: { errors: signupErrors },
     reset: resetSignupForm
   } = useForm<SignupFormValues>({
@@ -78,6 +89,14 @@ export default function Login() {
   });
 
   const selectedRole = watch('role');
+  const selectedGender = watch('gender');
+
+  // Reset hostel block when gender changes for students
+  useEffect(() => {
+    if (selectedRole === 'student') {
+      setSignupValue('hostelBlock', '');
+    }
+  }, [selectedGender, selectedRole, setSignupValue]);
 
   // Redirect authenticated users to their dashboard
   useEffect(() => {
@@ -91,6 +110,12 @@ export default function Login() {
           break;
         case 'vendor':
           navigate('/vendor');
+          break;
+        case 'barber':
+          navigate('/barber');
+          break;
+        case 'laundry':
+          navigate('/laundry');
           break;
         case 'super_user':
           navigate('/super-user');
@@ -125,10 +150,20 @@ export default function Login() {
         data.role,
         data.sapId,
         data.roomNumber,
-        data.hostelBlock
+        data.hostelBlock,
+        data.gender
       );
 
       if (result.success) {
+        // If laundry role, save the revenue PIN
+        if (data.role === 'laundry' && data.revenuePin && result.userId) {
+          const { supabase } = await import('@/integrations/supabase/client');
+          await supabase.from('laundry_settings').insert({
+            user_id: result.userId,
+            revenue_pin: data.revenuePin,
+          } as any);
+        }
+
         if (result.pendingApproval) {
           toast.success('Account created! Your request has been sent to the Super User for approval.');
           setCurrentView('home');
@@ -611,6 +646,8 @@ export default function Login() {
                           <SelectItem value="student">Student</SelectItem>
                           <SelectItem value="admin">Administrator</SelectItem>
                           <SelectItem value="vendor">Store Vendor</SelectItem>
+                          <SelectItem value="barber">Barber</SelectItem>
+                          <SelectItem value="laundry">Laundry Owner</SelectItem>
                         </SelectContent>
                       </Select>
                     )}
@@ -620,13 +657,60 @@ export default function Login() {
                   )}
                 </div>
 
-                {(selectedRole === 'admin' || selectedRole === 'vendor') && (
+                {(selectedRole === 'admin' || selectedRole === 'vendor' || selectedRole === 'barber' || selectedRole === 'laundry') && (
                   <div className="p-3 bg-warning/10 border border-warning/30 rounded-lg">
                     <p className="text-xs text-warning-foreground">
-                      <strong>Note:</strong> Admin and Vendor accounts require Super User approval before you can login.
+                      <strong>Note:</strong> {selectedRole === 'barber' ? 'Barber' : selectedRole === 'laundry' ? 'Laundry Owner' : 'Admin and Vendor'} accounts require Super User approval before you can login.
                     </p>
                   </div>
                 )}
+
+                {selectedRole === 'laundry' && (
+                  <div className="space-y-2">
+                    <Label htmlFor="revenuePin" className="text-sm font-medium">
+                      Revenue Tracker PIN (4 digits)
+                    </Label>
+                    <Input
+                      id="revenuePin"
+                      type="password"
+                      maxLength={4}
+                      placeholder="Enter 4-digit PIN"
+                      className="bg-background h-11"
+                      {...registerSignup('revenuePin')}
+                      onChange={(e) => {
+                        const val = e.target.value.replace(/\D/g, '');
+                        setSignupValue('revenuePin', val);
+                      }}
+                    />
+                    <p className="text-xs text-muted-foreground">This PIN will be used to access your revenue tracker.</p>
+                    {signupErrors.revenuePin && (
+                      <p className="text-sm text-destructive">{signupErrors.revenuePin.message}</p>
+                    )}
+                  </div>
+                )}
+
+                {/* Gender selector for all roles */}
+                <div className="space-y-2">
+                  <Label className="text-sm font-medium">Gender</Label>
+                  <Controller
+                    name="gender"
+                    control={controlSignup}
+                    render={({ field }) => (
+                      <Select value={field.value || ''} onValueChange={field.onChange}>
+                        <SelectTrigger className="bg-background h-11">
+                          <SelectValue placeholder="Select gender" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="male">Male</SelectItem>
+                          <SelectItem value="female">Female</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    )}
+                  />
+                  {signupErrors.gender && (
+                    <p className="text-sm text-destructive">{signupErrors.gender.message}</p>
+                  )}
+                </div>
 
                 {selectedRole === 'student' && (
                   <>
@@ -638,7 +722,7 @@ export default function Login() {
                         id="sapId"
                         type="text"
                         placeholder="Enter your SAP ID"
-                    className="bg-background h-11"
+                        className="bg-background h-11"
                         {...registerSignup('sapId')}
                       />
                       {signupErrors.sapId && (
@@ -656,7 +740,7 @@ export default function Login() {
                           type="text"
                           placeholder="e.g. 304"
                           className="bg-background h-11"
-                           {...registerSignup('roomNumber')}
+                          {...registerSignup('roomNumber')}
                         />
                         {signupErrors.roomNumber && (
                           <p className="text-sm text-destructive">{signupErrors.roomNumber.message}</p>
@@ -670,15 +754,27 @@ export default function Login() {
                           name="hostelBlock"
                           control={controlSignup}
                           render={({ field }) => (
-                            <Select value={field.value || ''} onValueChange={field.onChange}>
+                            <Select
+                              value={field.value || ''}
+                              onValueChange={field.onChange}
+                              disabled={!selectedGender}
+                            >
                               <SelectTrigger className="bg-background h-11 z-50">
-                                <SelectValue placeholder="Select hostel block" />
+                                <SelectValue placeholder={selectedGender ? "Select hostel block" : "Select gender first"} />
                               </SelectTrigger>
                               <SelectContent className="bg-popover z-50">
-                                <SelectItem value="Hostel B1">Hostel B1</SelectItem>
-                                <SelectItem value="Hostel B2">Hostel B2</SelectItem>
-                                <SelectItem value="Hostel G1">Hostel G1</SelectItem>
-                                <SelectItem value="Hostel G2">Hostel G2</SelectItem>
+                                {selectedGender === 'male' && (
+                                  <>
+                                    <SelectItem value="Hostel B1">Hostel B1</SelectItem>
+                                    <SelectItem value="Hostel B2">Hostel B2</SelectItem>
+                                  </>
+                                )}
+                                {selectedGender === 'female' && (
+                                  <>
+                                    <SelectItem value="Hostel G1">Hostel G1</SelectItem>
+                                    <SelectItem value="Hostel G2">Hostel G2</SelectItem>
+                                  </>
+                                )}
                               </SelectContent>
                             </Select>
                           )}

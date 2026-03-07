@@ -10,6 +10,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Wrench, Send, ImagePlus, X } from 'lucide-react';
 import { toast } from 'sonner';
+import { normalizeHostelDisplay } from '@/lib/hostelUtils';
 
 
 const appliances = [
@@ -61,8 +62,7 @@ export function ApplianceComplaintForm() {
     const path = `${userId}/${Date.now()}.${ext}`;
     const { error } = await supabase.storage.from('appliance-images').upload(path, imageFile);
     if (error) throw error;
-    const { data: urlData } = supabase.storage.from('appliance-images').getPublicUrl(path);
-    return urlData.publicUrl;
+    return path;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -77,7 +77,7 @@ export function ApplianceComplaintForm() {
     
     try {
       const imageUrl = await uploadImage(profile?.user_id || '');
-      await addApplianceComplaint({ ...formData, imageUrl });
+      await addApplianceComplaint({ ...formData, hostelBlock: normalizeHostelDisplay(formData.hostelBlock), imageUrl });
       toast.success('Complaint submitted successfully!');
       
       setFormData({

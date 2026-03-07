@@ -1,44 +1,26 @@
 
 
-## Add Notifications Section to Student and Vendor Dashboards
+## Plan: Add Medical Section to Store Orders
 
-### Overview
-Add a dedicated "Notifications" tab to both the Student Dashboard and Vendor Dashboard that displays all announcements in a full list view (not just the dismissible banner). This gives users a persistent place to review all current announcements.
+### Current State
+- The `storeCategories` array in `StoreOrderForm.tsx` only includes `['Stationery', 'Fruits', 'Gym Supplements']`
+- A "Medicine" category already exists in the database (Sanitary Pad is already there for girls)
+- The inventory query on line 69 filters to only those 3 categories, excluding Medicine items
 
-### What Changes
+### Changes
 
-**1. Create a shared Notifications component**
-- New file: `src/components/shared/NotificationsSection.tsx`
-- Accepts a `role` prop (`'students'` | `'vendors'`) to fetch the correct announcements
-- Fetches active, non-expired announcements from the database filtered by `target_audience` (matching the role or `'both'`)
-- Displays announcements as a scrollable list of cards, each showing the title, message, and date
-- Shows an empty state when there are no announcements
+**Step 1: Add medical items to database (data insert)**
+Insert items into `inventory_items` for both boys and girls sections:
+- Sanitary Pads (girls only, already exists)
+- Hot Water Bag — both sections
+- Band-Aid (Pack of 10) — both sections
+- Cotton Roll — both sections
+- ORS Sachets (Pack of 5) — both sections
+- Ice Pack — both sections
 
-**2. Update Student Dashboard**
-- Add a 6th tab: "Notifications" with a Bell icon
-- Render the `NotificationsSection` component with `role="students"`
+**Step 2: Update `StoreOrderForm.tsx`**
+- Add `'Medicine'` to the `storeCategories` array (line 18)
+- Update the inventory query `.in('category', ...)` filter to include `'Medicine'` (line 69)
 
-**3. Update Vendor Dashboard**
-- Add a 6th tab: "Notifications" with a Bell icon
-- Render the `NotificationsSection` component with `role="vendors"`
-
-### Technical Details
-
-**New file: `src/components/shared/NotificationsSection.tsx`**
-- Queries `announcements` table with filters: `is_active = true`, `target_audience IN [role, 'both']`
-- Client-side filters out expired announcements
-- Each announcement rendered as a Card with Megaphone icon, title, date badge, and full message text
-- Loading state with spinner, empty state with friendly message
-
-**Modified file: `src/pages/student/StudentDashboard.tsx`**
-- Import `Bell` from lucide-react and `NotificationsSection`
-- Add "Notifications" TabsTrigger and TabsContent
-- Grid changes from `grid-cols-5` to accommodate 6 tabs (`grid-cols-3 md:grid-cols-6`)
-
-**Modified file: `src/pages/vendor/VendorDashboard.tsx`**
-- Import `Bell` from lucide-react and `NotificationsSection`
-- Add "Notifications" TabsTrigger and TabsContent
-- Grid changes from `grid-cols-5` to `grid-cols-6`
-
-No database changes needed -- the existing `announcements` table and RLS policies already support filtering by `target_audience` for both students and vendors.
+No other file changes needed — the rest of the component is fully dynamic.
 

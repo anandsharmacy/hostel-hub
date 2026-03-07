@@ -5,6 +5,8 @@ import LoadingSpinner from '@/components/LoadingSpinner';
 import { Sparkles, Wrench, ShoppingBag, Calendar, MapPin, Receipt, Pill, FileText, ExternalLink, Clock, ImageIcon } from 'lucide-react';
 import { format } from 'date-fns';
 import { Button } from '@/components/ui/button';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
 
 export function MyRequests() {
   const { cleaningRequests, applianceComplaints, storeOrders, medicineRequests, isLoading } = useData();
@@ -121,13 +123,31 @@ export function MyRequests() {
                     </div>
                     <p className="text-sm text-muted-foreground">{complaint.description}</p>
                     {complaint.imageUrl && (
-                      <a href={complaint.imageUrl} target="_blank" rel="noopener noreferrer" className="block mt-2">
-                        <img
-                          src={complaint.imageUrl}
-                          alt="Appliance issue"
-                          className="w-24 h-24 object-cover rounded-lg border border-border hover:opacity-80 transition-opacity"
-                        />
-                      </a>
+                      <Button
+                        variant="link"
+                        size="sm"
+                        className="h-auto p-0 text-xs"
+                        onClick={async () => {
+                          try {
+                            if (complaint.imageUrl!.startsWith('http')) {
+                              window.open(complaint.imageUrl!, '_blank');
+                              return;
+                            }
+                            const { data, error } = await supabase.storage
+                              .from('appliance-images')
+                              .createSignedUrl(complaint.imageUrl!, 300);
+                            if (error) throw error;
+                            window.open(data.signedUrl, '_blank');
+                          } catch (err) {
+                            console.error('Error accessing image:', err);
+                            toast.error('Unable to open image');
+                          }
+                        }}
+                      >
+                        <ImageIcon className="w-3 h-3 mr-1" />
+                        View Image
+                        <ExternalLink className="w-3 h-3 ml-1" />
+                      </Button>
                     )}
                   </div>
                   <StatusBadge status={complaint.status} />
@@ -234,7 +254,22 @@ export function MyRequests() {
                         variant="link"
                         size="sm"
                         className="h-auto p-0 text-xs"
-                        onClick={() => window.open(request.prescriptionUrl!, '_blank')}
+                        onClick={async () => {
+                          try {
+                            // prescriptionUrl stores the file path; generate a signed URL
+                            const filePath = request.prescriptionUrl!.includes('/prescriptions/')
+                              ? request.prescriptionUrl!.split('/prescriptions/')[1]
+                              : request.prescriptionUrl!;
+                            const { data, error } = await supabase.storage
+                              .from('prescriptions')
+                              .createSignedUrl(filePath, 300); // 5 min expiry
+                            if (error) throw error;
+                            window.open(data.signedUrl, '_blank');
+                          } catch (err) {
+                            console.error('Error accessing prescription:', err);
+                            toast.error('Unable to open prescription');
+                          }
+                        }}
                       >
                         <FileText className="w-3 h-3 mr-1" />
                         View Prescription

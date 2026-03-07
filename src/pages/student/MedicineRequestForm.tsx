@@ -11,6 +11,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { Pill, Upload, FileText, X, Receipt, CheckCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
+import { normalizeHostelDisplay } from '@/lib/hostelUtils';
 
 
 
@@ -88,11 +89,8 @@ export function MedicineRequestForm() {
       
       if (uploadError) throw uploadError;
       
-      const { data } = supabase.storage
-        .from('prescriptions')
-        .getPublicUrl(fileName);
-      
-      return data.publicUrl;
+      // Store just the file path (not a public URL) since bucket is private
+      return fileName;
     } catch (error) {
       console.error('Error uploading prescription:', error);
       toast.error('Failed to upload prescription');
@@ -127,7 +125,7 @@ export function MedicineRequestForm() {
       const previousCount = medicineRequests.length;
       await addMedicineRequest({
         studentName: formData.studentName,
-        hostelBlock: formData.hostelBlock,
+        hostelBlock: normalizeHostelDisplay(formData.hostelBlock),
         roomNumber: formData.roomNumber,
         medicineName: formData.medicineName || null,
         prescriptionUrl,

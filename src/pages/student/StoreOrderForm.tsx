@@ -11,10 +11,11 @@ import { ShoppingBag, Plus, Minus, ShoppingCart, X, Receipt, CheckCircle, AlertT
 import { toast } from 'sonner';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { supabase } from '@/integrations/supabase/client';
+import { normalizeHostelDisplay } from '@/lib/hostelUtils';
 
 
 
-const storeCategories = ['Stationery', 'Fruits', 'Gym Supplements'] as const;
+const storeCategories = ['Stationery', 'Fruits', 'Gym Supplements', 'Medicine'] as const;
 type Category = typeof storeCategories[number];
 
 interface InventoryItem {
@@ -65,7 +66,7 @@ export function StoreOrderForm() {
       const { data, error } = await supabase
         .from('inventory_items')
         .select('*')
-        .in('category', ['Stationery', 'Fruits', 'Gym Supplements'])
+        .in('category', ['Stationery', 'Fruits', 'Gym Supplements', 'Medicine'])
         .eq('is_available', true)
         .eq('hostel_section', hostelSection)
         .order('name');
@@ -157,6 +158,7 @@ export function StoreOrderForm() {
       const previousOrderCount = storeOrders.length;
       await addStoreOrder({
         ...formData,
+        hostelBlock: normalizeHostelDisplay(formData.hostelBlock),
         category: selectedCategory,
         items: cart.map(({ name, quantity }) => ({ name, quantity })),
       });
