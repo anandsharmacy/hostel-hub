@@ -21,6 +21,13 @@ dist-ssr
 *.ntvs*
 *.njsproj
 *.sln
+# Environment / secrets
+.env
+.env.*
+
+# Temp migration scripts
+_apply_migrations.cjs
+
 # Supabase
 supabase/.temp/
 supabase/.branches/

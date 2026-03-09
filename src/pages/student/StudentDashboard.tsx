@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Sparkles, Wrench, ShoppingBag, ClipboardList, Pill, Bell, Scissors } from 'lucide-react';
+import { Sparkles, Wrench, ShoppingBag, ClipboardList, Pill, Bell, Scissors, Lightbulb } from 'lucide-react';
 import { CleaningRequestForm } from './CleaningRequestForm';
 import { ApplianceComplaintForm } from './ApplianceComplaintForm';
 import { StoreOrderForm } from './StoreOrderForm';
@@ -10,6 +10,7 @@ import { MyRequests } from './MyRequests';
 import { AnnouncementsBanner } from '@/components/student/AnnouncementsBanner';
 import { NotificationsSection } from '@/components/shared/NotificationsSection';
 import { SalonQueueView } from '@/components/student/SalonQueueView';
+import { RoomControlsPanel } from '@/components/student/RoomControlsPanel';
 
 export default function StudentDashboard() {
   const [activeTab, setActiveTab] = useState('cleaning');
@@ -25,7 +26,7 @@ export default function StudentDashboard() {
         <AnnouncementsBanner />
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid grid-cols-2 md:grid-cols-7 h-auto gap-2 bg-transparent p-0">
+          <TabsList className="grid grid-cols-2 md:grid-cols-8 h-auto gap-2 bg-transparent p-0">
             <TabsTrigger
               value="cleaning"
               className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground flex items-center gap-2 py-3 px-4 rounded-lg border border-border bg-card"
@@ -67,6 +68,14 @@ export default function StudentDashboard() {
               <span className="sm:hidden">Requests</span>
             </TabsTrigger>
             <TabsTrigger
+              value="room-controls"
+              className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground flex items-center gap-2 py-3 px-4 rounded-lg border border-border bg-card"
+            >
+              <Lightbulb className="w-4 h-4" />
+              <span className="hidden sm:inline">Room Controls</span>
+              <span className="sm:hidden">Controls</span>
+            </TabsTrigger>
+            <TabsTrigger
               value="salon"
               className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground flex items-center gap-2 py-3 px-4 rounded-lg border border-border bg-card"
             >
@@ -102,6 +111,10 @@ export default function StudentDashboard() {
 
           <TabsContent value="requests" className="animate-slide-up">
             <MyRequests />
+          </TabsContent>
+
+          <TabsContent value="room-controls" className="animate-slide-up">
+            <RoomControlsPanel />
           </TabsContent>
 
           <TabsContent value="salon" className="animate-slide-up">

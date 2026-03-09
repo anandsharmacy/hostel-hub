@@ -504,6 +504,154 @@ export type Database = {
         }
         Relationships: []
       }
+      room_device_logs: {
+        Row: {
+          action: string
+          created_at: string
+          id: string
+          message: string | null
+          reported_state: boolean | null
+          requested_state: boolean | null
+          room_device_id: string
+          source: string
+          user_id: string | null
+        }
+        Insert: {
+          action: string
+          created_at?: string
+          id?: string
+          message?: string | null
+          reported_state?: boolean | null
+          requested_state?: boolean | null
+          room_device_id: string
+          source: string
+          user_id?: string | null
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          id?: string
+          message?: string | null
+          reported_state?: boolean | null
+          requested_state?: boolean | null
+          room_device_id?: string
+          source?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "room_device_logs_room_device_id_fkey"
+            columns: ["room_device_id"]
+            isOneToOne: false
+            referencedRelation: "room_devices"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      room_devices: {
+        Row: {
+          appliance_type: string
+          created_at: string
+          gateway_id: string
+          hostel_block: string
+          id: string
+          last_event_at: string | null
+          metadata: Json
+          name: string
+          power_rating_watts: number
+          power_state: boolean
+          relay_label: string
+          relay_pin: number
+          room_number: string
+          sinric_device_id: string | null
+          slug: string
+          switch_pin: string
+          updated_at: string
+        }
+        Insert: {
+          appliance_type: string
+          created_at?: string
+          gateway_id: string
+          hostel_block: string
+          id?: string
+          last_event_at?: string | null
+          metadata?: Json
+          name: string
+          power_rating_watts?: number
+          power_state?: boolean
+          relay_label: string
+          relay_pin: number
+          room_number: string
+          sinric_device_id?: string | null
+          slug: string
+          switch_pin: string
+          updated_at?: string
+        }
+        Update: {
+          appliance_type?: string
+          created_at?: string
+          gateway_id?: string
+          hostel_block?: string
+          id?: string
+          last_event_at?: string | null
+          metadata?: Json
+          name?: string
+          power_rating_watts?: number
+          power_state?: boolean
+          relay_label?: string
+          relay_pin?: number
+          room_number?: string
+          sinric_device_id?: string | null
+          slug?: string
+          switch_pin?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "room_devices_gateway_id_fkey"
+            columns: ["gateway_id"]
+            isOneToOne: false
+            referencedRelation: "room_gateways"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      room_gateways: {
+        Row: {
+          connection_state: string
+          created_at: string
+          hostel_block: string
+          id: string
+          last_seen: string | null
+          metadata: Json
+          name: string
+          room_number: string
+          updated_at: string
+        }
+        Insert: {
+          connection_state?: string
+          created_at?: string
+          hostel_block: string
+          id?: string
+          last_seen?: string | null
+          metadata?: Json
+          name?: string
+          room_number: string
+          updated_at?: string
+        }
+        Update: {
+          connection_state?: string
+          created_at?: string
+          hostel_block?: string
+          id?: string
+          last_seen?: string | null
+          metadata?: Json
+          name?: string
+          room_number?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       restock_history: {
         Row: {
           created_at: string
