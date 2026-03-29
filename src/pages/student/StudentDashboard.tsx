@@ -26,10 +26,10 @@ export default function StudentDashboard() {
         <AnnouncementsBanner />
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid grid-cols-2 md:grid-cols-8 h-auto gap-2 bg-transparent p-0">
+          <TabsList className="grid grid-cols-2 md:grid-cols-8 h-auto gap-2 bg-transparent p-0 border-0 shadow-none backdrop-blur-0">
             <TabsTrigger
               value="cleaning"
-              className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground flex items-center gap-2 py-3 px-4 rounded-lg border border-border bg-card"
+              className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary/90 data-[state=active]:to-primary/70 data-[state=active]:text-primary-foreground data-[state=active]:shadow-[0_14px_28px_-22px_hsl(var(--nmims-maroon)/0.7)] flex items-center gap-2 py-3 px-4 rounded-2xl border border-white/60 bg-background/62 backdrop-blur-md"
             >
               <Sparkles className="w-4 h-4" />
               <span className="hidden sm:inline">Room Cleaning</span>
@@ -37,7 +37,7 @@ export default function StudentDashboard() {
             </TabsTrigger>
             <TabsTrigger
               value="appliance"
-              className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground flex items-center gap-2 py-3 px-4 rounded-lg border border-border bg-card"
+              className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary/90 data-[state=active]:to-primary/70 data-[state=active]:text-primary-foreground data-[state=active]:shadow-[0_14px_28px_-22px_hsl(var(--nmims-maroon)/0.7)] flex items-center gap-2 py-3 px-4 rounded-2xl border border-white/60 bg-background/62 backdrop-blur-md"
             >
               <Wrench className="w-4 h-4" />
               <span className="hidden sm:inline">Appliance Issue</span>
@@ -45,7 +45,7 @@ export default function StudentDashboard() {
             </TabsTrigger>
             <TabsTrigger
               value="store"
-              className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground flex items-center gap-2 py-3 px-4 rounded-lg border border-border bg-card"
+              className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary/90 data-[state=active]:to-primary/70 data-[state=active]:text-primary-foreground data-[state=active]:shadow-[0_14px_28px_-22px_hsl(var(--nmims-maroon)/0.7)] flex items-center gap-2 py-3 px-4 rounded-2xl border border-white/60 bg-background/62 backdrop-blur-md"
             >
               <ShoppingBag className="w-4 h-4" />
               <span className="hidden sm:inline">Store Orders</span>
@@ -53,7 +53,7 @@ export default function StudentDashboard() {
             </TabsTrigger>
             <TabsTrigger
               value="medicine"
-              className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground flex items-center gap-2 py-3 px-4 rounded-lg border border-border bg-card"
+              className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary/90 data-[state=active]:to-primary/70 data-[state=active]:text-primary-foreground data-[state=active]:shadow-[0_14px_28px_-22px_hsl(var(--nmims-maroon)/0.7)] flex items-center gap-2 py-3 px-4 rounded-2xl border border-white/60 bg-background/62 backdrop-blur-md"
             >
               <Pill className="w-4 h-4" />
               <span className="hidden sm:inline">Medicine</span>
@@ -61,7 +61,7 @@ export default function StudentDashboard() {
             </TabsTrigger>
             <TabsTrigger
               value="requests"
-              className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground flex items-center gap-2 py-3 px-4 rounded-lg border border-border bg-card"
+              className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary/90 data-[state=active]:to-primary/70 data-[state=active]:text-primary-foreground data-[state=active]:shadow-[0_14px_28px_-22px_hsl(var(--nmims-maroon)/0.7)] flex items-center gap-2 py-3 px-4 rounded-2xl border border-white/60 bg-background/62 backdrop-blur-md"
             >
               <ClipboardList className="w-4 h-4" />
               <span className="hidden sm:inline">My Requests</span>
@@ -69,7 +69,7 @@ export default function StudentDashboard() {
             </TabsTrigger>
             <TabsTrigger
               value="room-controls"
-              className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground flex items-center gap-2 py-3 px-4 rounded-lg border border-border bg-card"
+              className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary/90 data-[state=active]:to-primary/70 data-[state=active]:text-primary-foreground data-[state=active]:shadow-[0_14px_28px_-22px_hsl(var(--nmims-maroon)/0.7)] flex items-center gap-2 py-3 px-4 rounded-2xl border border-white/60 bg-background/62 backdrop-blur-md"
             >
               <Lightbulb className="w-4 h-4" />
               <span className="hidden sm:inline">Room Controls</span>
@@ -77,7 +77,7 @@ export default function StudentDashboard() {
             </TabsTrigger>
             <TabsTrigger
               value="salon"
-              className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground flex items-center gap-2 py-3 px-4 rounded-lg border border-border bg-card"
+              className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary/90 data-[state=active]:to-primary/70 data-[state=active]:text-primary-foreground data-[state=active]:shadow-[0_14px_28px_-22px_hsl(var(--nmims-maroon)/0.7)] flex items-center gap-2 py-3 px-4 rounded-2xl border border-white/60 bg-background/62 backdrop-blur-md"
             >
               <Scissors className="w-4 h-4" />
               <span className="hidden sm:inline">Salon</span>
@@ -85,7 +85,7 @@ export default function StudentDashboard() {
             </TabsTrigger>
             <TabsTrigger
               value="notifications"
-              className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground flex items-center gap-2 py-3 px-4 rounded-lg border border-border bg-card"
+              className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary/90 data-[state=active]:to-primary/70 data-[state=active]:text-primary-foreground data-[state=active]:shadow-[0_14px_28px_-22px_hsl(var(--nmims-maroon)/0.7)] flex items-center gap-2 py-3 px-4 rounded-2xl border border-white/60 bg-background/62 backdrop-blur-md"
             >
               <Bell className="w-4 h-4" />
               <span className="hidden sm:inline">Notifications</span>

@@ -6,9 +6,10 @@ import { cn } from '@/lib/utils';
 interface VoiceInputProps {
   onTranscript: (text: string) => void;
   disabled?: boolean;
+  className?: string;
 }
 
-export function VoiceInput({ onTranscript, disabled }: VoiceInputProps) {
+export function VoiceInput({ onTranscript, disabled, className }: VoiceInputProps) {
   const [isListening, setIsListening] = useState(false);
   const [supported] = useState(() => {
     return typeof window !== 'undefined' && ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window);
@@ -49,7 +50,8 @@ export function VoiceInput({ onTranscript, disabled }: VoiceInputProps) {
       disabled={disabled || isListening}
       className={cn(
         'h-8 w-8 shrink-0',
-        isListening && 'text-destructive animate-pulse'
+        isListening && 'text-destructive animate-pulse',
+        className
       )}
       title={isListening ? 'Listening...' : 'Voice input'}
     >

@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { MessageCircle, X, Send, Bot, User } from 'lucide-react';
+import { MessageCircle, X, Send, Bot, User, House } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { useAuth } from '@/contexts/AuthContext';
 import { useData } from '@/contexts/DataContext';
 import { VoiceInput } from './VoiceInput';
@@ -19,8 +18,31 @@ const welcomeMessages: Record<string, string> = {
     "Hello! I can assist with system oversight and user management.",
 };
 
+const insightCards: Record<string, Array<{ label: string; value: string }>> = {
+  student: [
+    { label: 'Upcoming Meeting', value: '10:00 AM' },
+    { label: 'Daily Insights', value: 'Health & Productivity' },
+    { label: 'Smart Home Control', value: 'Active' },
+  ],
+  admin: [
+    { label: 'Pending Reviews', value: 'Dashboard Ready' },
+    { label: 'Daily Insights', value: 'Operations Overview' },
+    { label: 'System Health', value: 'Stable' },
+  ],
+  vendor: [
+    { label: 'Store Updates', value: 'Orders in Queue' },
+    { label: 'Daily Insights', value: 'Inventory Signals' },
+    { label: 'Service Status', value: 'Active' },
+  ],
+  super_user: [
+    { label: 'Governance Pulse', value: 'Platform Supervision' },
+    { label: 'Daily Insights', value: 'Security & Access' },
+    { label: 'Control Center', value: 'Active' },
+  ],
+};
+
 export function AIChatBot() {
-  const { role, session } = useAuth();
+  const { role, session, profile } = useAuth();
   const { refetchData } = useData();
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -103,7 +125,15 @@ export function AIChatBot() {
     [sendMessage]
   );
 
+  const resetConversation = () => {
+    setMessages([]);
+    setInput('');
+    inputRef.current?.focus();
+  };
+
   const welcome = welcomeMessages[role || 'student'];
+  const cards = insightCards[role || 'student'];
+  const firstName = profile?.full_name?.trim().split(' ')[0] || 'there';
 
   return (
     <>
@@ -111,7 +141,7 @@ export function AIChatBot() {
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
-          className="fixed bottom-6 right-6 z-50 h-14 w-14 rounded-full bg-primary text-primary-foreground shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center hover:scale-105"
+          className="assistant-launcher fixed bottom-6 right-6 z-50"
           aria-label="Open AI Assistant"
         >
           <MessageCircle className="h-6 w-6" />
@@ -120,17 +150,19 @@ export function AIChatBot() {
 
       {/* Chat panel */}
       {isOpen && (
-        <div className="fixed bottom-6 right-6 z-50 w-[360px] max-w-[calc(100vw-2rem)] h-[500px] max-h-[calc(100vh-6rem)] flex flex-col rounded-2xl border border-border bg-card shadow-2xl animate-fade-in overflow-hidden">
+        <div className="assistant-shell fixed inset-0 z-50 sm:inset-auto sm:bottom-6 sm:right-6 sm:w-[390px] sm:h-[620px] flex flex-col animate-fade-in overflow-hidden">
           {/* Header */}
-          <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-primary/5">
+          <div className="assistant-header flex items-center justify-between px-5 py-4">
             <div className="flex items-center gap-2">
-              <Bot className="h-5 w-5 text-primary" />
-              <span className="font-semibold text-sm">AI Assistant</span>
+              <div className="assistant-mini-orb">
+                <Bot className="h-4 w-4 text-primary" />
+              </div>
+              <span className="font-semibold text-sm text-foreground">AI Assistant</span>
             </div>
             <Button
               size="icon"
               variant="ghost"
-              className="h-7 w-7"
+              className="h-8 w-8 rounded-full hover:bg-background/70"
               onClick={() => setIsOpen(false)}
             >
               <X className="h-4 w-4" />
@@ -138,15 +170,39 @@ export function AIChatBot() {
           </div>
 
           {/* Messages */}
-          <div ref={scrollRef} className="flex-1 overflow-y-auto p-4 space-y-3">
+          <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 py-4 space-y-3">
+            {messages.length === 0 && (
+              <div className="space-y-4 animate-liquid-rise pb-2">
+                <div className="assistant-greeting">
+                  <p className="text-2xl font-semibold leading-tight text-foreground">Good morning, {firstName}.</p>
+                  <p className="text-muted-foreground mt-1">Ready for today?</p>
+                </div>
+
+                <div className="assistant-orb-wrap">
+                  <div className="assistant-orb">
+                    <div className="assistant-wave" />
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                  {cards.map((card) => (
+                    <div key={card.label} className="assistant-insight-card">
+                      <p className="text-sm text-muted-foreground">{card.label}:</p>
+                      <p className={cn('text-[1.15rem] font-semibold leading-tight', card.value === 'Active' ? 'text-primary' : 'text-foreground')}>
+                        {card.value}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
             {/* Welcome */}
             <div className="flex gap-2">
-              <div className="h-7 w-7 rounded-full bg-primary/10 flex items-center justify-center shrink-0 mt-0.5">
+              <div className="assistant-avatar">
                 <Bot className="h-4 w-4 text-primary" />
               </div>
-              <div className="rounded-xl rounded-tl-sm bg-muted px-3 py-2 text-sm max-w-[85%]">
-                {welcome}
-              </div>
+              <div className="assistant-message assistant-message-bot">{welcome}</div>
             </div>
 
             {messages.map((msg, i) => (
@@ -154,12 +210,7 @@ export function AIChatBot() {
                 key={i}
                 className={cn('flex gap-2', msg.role === 'user' && 'flex-row-reverse')}
               >
-                <div
-                  className={cn(
-                    'h-7 w-7 rounded-full flex items-center justify-center shrink-0 mt-0.5',
-                    msg.role === 'user' ? 'bg-primary/10' : 'bg-primary/10'
-                  )}
-                >
+                <div className="assistant-avatar">
                   {msg.role === 'user' ? (
                     <User className="h-4 w-4 text-primary" />
                   ) : (
@@ -168,10 +219,10 @@ export function AIChatBot() {
                 </div>
                 <div
                   className={cn(
-                    'rounded-xl px-3 py-2 text-sm max-w-[85%] whitespace-pre-wrap',
+                    'assistant-message',
                     msg.role === 'user'
-                      ? 'bg-primary text-primary-foreground rounded-tr-sm'
-                      : 'bg-muted rounded-tl-sm'
+                      ? 'assistant-message-user'
+                      : 'assistant-message-bot'
                   )}
                 >
                   {msg.content}
@@ -181,14 +232,14 @@ export function AIChatBot() {
 
             {isLoading && messages[messages.length - 1]?.role !== 'assistant' && (
               <div className="flex gap-2">
-                <div className="h-7 w-7 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                <div className="assistant-avatar">
                   <Bot className="h-4 w-4 text-primary" />
                 </div>
-                <div className="rounded-xl rounded-tl-sm bg-muted px-3 py-2 text-sm">
+                <div className="assistant-message assistant-message-bot">
                   <span className="inline-flex gap-1">
-                    <span className="w-1.5 h-1.5 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                    <span className="w-1.5 h-1.5 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                    <span className="w-1.5 h-1.5 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                    <span className="w-1.5 h-1.5 bg-primary/60 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                    <span className="w-1.5 h-1.5 bg-primary/60 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                    <span className="w-1.5 h-1.5 bg-primary/60 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
                   </span>
                 </div>
               </div>
@@ -196,30 +247,48 @@ export function AIChatBot() {
           </div>
 
           {/* Input */}
-          <form
-            onSubmit={handleSubmit}
-            className="flex items-center gap-1 px-3 py-2 border-t border-border"
-          >
-            <VoiceInput onTranscript={handleVoiceTranscript} disabled={isLoading} />
-            <input
-              ref={inputRef}
-              type="text"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              placeholder="Type or speak..."
-              disabled={isLoading}
-              className="flex-1 h-9 px-3 text-sm bg-transparent border-none outline-none placeholder:text-muted-foreground"
-            />
-            <Button
-              type="submit"
-              size="icon"
-              variant="ghost"
-              className="h-8 w-8 shrink-0"
-              disabled={!input.trim() || isLoading}
-            >
-              <Send className="h-4 w-4" />
-            </Button>
-          </form>
+          <div className="px-4 pb-4 pt-2">
+            <form onSubmit={handleSubmit} className="assistant-dock">
+              <Button
+                type="button"
+                size="icon"
+                variant="ghost"
+                onClick={resetConversation}
+                className="h-10 w-10 shrink-0 rounded-full text-primary hover:bg-primary/15"
+                title="Reset conversation"
+              >
+                <House className="h-5 w-5" />
+              </Button>
+
+              <input
+                ref={inputRef}
+                type="text"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                placeholder="Ask anything..."
+                disabled={isLoading}
+                className="assistant-input"
+              />
+
+              {!input.trim() ? (
+                <VoiceInput
+                  onTranscript={handleVoiceTranscript}
+                  disabled={isLoading}
+                  className="assistant-mic-btn"
+                />
+              ) : (
+                <Button
+                  type="submit"
+                  size="icon"
+                  variant="ghost"
+                  className="assistant-send-btn"
+                  disabled={!input.trim() || isLoading}
+                >
+                  <Send className="h-4 w-4" />
+                </Button>
+              )}
+            </form>
+          </div>
         </div>
       )}
     </>

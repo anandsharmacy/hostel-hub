@@ -175,7 +175,7 @@ export function CleaningRequestForm() {
     <Card className="card-elevated">
       <CardHeader>
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
+          <div className="w-10 h-10 glass-panel-soft rounded-2xl flex items-center justify-center">
             <Sparkles className="w-5 h-5 text-primary" />
           </div>
           <div>
@@ -238,7 +238,7 @@ export function CleaningRequestForm() {
                 min={8}
                 max={15}
               />
-              <span className="text-xl font-bold text-muted-foreground pb-6">to</span>
+              <span className="text-xl font-semibold text-primary/70 pb-6">to</span>
               <FlipTimePicker
                 label="End"
                 hour={endHour}
@@ -251,7 +251,7 @@ export function CleaningRequestForm() {
               />
             </div>
             <div className="text-center">
-              <span className="inline-flex items-center gap-2 px-4 py-2 bg-muted rounded-lg text-sm font-medium">
+              <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/60 bg-background/62 backdrop-blur-sm text-sm font-medium">
                 <Clock className="w-4 h-4 text-primary" />
                 Available: {availabilityStart} – {availabilityEnd}
               </span>
@@ -260,7 +260,7 @@ export function CleaningRequestForm() {
 
           {/* Queue Info */}
           {formData.preferredDate && (
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <div className="flex items-center gap-2 text-sm text-muted-foreground rounded-2xl border border-white/55 bg-background/48 backdrop-blur-sm px-3 py-2">
               <Users className="w-4 h-4" />
               {isLoadingQueue ? (
                 <span>Checking queue...</span>
@@ -276,7 +276,7 @@ export function CleaningRequestForm() {
 
           {/* Expected Arrival Time */}
           {expectedArrival.overflow ? (
-            <Alert className="bg-destructive/5 border-destructive/20">
+            <Alert className="bg-destructive/10 border-destructive/30">
               <AlertTriangle className="h-4 w-4 text-destructive" />
               <AlertDescription className="text-sm">
                 <span className="font-medium">Time slot full!</span>{' '}
@@ -284,7 +284,7 @@ export function CleaningRequestForm() {
               </AlertDescription>
             </Alert>
           ) : (
-            <Alert className="bg-primary/5 border-primary/20">
+            <Alert className="bg-primary/10 border-primary/30">
               <Info className="h-4 w-4 text-primary" />
               <AlertDescription className="text-sm">
                 <span className="font-medium">Expected Arrival Time:</span>{' '}
@@ -308,7 +308,7 @@ export function CleaningRequestForm() {
             />
           </div>
 
-          <Button type="submit" className="w-full md:w-auto" disabled={isSubmitting || expectedArrival.overflow}>
+          <Button type="submit" className="w-full md:w-auto md:min-w-64 md:mx-auto md:block" disabled={isSubmitting || expectedArrival.overflow}>
             {isSubmitting ? (
               <span className="flex items-center gap-2">
                 <span className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />

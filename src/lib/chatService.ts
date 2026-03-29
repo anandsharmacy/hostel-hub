@@ -2,6 +2,17 @@ export type ChatMessage = { role: "user" | "assistant"; content: string };
 
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/chat`;
 
+async function postChat(messages: ChatMessage[], token: string) {
+  return fetch(CHAT_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ messages }),
+  });
+}
+
 export async function streamChat({
   messages,
   token,
@@ -16,14 +27,29 @@ export async function streamChat({
   onError: (error: string) => void;
 }) {
   try {
-    const resp = await fetch(CHAT_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({ messages }),
-    });
+    let resp = await postChat(messages, token);
+
+    // If token is stale/expired, refresh the Supabase session and retry once.
+    if (resp.status === 401) {
+      const { supabase } = await import("@/integrations/supabase/client");
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+
+      const refreshedToken = session?.access_token;
+      if (refreshedToken && refreshedToken !== token) {
+        resp = await postChat(messages, refreshedToken);
+      } else {
+        const {
+          data: { session: forcedSession },
+        } = await supabase.auth.refreshSession();
+
+        const forcedToken = forcedSession?.access_token;
+        if (forcedToken) {
+          resp = await postChat(messages, forcedToken);
+        }
+      }
+    }
 
     if (!resp.ok) {
       if (resp.status === 429) {

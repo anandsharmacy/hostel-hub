@@ -40,7 +40,7 @@ export function Header() {
   ];
 
   return (
-    <header className="nmims-header text-white shadow-md">
+    <header className="nmims-header text-foreground">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-14">
           {/* Logo and Title */}
@@ -48,11 +48,11 @@ export function Header() {
             <img 
               src={nmimsLogo} 
               alt="NMIMS Logo" 
-              className="h-8 w-auto brightness-0 invert"
+              className="h-8 w-auto"
             />
             <div className="hidden sm:block">
               <p className="text-sm font-medium leading-tight">NMIMS Hyderabad</p>
-              <p className="text-xs opacity-80">Hostel Services</p>
+              <p className="text-xs text-muted-foreground">Hostel Services</p>
             </div>
           </Link>
 
@@ -62,7 +62,7 @@ export function Header() {
               <a
                 key={link.label}
                 href={link.href}
-                className="text-sm font-medium hover:text-white/80 transition-colors"
+                className="text-sm font-medium hover:text-primary transition-colors"
               >
                 {link.label}
               </a>
@@ -73,12 +73,12 @@ export function Header() {
           <div className="hidden md:flex items-center gap-3">
             <button
               onClick={toggleTheme}
-              className="p-2 rounded-lg hover:bg-white/10 transition-colors"
+              className="p-2 rounded-xl border border-transparent hover:border-white/60 hover:bg-background/60 transition-colors"
               aria-label="Toggle dark mode"
             >
               {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
             </button>
-            <span className="px-3 py-1 bg-white/10 rounded-full text-xs font-medium">
+            <span className="px-3 py-1 bg-background/70 border border-white/60 rounded-full text-xs font-medium shadow-[0_8px_20px_-16px_hsl(var(--nmims-maroon)/0.5)]">
               {getRoleLabel()}
             </span>
             <div className="text-right">
@@ -89,7 +89,7 @@ export function Header() {
               variant="ghost"
               size="sm"
               onClick={handleLogout}
-              className="text-white hover:bg-white/10"
+              className="hover:bg-background/65 border border-transparent hover:border-white/60"
             >
               <LogOut className="h-4 w-4 mr-2" />
               Logout
@@ -98,7 +98,7 @@ export function Header() {
 
           {/* Mobile Menu Button */}
           <button
-            className="md:hidden p-2 hover:bg-white/10 rounded-lg"
+            className="md:hidden p-2 hover:bg-background/65 rounded-xl border border-transparent hover:border-white/60"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           >
             {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
@@ -107,23 +107,23 @@ export function Header() {
 
         {/* Mobile Menu */}
         {mobileMenuOpen && (
-          <div className="md:hidden py-4 border-t border-white/20 animate-slide-up">
+          <div className="md:hidden py-4 border-t border-white/40 animate-slide-up">
             <div className="space-y-4">
               <div className="px-2">
-                <span className="px-3 py-1 bg-white/10 rounded-full text-xs font-medium">
+                <span className="px-3 py-1 bg-background/70 border border-white/60 rounded-full text-xs font-medium">
                   {getRoleLabel()}
                 </span>
               </div>
               <div className="px-2">
                 <p className="text-sm font-medium">{profile?.full_name || 'User'}</p>
-                <p className="text-xs opacity-80">{user?.email}</p>
+                <p className="text-xs text-muted-foreground">{user?.email}</p>
               </div>
               <div className="flex flex-col gap-2">
                 {navLinks.map((link) => (
                   <a
                     key={link.label}
                     href={link.href}
-                    className="px-2 py-2 text-sm hover:bg-white/10 rounded"
+                    className="px-2 py-2 text-sm hover:bg-background/60 rounded-xl"
                   >
                     {link.label}
                   </a>
@@ -133,7 +133,7 @@ export function Header() {
                 variant="ghost"
                 size="sm"
                 onClick={handleLogout}
-                className="text-white hover:bg-white/10 w-full justify-start"
+                className="hover:bg-background/65 w-full justify-start"
               >
                 <LogOut className="h-4 w-4 mr-2" />
                 Logout

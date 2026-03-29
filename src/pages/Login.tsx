@@ -209,14 +209,14 @@ export default function Login() {
   return (
     <div className="min-h-screen flex flex-col">
       {/* Navigation Header */}
-      <header className="nmims-header text-white">
+      <header className="nmims-header text-foreground">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-14">
             <div className="flex items-center">
               <img
                 src={nmimsLogo}
                 alt="NMIMS Logo"
-                className="h-8 w-auto brightness-0 invert"
+                className="h-8 w-auto"
               />
             </div>
 
@@ -226,7 +226,7 @@ export default function Login() {
                   <Link
                     key={link.label}
                     to={link.href}
-                    className="text-sm font-medium hover:text-white/80 transition-colors"
+                    className="text-sm font-medium hover:text-primary transition-colors"
                   >
                     {link.label}
                   </Link>
@@ -234,7 +234,7 @@ export default function Login() {
                   <a
                     key={link.label}
                     href={link.href}
-                    className="text-sm font-medium hover:text-white/80 transition-colors"
+                    className="text-sm font-medium hover:text-primary transition-colors"
                   >
                     {link.label}
                   </a>
@@ -244,7 +244,7 @@ export default function Login() {
 
             <button
               onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-              className="p-2 rounded-lg hover:bg-white/10 transition-colors"
+              className="p-2 rounded-xl border border-transparent hover:border-white/60 hover:bg-background/60 transition-colors"
               aria-label="Toggle dark mode"
             >
               {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
@@ -314,7 +314,7 @@ export default function Login() {
             </div>
           </>
         ) : currentView === 'superuser' ? (
-          <Card className="w-full max-w-md bg-card/95 backdrop-blur border-0 shadow-xl animate-scale-in">
+          <Card className="w-full max-w-md glass-panel animate-scale-in">
             <CardHeader className="pb-4 text-center relative">
               <button
                 onClick={() => setCurrentView('home')}
@@ -342,7 +342,7 @@ export default function Login() {
                     id="superEmail"
                     type="email"
                     placeholder="Enter super user email"
-                    className="bg-background h-11"
+                    className="h-11"
                     autoComplete="email"
                     {...registerSuper('email')}
                   />
@@ -358,7 +358,7 @@ export default function Login() {
                     id="superPassword"
                     type="password"
                     placeholder="Enter your password"
-                    className="bg-background h-11"
+                    className="h-11"
                     autoComplete="current-password"
                     {...registerSuper('password')}
                   />
@@ -370,7 +370,7 @@ export default function Login() {
                 <Button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full h-11 bg-nmims-maroon hover:bg-nmims-dark-maroon text-white font-medium"
+                  className="w-full h-11 font-medium"
                 >
                   {isSubmitting ? (
                     <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -385,7 +385,7 @@ export default function Login() {
             </CardContent>
           </Card>
         ) : currentView === 'signin' ? (
-          <Card className="w-full max-w-md bg-card/95 backdrop-blur border-0 shadow-xl animate-scale-in">
+          <Card className="w-full max-w-md glass-panel animate-scale-in">
             <CardHeader className="pb-4 text-center relative">
               <button
                 onClick={() => setCurrentView('home')}
@@ -413,7 +413,7 @@ export default function Login() {
                     id="email"
                     type="email"
                     placeholder="Enter your email"
-                    className="bg-background h-11"
+                    className="h-11"
                     autoComplete="email"
                     {...registerLogin('email')}
                   />
@@ -429,7 +429,7 @@ export default function Login() {
                     id="password"
                     type="password"
                     placeholder="Enter your password"
-                    className="bg-background h-11"
+                    className="h-11"
                     autoComplete="current-password"
                     {...registerLogin('password')}
                   />
@@ -441,7 +441,7 @@ export default function Login() {
                 <Button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full h-11 bg-nmims-maroon hover:bg-nmims-dark-maroon text-white font-medium"
+                  className="w-full h-11 font-medium"
                 >
                   {isSubmitting ? (
                     <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -480,7 +480,7 @@ export default function Login() {
             </CardContent>
           </Card>
         ) : currentView === 'forgot-password' ? (
-          <Card className="w-full max-w-md bg-card/95 backdrop-blur border-0 shadow-xl animate-scale-in">
+          <Card className="w-full max-w-md glass-panel animate-scale-in">
             <CardHeader className="pb-4 text-center relative">
               <button
                 onClick={() => setCurrentView('signin')}
@@ -509,7 +509,7 @@ export default function Login() {
                   placeholder="Enter your email"
                   value={resetEmail}
                   onChange={(e) => setResetEmail(e.target.value)}
-                   className="bg-background h-11"
+                  className="h-11"
                   autoComplete="email"
                 />
               </div>
@@ -532,7 +532,7 @@ export default function Login() {
                   }
                 }}
                 disabled={isSubmitting}
-                className="w-full h-11 bg-nmims-maroon hover:bg-nmims-dark-maroon text-white font-medium"
+                className="w-full h-11 font-medium"
               >
                 {isSubmitting ? (
                   <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -559,7 +559,7 @@ export default function Login() {
             </CardContent>
           </Card>
         ) : (
-          <Card className="w-full max-w-md bg-card/95 backdrop-blur border-0 shadow-xl animate-scale-in">
+          <Card className="w-full max-w-md glass-panel animate-scale-in">
             <CardHeader className="pb-4 text-center relative">
               <button
                 onClick={() => setCurrentView('home')}
@@ -587,7 +587,7 @@ export default function Login() {
                     id="fullName"
                     type="text"
                     placeholder="Enter your full name"
-                    className="bg-background h-11"
+                    className="h-11"
                     autoComplete="name"
                     {...registerSignup('fullName')}
                   />
@@ -604,7 +604,7 @@ export default function Login() {
                     id="signupEmail"
                     type="email"
                     placeholder="Enter your email"
-                    className="bg-background h-11"
+                    className="h-11"
                     autoComplete="email"
                     {...registerSignup('email')}
                   />
@@ -621,7 +621,7 @@ export default function Login() {
                     id="signupPassword"
                     type="password"
                     placeholder="Create a password"
-                    className="bg-background h-11"
+                    className="h-11"
                     autoComplete="new-password"
                     {...registerSignup('password')}
                   />
@@ -639,7 +639,7 @@ export default function Login() {
                     control={controlSignup}
                     render={({ field }) => (
                       <Select value={field.value} onValueChange={field.onChange}>
-                        <SelectTrigger className="bg-background h-11">
+                        <SelectTrigger className="h-11">
                           <SelectValue placeholder="Select your role" />
                         </SelectTrigger>
                         <SelectContent>
@@ -658,7 +658,7 @@ export default function Login() {
                 </div>
 
                 {(selectedRole === 'admin' || selectedRole === 'vendor' || selectedRole === 'barber' || selectedRole === 'laundry') && (
-                  <div className="p-3 bg-warning/10 border border-warning/30 rounded-lg">
+                  <div className="p-3 bg-warning/15 border border-warning/35 rounded-2xl backdrop-blur-sm">
                     <p className="text-xs text-warning-foreground">
                       <strong>Note:</strong> {selectedRole === 'barber' ? 'Barber' : selectedRole === 'laundry' ? 'Laundry Owner' : 'Admin and Vendor'} accounts require Super User approval before you can login.
                     </p>
@@ -675,7 +675,7 @@ export default function Login() {
                       type="password"
                       maxLength={4}
                       placeholder="Enter 4-digit PIN"
-                      className="bg-background h-11"
+                      className="h-11"
                       {...registerSignup('revenuePin')}
                       onChange={(e) => {
                         const val = e.target.value.replace(/\D/g, '');
@@ -697,7 +697,7 @@ export default function Login() {
                     control={controlSignup}
                     render={({ field }) => (
                       <Select value={field.value || ''} onValueChange={field.onChange}>
-                        <SelectTrigger className="bg-background h-11">
+                        <SelectTrigger className="h-11">
                           <SelectValue placeholder="Select gender" />
                         </SelectTrigger>
                         <SelectContent>
@@ -722,7 +722,7 @@ export default function Login() {
                         id="sapId"
                         type="text"
                         placeholder="Enter your SAP ID"
-                        className="bg-background h-11"
+                        className="h-11"
                         {...registerSignup('sapId')}
                       />
                       {signupErrors.sapId && (
@@ -739,7 +739,7 @@ export default function Login() {
                           id="roomNumber"
                           type="text"
                           placeholder="e.g. 304"
-                          className="bg-background h-11"
+                          className="h-11"
                           {...registerSignup('roomNumber')}
                         />
                         {signupErrors.roomNumber && (
@@ -759,10 +759,10 @@ export default function Login() {
                               onValueChange={field.onChange}
                               disabled={!selectedGender}
                             >
-                              <SelectTrigger className="bg-background h-11 z-50">
+                              <SelectTrigger className="h-11 z-50">
                                 <SelectValue placeholder={selectedGender ? "Select hostel block" : "Select gender first"} />
                               </SelectTrigger>
-                              <SelectContent className="bg-popover z-50">
+                              <SelectContent className="z-50">
                                 {selectedGender === 'male' && (
                                   <>
                                     <SelectItem value="Hostel B1">Hostel B1</SelectItem>
@@ -790,7 +790,7 @@ export default function Login() {
                 <Button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full h-11 bg-nmims-maroon hover:bg-nmims-dark-maroon text-white font-medium"
+                  className="w-full h-11 font-medium"
                 >
                   {isSubmitting ? (
                     <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -821,7 +821,7 @@ export default function Login() {
       </main>
 
       {/* Footer */}
-      <footer className="bg-gray-800 text-white py-3 text-center text-sm">
+      <footer className="border-t border-white/45 bg-background/70 backdrop-blur-md text-foreground py-3 text-center text-sm">
         <p>2026 © NMIMS Hyderabad - All rights reserved.</p>
       </footer>
     </div>

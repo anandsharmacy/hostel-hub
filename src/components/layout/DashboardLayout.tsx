@@ -8,9 +8,9 @@ interface DashboardLayoutProps {
 
 export function DashboardLayout({ children }: DashboardLayoutProps) {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen geometric-bg">
       <DashboardNavbar />
-      <main className="container mx-auto px-4 py-8">
+      <main className="container mx-auto px-4 py-8 animate-liquid-rise">
         {children}
       </main>
       <AIChatBot />
