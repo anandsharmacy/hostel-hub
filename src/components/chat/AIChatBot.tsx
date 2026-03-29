@@ -42,7 +42,7 @@ const insightCards: Record<string, Array<{ label: string; value: string }>> = {
 };
 
 export function AIChatBot() {
-  const { role, session, profile } = useAuth();
+  const { role, session, profile, isLoading: authLoading } = useAuth();
   const { refetchData } = useData();
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -69,7 +69,33 @@ export function AIChatBot() {
 
   const sendMessage = useCallback(
     async (text: string) => {
-      if (!text.trim() || isLoading || !session?.access_token) return;
+      if (!text.trim() || isLoading || authLoading) return;
+
+      let activeToken = session?.access_token;
+
+      // If the token is missing (e.g., hydration lag), try to fetch/refresh once before bailing.
+      if (!activeToken) {
+        try {
+          const { supabase } = await import('@/integrations/supabase/client');
+          const { data: getSessionData } = await supabase.auth.getSession();
+          activeToken = getSessionData.session?.access_token;
+
+          if (!activeToken) {
+            const { data: refreshed } = await supabase.auth.refreshSession();
+            activeToken = refreshed.session?.access_token || undefined;
+          }
+        } catch (err) {
+          console.error('Token fetch error:', err);
+        }
+      }
+
+      if (!activeToken) {
+        setMessages((prev) => [
+          ...prev,
+          { role: 'assistant', content: '⚠️ Please log in to use the chatbot.' },
+        ]);
+        return;
+      }
 
       const userMsg: ChatMessage = { role: 'user', content: text.trim() };
       const newMessages = [...messages, userMsg];
@@ -94,7 +120,7 @@ export function AIChatBot() {
 
       await streamChat({
         messages: newMessages,
-        token: session.access_token,
+        token: activeToken,
         onDelta: upsertAssistant,
         onDone: () => {
           setIsLoading(false);
@@ -110,7 +136,7 @@ export function AIChatBot() {
         },
       });
     },
-    [messages, isLoading, session]
+    [messages, isLoading, authLoading, session, refetchData]
   );
 
   const handleSubmit = (e: React.FormEvent) => {
