@@ -42,7 +42,7 @@ const insightCards: Record<string, Array<{ label: string; value: string }>> = {
 };
 
 export function AIChatBot() {
-  const { user, role, session, profile, isLoading: authLoading } = useAuth();
+  const { user, role, profile, isLoading: authLoading } = useAuth();
   const { refetchData } = useData();
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -105,7 +105,6 @@ export function AIChatBot() {
 
       await streamChat({
         messages: newMessages,
-        token: session?.access_token || '',
         onDelta: upsertAssistant,
         onDone: () => {
           setIsLoading(false);
@@ -121,7 +120,7 @@ export function AIChatBot() {
         },
       });
     },
-    [messages, isLoading, authLoading, user, session, refetchData]
+    [messages, isLoading, authLoading, user, refetchData]
   );
 
   const handleSubmit = (e: React.FormEvent) => {
