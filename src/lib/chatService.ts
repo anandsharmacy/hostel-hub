@@ -23,11 +23,31 @@ function isTokenNearExpiry(token: string, withinSeconds = 60): boolean {
 async function resolveActiveToken(preferredToken?: string): Promise<string | null> {
   const { supabase } = await import("@/integrations/supabase/client");
 
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
+  let token = preferredToken || null;
 
-  let token = session?.access_token || preferredToken || null;
+  if (!token) {
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+    token = session?.access_token || null;
+  }
+
+  if (!token) {
+    const {
+      data: { session: refreshedSession },
+    } = await supabase.auth.refreshSession();
+    token = refreshedSession?.access_token || null;
+  }
+
+  if (!token) {
+    // Some clients can transiently report no session right after page/app hydration.
+    await new Promise((resolve) => setTimeout(resolve, 150));
+    const {
+      data: { session: retriedSession },
+    } = await supabase.auth.getSession();
+    token = retriedSession?.access_token || null;
+  }
+
   if (!token) return null;
 
   if (isTokenNearExpiry(token)) {

@@ -42,7 +42,7 @@ const insightCards: Record<string, Array<{ label: string; value: string }>> = {
 };
 
 export function AIChatBot() {
-  const { role, session, profile, isLoading: authLoading } = useAuth();
+  const { user, role, session, profile, isLoading: authLoading } = useAuth();
   const { refetchData } = useData();
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -71,32 +71,14 @@ export function AIChatBot() {
     async (text: string) => {
       if (!text.trim() || isLoading) return;
 
-      // Wait for auth to finish loading before checking token
-      let activeToken = session?.access_token;
-
-      if (!activeToken) {
-        try {
-          const { supabase } = await import('@/integrations/supabase/client');
-          const { data: getSessionData } = await supabase.auth.getSession();
-          activeToken = getSessionData.session?.access_token;
-
-          if (!activeToken) {
-            const { data: refreshed } = await supabase.auth.refreshSession();
-            activeToken = refreshed.session?.access_token || undefined;
-          }
-        } catch (err) {
-          console.error('Token fetch error:', err);
-        }
-      }
-
-      if (!activeToken) {
-        // Only show login error if auth has fully loaded (not a timing issue)
-        if (!authLoading) {
-          setMessages((prev) => [
-            ...prev,
-            { role: 'assistant', content: '⚠️ Please log in to use the chatbot.' },
-          ]);
-        }
+      // Only guard by authenticated user state here.
+      // Token fallback/retry logic is handled inside streamChat.
+      if (authLoading) return;
+      if (!user) {
+        setMessages((prev) => [
+          ...prev,
+          { role: 'assistant', content: '⚠️ Please log in to use the chatbot.' },
+        ]);
         return;
       }
 
@@ -123,7 +105,7 @@ export function AIChatBot() {
 
       await streamChat({
         messages: newMessages,
-        token: activeToken,
+        token: session?.access_token || '',
         onDelta: upsertAssistant,
         onDone: () => {
           setIsLoading(false);
@@ -139,7 +121,7 @@ export function AIChatBot() {
         },
       });
     },
-    [messages, isLoading, authLoading, session, refetchData]
+    [messages, isLoading, authLoading, user, session, refetchData]
   );
 
   const handleSubmit = (e: React.FormEvent) => {
