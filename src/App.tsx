@@ -20,6 +20,7 @@ import BarberDashboard from "./pages/barber/BarberDashboard";
 import LaundryDashboard from "./pages/laundry/LaundryDashboard";
 import ResetPassword from "./pages/ResetPassword";
 import NotFound from "./pages/NotFound";
+import { AIChatBot } from "@/components/chat/AIChatBot";
 
 const queryClient = new QueryClient();
 
@@ -119,6 +120,7 @@ const App = () => (
             <Sonner />
             <BrowserRouter>
               <AppRoutes />
+              <AIChatBot />
             </BrowserRouter>
           </TooltipProvider>
         </DataProvider>

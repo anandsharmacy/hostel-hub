@@ -28,6 +28,14 @@ function shouldRefreshAccessToken(token: string, withinSeconds = 60): boolean {
   return exp <= now + withinSeconds;
 }
 
+/** User JWT when signed in; otherwise anon key so the chat edge function allows guest mode. */
+async function getChatAuthBearer(): Promise<string | null> {
+  const userToken = await resolveActiveToken();
+  if (userToken) return userToken;
+  const anon = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string | undefined;
+  return anon?.trim() || null;
+}
+
 /**
  * Always resolves the bearer token from the Supabase client session (canonical),
  * never from React state. Refreshes when missing, stale, expired, or unreadable.
@@ -67,12 +75,14 @@ async function resolveActiveToken(): Promise<string | null> {
   return token;
 }
 
-async function postChat(messages: ChatMessage[], token: string) {
+async function postChat(messages: ChatMessage[], bearer: string) {
+  const apikey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string | undefined;
   return fetch(CHAT_URL, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${bearer}`,
+      ...(apikey ? { apikey } : {}),
     },
     body: JSON.stringify({ messages }),
   });
@@ -90,20 +100,20 @@ export async function streamChat({
   onError: (error: string) => void;
 }) {
   try {
-    const initialToken = await resolveActiveToken();
-    if (!initialToken) {
-      onError("Please log in to use the chatbot.");
+    const bearer = await getChatAuthBearer();
+    if (!bearer) {
+      onError("Chat is temporarily unavailable.");
       return;
     }
 
-    let resp = await postChat(messages, initialToken);
+    let resp = await postChat(messages, bearer);
 
     if (resp.status === 401) {
       const { supabase } = await import("@/integrations/supabase/client");
       await supabase.auth.refreshSession();
-      const retryToken = await resolveActiveToken();
-      if (retryToken) {
-        resp = await postChat(messages, retryToken);
+      const retryBearer = await getChatAuthBearer();
+      if (retryBearer) {
+        resp = await postChat(messages, retryBearer);
       }
     }
 
@@ -117,7 +127,7 @@ export async function streamChat({
         return;
       }
       if (resp.status === 401) {
-        onError("Please log in to use the chatbot.");
+        onError("Unable to verify your session. Please try again.");
         return;
       }
 

@@ -8,6 +8,8 @@ import { streamChat, type ChatMessage } from '@/lib/chatService';
 import { cn } from '@/lib/utils';
 
 const welcomeMessages: Record<string, string> = {
+  guest:
+    "Hi! 👋 Ask me about hostel services and the portal. Sign in to your student account to book cleaning, orders, and more. Try typing or use the mic!",
   student:
     "Hi! 👋 I can help you book cleaning, order from the store, file complaints, or request medicine. Try typing or use the mic!",
   admin:
@@ -19,6 +21,11 @@ const welcomeMessages: Record<string, string> = {
 };
 
 const insightCards: Record<string, Array<{ label: string; value: string }>> = {
+  guest: [
+    { label: 'Portal', value: 'Hostel services info' },
+    { label: 'Sign in', value: 'Book & order' },
+    { label: 'Help', value: 'Ask anything' },
+  ],
   student: [
     { label: 'Upcoming Meeting', value: '10:00 AM' },
     { label: 'Daily Insights', value: 'Health & Productivity' },
@@ -42,7 +49,7 @@ const insightCards: Record<string, Array<{ label: string; value: string }>> = {
 };
 
 export function AIChatBot() {
-  const { user, role, profile, isLoading: authLoading } = useAuth();
+  const { role, profile } = useAuth();
   const { refetchData } = useData();
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -70,17 +77,6 @@ export function AIChatBot() {
   const sendMessage = useCallback(
     async (text: string) => {
       if (!text.trim() || isLoading) return;
-
-      // Only guard by authenticated user state here.
-      // Token fallback/retry logic is handled inside streamChat.
-      if (authLoading) return;
-      if (!user) {
-        setMessages((prev) => [
-          ...prev,
-          { role: 'assistant', content: '⚠️ Please log in to use the chatbot.' },
-        ]);
-        return;
-      }
 
       const userMsg: ChatMessage = { role: 'user', content: text.trim() };
       const newMessages = [...messages, userMsg];
@@ -120,7 +116,7 @@ export function AIChatBot() {
         },
       });
     },
-    [messages, isLoading, authLoading, user, refetchData]
+    [messages, isLoading, refetchData]
   );
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -141,8 +137,9 @@ export function AIChatBot() {
     inputRef.current?.focus();
   };
 
-  const welcome = welcomeMessages[role || 'student'];
-  const cards = insightCards[role || 'student'];
+  const effectiveRole = role ?? 'guest';
+  const welcome = welcomeMessages[effectiveRole] ?? welcomeMessages.guest;
+  const cards = insightCards[effectiveRole] ?? insightCards.guest;
   const firstName = profile?.full_name?.trim().split(' ')[0] || 'there';
 
   return (

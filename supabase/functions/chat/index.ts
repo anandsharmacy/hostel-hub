@@ -122,6 +122,13 @@ const tools = [
 ];
 
 function getSystemPrompt(role: string, profile: any) {
+  if (role === "guest") {
+    return `You are a helpful AI assistant for the NMIMS Hostel Management Portal. Be concise and friendly. Today's date is ${new Date().toISOString().split("T")[0]}.
+The visitor is not signed in. You may answer general questions about hostel services, rules, and how the portal works.
+Explain that booking cleaning, store orders, appliance complaints, and medicine requests require signing in to the student portal with their account.
+Do not claim you have submitted or booked anything on their behalf.`;
+  }
+
   const base = `You are a helpful AI assistant for the NMIMS Hostel Management Portal. Be concise and friendly. Today's date is ${new Date().toISOString().split("T")[0]}.`;
 
   const profileInfo = profile
@@ -385,38 +392,36 @@ serve(async (req) => {
   try {
     if (!GEMINI_API_KEY) throw new Error("GEMINI_API_KEY is not configured");
 
-    // Get user from auth header
     const authHeader = req.headers.get("authorization") || "";
-    const token = authHeader.replace("Bearer ", "");
+    const token = authHeader.replace(/^Bearer\s+/i, "").trim();
 
     const supabaseAuth = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
-    const {
-      data: { user },
-      error: userError,
-    } = await supabaseAuth.auth.getUser(token);
+    let user: { id: string } | null = null;
+    let profile: any = null;
+    let role = "guest";
 
-    if (userError || !user) {
-      return new Response(
-        JSON.stringify({ error: "Unauthorized" }),
-        { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+    if (token) {
+      const {
+        data: { user: u },
+        error: userError,
+      } = await supabaseAuth.auth.getUser(token);
+      if (!userError && u) {
+        user = u;
+        const [profileRes, roleRes] = await Promise.all([
+          supabaseAuth.from("profiles").select("*").eq("user_id", u.id).maybeSingle(),
+          supabaseAuth.from("user_roles").select("role").eq("user_id", u.id).maybeSingle(),
+        ]);
+        profile = profileRes.data;
+        role = roleRes.data?.role || "student";
+      }
     }
-
-    // Get user profile and role
-    const [profileRes, roleRes] = await Promise.all([
-      supabaseAuth.from("profiles").select("*").eq("user_id", user.id).maybeSingle(),
-      supabaseAuth.from("user_roles").select("role").eq("user_id", user.id).maybeSingle(),
-    ]);
-
-    const profile = profileRes.data;
-    const role = roleRes.data?.role || "student";
 
     const { messages } = await req.json();
     const systemPrompt = getSystemPrompt(role, profile);
 
-    // Only give tools to students
-    const requestTools = role === "student" ? tools : undefined;
+    // Tools only for signed-in students (DB actions require a user id)
+    const requestTools = user && role === "student" ? tools : undefined;
 
     // First AI call
     const aiPayload: any = {
@@ -458,8 +463,14 @@ serve(async (req) => {
     const aiData = await aiResponse.json();
     const choice = aiData.choices?.[0];
 
-    // Check for tool calls
+    // Check for tool calls (only students with tools enabled; guard if model misbehaves)
     if (choice?.message?.tool_calls?.length) {
+      if (!user) {
+        return new Response(
+          JSON.stringify({ error: "Sign in required for this action." }),
+          { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
       const toolCall = choice.message.tool_calls[0];
       const fnName = toolCall.function.name;
       const fnArgs = JSON.parse(toolCall.function.arguments);
