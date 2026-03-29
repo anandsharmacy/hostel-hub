@@ -32,7 +32,7 @@ function shouldRefreshAccessToken(token: string, withinSeconds = 60): boolean {
 async function getChatAuthBearer(): Promise<string | null> {
   const userToken = await resolveActiveToken();
   if (userToken) return userToken;
-  const anon = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string | undefined;
+  const anon = (import.meta.env.VITE_SUPABASE_ANON_KEY || import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY) as string | undefined;
   return anon?.trim() || null;
 }
 
@@ -76,7 +76,7 @@ async function resolveActiveToken(): Promise<string | null> {
 }
 
 async function postChat(messages: ChatMessage[], bearer: string) {
-  const apikey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string | undefined;
+  const apikey = (import.meta.env.VITE_SUPABASE_ANON_KEY || import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY) as string | undefined;
   return fetch(CHAT_URL, {
     method: "POST",
     headers: {
