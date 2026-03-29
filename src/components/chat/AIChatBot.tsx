@@ -69,11 +69,11 @@ export function AIChatBot() {
 
   const sendMessage = useCallback(
     async (text: string) => {
-      if (!text.trim() || isLoading || authLoading) return;
+      if (!text.trim() || isLoading) return;
 
+      // Wait for auth to finish loading before checking token
       let activeToken = session?.access_token;
 
-      // If the token is missing (e.g., hydration lag), try to fetch/refresh once before bailing.
       if (!activeToken) {
         try {
           const { supabase } = await import('@/integrations/supabase/client');
@@ -90,10 +90,13 @@ export function AIChatBot() {
       }
 
       if (!activeToken) {
-        setMessages((prev) => [
-          ...prev,
-          { role: 'assistant', content: '⚠️ Please log in to use the chatbot.' },
-        ]);
+        // Only show login error if auth has fully loaded (not a timing issue)
+        if (!authLoading) {
+          setMessages((prev) => [
+            ...prev,
+            { role: 'assistant', content: '⚠️ Please log in to use the chatbot.' },
+          ]);
+        }
         return;
       }
 
