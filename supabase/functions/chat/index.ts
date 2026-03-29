@@ -9,6 +9,9 @@ const corsHeaders = {
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+const GEMINI_API_KEY = Deno.env.get("GEMINI_API_KEY")!;
+const GEMINI_OPENAI_URL = "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions";
+const GEMINI_MODEL = "gemini-2.0-flash";
 
 const tools = [
   {
@@ -380,8 +383,7 @@ serve(async (req) => {
   }
 
   try {
-    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-    if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
+    if (!GEMINI_API_KEY) throw new Error("GEMINI_API_KEY is not configured");
 
     // Get user from auth header
     const authHeader = req.headers.get("authorization") || "";
@@ -418,7 +420,7 @@ serve(async (req) => {
 
     // First AI call
     const aiPayload: any = {
-      model: "google/gemini-3-flash-preview",
+      model: GEMINI_MODEL,
       messages: [{ role: "system", content: systemPrompt }, ...messages],
       stream: false,
     };
@@ -426,17 +428,14 @@ serve(async (req) => {
       aiPayload.tools = requestTools;
     }
 
-    const aiResponse = await fetch(
-      "https://ai.gateway.lovable.dev/v1/chat/completions",
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${LOVABLE_API_KEY}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(aiPayload),
-      }
-    );
+    const aiResponse = await fetch(GEMINI_OPENAI_URL, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${GEMINI_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(aiPayload),
+    });
 
     if (!aiResponse.ok) {
       if (aiResponse.status === 429) {
@@ -452,8 +451,8 @@ serve(async (req) => {
         );
       }
       const errText = await aiResponse.text();
-      console.error("AI gateway error:", aiResponse.status, errText);
-      throw new Error("AI gateway error");
+      console.error("Gemini API error:", aiResponse.status, errText);
+      throw new Error("Gemini API error");
     }
 
     const aiData = await aiResponse.json();
@@ -479,21 +478,18 @@ serve(async (req) => {
         },
       ];
 
-      const followupRes = await fetch(
-        "https://ai.gateway.lovable.dev/v1/chat/completions",
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${LOVABLE_API_KEY}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            model: "google/gemini-3-flash-preview",
-            messages: followupMessages,
-            stream: true,
-          }),
-        }
-      );
+      const followupRes = await fetch(GEMINI_OPENAI_URL, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${GEMINI_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          model: GEMINI_MODEL,
+          messages: followupMessages,
+          stream: true,
+        }),
+      });
 
       if (!followupRes.ok) {
         // Fallback: return the raw result
@@ -520,7 +516,7 @@ serve(async (req) => {
     // No tool call - stream the response
     // Re-do with streaming
     const streamPayload: any = {
-      model: "google/gemini-3-flash-preview",
+      model: GEMINI_MODEL,
       messages: [{ role: "system", content: systemPrompt }, ...messages],
       stream: true,
     };
@@ -528,17 +524,14 @@ serve(async (req) => {
       streamPayload.tools = requestTools;
     }
 
-    const streamResponse = await fetch(
-      "https://ai.gateway.lovable.dev/v1/chat/completions",
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${LOVABLE_API_KEY}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(streamPayload),
-      }
-    );
+    const streamResponse = await fetch(GEMINI_OPENAI_URL, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${GEMINI_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(streamPayload),
+    });
 
     if (!streamResponse.ok) {
       throw new Error("Failed to stream response");
