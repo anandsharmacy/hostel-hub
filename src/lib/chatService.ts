@@ -2,6 +2,44 @@ export type ChatMessage = { role: "user" | "assistant"; content: string };
 
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/chat`;
 
+function decodeJwtExpiry(token: string): number | null {
+  try {
+    const payloadBase64 = token.split(".")[1];
+    if (!payloadBase64) return null;
+    const payload = JSON.parse(atob(payloadBase64)) as { exp?: number };
+    return typeof payload.exp === "number" ? payload.exp : null;
+  } catch {
+    return null;
+  }
+}
+
+function isTokenNearExpiry(token: string, withinSeconds = 60): boolean {
+  const exp = decodeJwtExpiry(token);
+  if (!exp) return false;
+  const now = Math.floor(Date.now() / 1000);
+  return exp - now <= withinSeconds;
+}
+
+async function resolveActiveToken(preferredToken?: string): Promise<string | null> {
+  const { supabase } = await import("@/integrations/supabase/client");
+
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+
+  let token = session?.access_token || preferredToken || null;
+  if (!token) return null;
+
+  if (isTokenNearExpiry(token)) {
+    const {
+      data: { session: refreshedSession },
+    } = await supabase.auth.refreshSession();
+    token = refreshedSession?.access_token || token;
+  }
+
+  return token;
+}
+
 async function postChat(messages: ChatMessage[], token: string) {
   return fetch(CHAT_URL, {
     method: "POST",
@@ -27,27 +65,25 @@ export async function streamChat({
   onError: (error: string) => void;
 }) {
   try {
-    let resp = await postChat(messages, token);
+    const initialToken = await resolveActiveToken(token);
+    if (!initialToken) {
+      onError("Please log in to use the chatbot.");
+      return;
+    }
+
+    let resp = await postChat(messages, initialToken);
 
     // If token is stale/expired, refresh the Supabase session and retry once.
     if (resp.status === 401) {
       const { supabase } = await import("@/integrations/supabase/client");
+
       const {
-        data: { session },
-      } = await supabase.auth.getSession();
+        data: { session: forcedSession },
+      } = await supabase.auth.refreshSession();
 
-      const refreshedToken = session?.access_token;
-      if (refreshedToken && refreshedToken !== token) {
-        resp = await postChat(messages, refreshedToken);
-      } else {
-        const {
-          data: { session: forcedSession },
-        } = await supabase.auth.refreshSession();
-
-        const forcedToken = forcedSession?.access_token;
-        if (forcedToken) {
-          resp = await postChat(messages, forcedToken);
-        }
+      const forcedToken = forcedSession?.access_token;
+      if (forcedToken) {
+        resp = await postChat(messages, forcedToken);
       }
     }
 
