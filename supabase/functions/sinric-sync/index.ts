@@ -22,7 +22,7 @@ const corsHeaders = {
 const SUPABASE_URL = "https://zvbhaehxojklmzylpjri.supabase.co";
 const SUPABASE_SERVICE_ROLE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp2YmhhZWh4b2prbG16eWxwanJpIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3MjgxNTI2NSwiZXhwIjoyMDg4MzkxMjY1fQ.0xrOHuy_ldfhwr9MIPoBPz7EcEBx2D8lZ82vu0N2nUo";
 const SINRIC_API_KEY = "cbce26a2-0037-431a-80ab-59441f73bb66";
-const SINRIC_CLIENT_ID = "nmims-hostel-portal";
+const SINRIC_APP_SECRET = "52775ca0-878a-4ff6-bc9c-b293d9a70634-70cb2377-235f-4740-a4fc-cdf9ddb1c63a";
 const ROOM_CONTROLS_SYNC_SECRET = "52775ca0-878a-4ff6-bc9c-b293d9a70634-70cb2377-235f-4740-a4fc-cdf9ddb1c63a";
 
 type SinricDevice = {
@@ -54,7 +54,7 @@ async function getSinricAccessToken(): Promise<string> {
       "x-sinric-api-key": SINRIC_API_KEY,
       "Content-Type": "application/x-www-form-urlencoded",
     },
-    body: new URLSearchParams({ client_id: SINRIC_CLIENT_ID }),
+    body: new URLSearchParams({ client_id: SINRIC_APP_SECRET }),
   });
 
   if (!res.ok) {
