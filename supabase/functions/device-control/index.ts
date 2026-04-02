@@ -9,9 +9,9 @@ const corsHeaders = {
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-const SINRIC_API_KEY = Deno.env.get("SINRIC_API_KEY") || "";
+const SINRIC_API_KEY = Deno.env.get("SINRIC_API_KEY");
 const SINRIC_CLIENT_ID = Deno.env.get("SINRIC_CLIENT_ID") || "nmims-hostel-portal";
-const ROOM_CONTROLS_SYNC_SECRET = Deno.env.get("ROOM_CONTROLS_SYNC_SECRET") || "";
+const ROOM_CONTROLS_SYNC_SECRET = Deno.env.get("ROOM_CONTROLS_SYNC_SECRET") || "69ceb90817b32c0941e1ddb1";
 
 const DEFAULT_GATEWAY_NAME = "Gateway NodeMCU-1";
 const PLACEHOLDER_DEVICE_ID = "xxxxxxxxxxxxxxxxxxxxxxxx";
