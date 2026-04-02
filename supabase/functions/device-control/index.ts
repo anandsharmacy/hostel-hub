@@ -7,10 +7,11 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type, x-room-controls-secret, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
-const SUPABASE_URL = Deno.env.get("https://zvbhaehxojklmzylpjri.supabase.co")!;
-const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp2YmhhZWh4b2prbG16eWxwanJpIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3MjgxNTI2NSwiZXhwIjoyMDg4MzkxMjY1fQ.0xrOHuy_ldfhwr9MIPoBPz7EcEBx2D8lZ82vu0N2nUo")!;
-const SINRIC_API_KEY = Deno.env.get("cbce26a2-0037-431a-80ab-59441f73bb66");
-const SINRIC_APP_SECRET = Deno.env.get("52775ca0-878a-4ff6-bc9c-b293d9a70634-70cb2377-235f-4740-a4fc-cdf9ddb1c63a") || "nmims-hostel-portal";
+const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
+const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+const SINRIC_API_KEY = Deno.env.get("SINRIC_API_KEY") || "";
+const SINRIC_CLIENT_ID = Deno.env.get("SINRIC_CLIENT_ID") || "nmims-hostel-portal";
+const ROOM_CONTROLS_SYNC_SECRET = Deno.env.get("ROOM_CONTROLS_SYNC_SECRET") || "";
 
 const DEFAULT_GATEWAY_NAME = "Gateway NodeMCU-1";
 const PLACEHOLDER_DEVICE_ID = "xxxxxxxxxxxxxxxxxxxxxxxx";
