@@ -23,7 +23,7 @@ interface RoomControlCardProps {
 
 export function RoomControlCard({ device, pending, onToggle }: RoomControlCardProps) {
   const Icon = getDeviceIcon(device.appliance_type);
-  const isConfigured = Boolean(device.sinric_device_id);
+  const isConfigured = Boolean(device.sinric_device_id?.trim());
 
   return (
     <Card className={`border-border/80 shadow-sm transition-shadow hover:shadow-md ${!isConfigured ? 'opacity-60' : ''}`}>

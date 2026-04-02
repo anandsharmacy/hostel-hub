@@ -30,8 +30,8 @@ export function RoomControlsPanel() {
   const [pendingDeviceId, setPendingDeviceId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const hostelBlock = profile?.hostel_block ?? null;
-  const roomNumber = profile?.room_number ?? null;
+  const hostelBlock = profile?.hostel_block?.trim() ?? null;
+  const roomNumber = profile?.room_number?.trim() ?? null;
   const canLoad = Boolean(session?.access_token && hostelBlock && roomNumber);
 
   const loadControls = useCallback(async () => {
@@ -42,14 +42,35 @@ export function RoomControlsPanel() {
     try {
       let payload = await getRoomControls(hostelBlock, roomNumber);
 
+      if (import.meta.env.DEV) {
+        console.debug('[RoomControlsPanel] initial payload', payload);
+      }
+
       // Auto-provision if no gateway exists yet
       if (!payload.gateway) {
         await provisionRoomControls();
         payload = await getRoomControls(hostelBlock, roomNumber);
+
+        if (import.meta.env.DEV) {
+          console.debug('[RoomControlsPanel] payload after provisioning', payload);
+        }
       }
 
       setGateway(payload.gateway);
       setDevices(payload.devices);
+
+      if (import.meta.env.DEV) {
+        console.debug('[RoomControlsPanel] state update', {
+          gateway: payload.gateway?.id,
+          deviceCount: payload.devices.length,
+          devices: payload.devices.map((device) => ({
+            name: device.name,
+            slug: device.slug,
+            sinric_device_id: device.sinric_device_id,
+            power_state: device.power_state,
+          })),
+        });
+      }
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Failed to load room controls';
       setError(message);
@@ -82,6 +103,22 @@ export function RoomControlsPanel() {
       supabase.removeChannel(channel);
     };
   }, [canLoad, loadControls]);
+
+  useEffect(() => {
+    if (!import.meta.env.DEV) return;
+
+    console.debug('[RoomControlsPanel] render state', {
+      gatewayId: gateway?.id,
+      gatewaySeen: gateway?.last_seen,
+      deviceCount: devices.length,
+      devices: devices.map((device) => ({
+        name: device.name,
+        slug: device.slug,
+        sinric_device_id: device.sinric_device_id,
+        power_state: device.power_state,
+      })),
+    });
+  }, [gateway, devices]);
 
   const handleToggle = useCallback(async (device: RoomDevice, nextState: boolean) => {
     if (!session?.access_token) return;
@@ -151,7 +188,7 @@ export function RoomControlsPanel() {
             <div>
               <CardTitle className="text-xl">Room Controls</CardTitle>
               <p className="mt-1 text-sm text-muted-foreground">
-                Live controls for {profile.hostel_block} room {profile.room_number}
+                Live controls for {hostelBlock} room {roomNumber}
               </p>
             </div>
             <Button variant="outline" size="sm" onClick={loadControls}>

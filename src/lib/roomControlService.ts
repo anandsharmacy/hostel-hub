@@ -15,11 +15,14 @@ export async function provisionRoomControls(): Promise<{ provisioned: boolean; r
 
 /** Load gateway and devices directly from Supabase tables (uses RLS). */
 export async function getRoomControls(hostelBlock: string, roomNumber: string): Promise<{ gateway: RoomGateway | null; devices: RoomDevice[] }> {
+  const normalizedHostelBlock = hostelBlock.trim();
+  const normalizedRoomNumber = roomNumber.trim();
+
   const { data: gateway, error: gwError } = await supabase
     .from('room_gateways')
     .select('*')
-    .eq('hostel_block', hostelBlock)
-    .eq('room_number', roomNumber)
+    .eq('hostel_block', normalizedHostelBlock)
+    .eq('room_number', normalizedRoomNumber)
     .maybeSingle();
 
   if (gwError) throw new Error(gwError.message);
@@ -31,10 +34,26 @@ export async function getRoomControls(hostelBlock: string, roomNumber: string): 
   const { data: devices, error: devError } = await supabase
     .from('room_devices')
     .select('*')
-    .eq('gateway_id', gateway.id)
+    .eq('hostel_block', normalizedHostelBlock)
+    .eq('room_number', normalizedRoomNumber)
     .order('relay_pin', { ascending: true });
 
   if (devError) throw new Error(devError.message);
+
+  if (import.meta.env.DEV) {
+    console.debug('[getRoomControls] payload', {
+      hostelBlock: normalizedHostelBlock,
+      roomNumber: normalizedRoomNumber,
+      gateway,
+      devices: devices?.map((device) => ({
+        id: device.id,
+        name: device.name,
+        slug: device.slug,
+        sinric_device_id: device.sinric_device_id,
+        power_state: device.power_state,
+      })),
+    });
+  }
 
   return { gateway, devices: devices || [] };
 }

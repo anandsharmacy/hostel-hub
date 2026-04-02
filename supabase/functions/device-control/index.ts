@@ -380,6 +380,16 @@ serve(async (req) => {
 
     if (deviceUpdateError) throw deviceUpdateError;
 
+    const { error: gatewayUpdateError } = await supabase
+      .from("room_gateways")
+      .update({
+        connection_state: "online",
+        last_seen: now,
+      })
+      .eq("id", device.gateway_id);
+
+    if (gatewayUpdateError) throw gatewayUpdateError;
+
     const { error: logError } = await supabase.from("room_device_logs").insert({
       room_device_id: device.id,
       user_id: user.id,
