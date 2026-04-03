@@ -205,49 +205,22 @@ async function ensureRoomProvisioned(
   return { gateway: freshGateway, devices: (freshDevices || []) as RoomDeviceRow[] };
 }
 
-async function getSinricAccessToken() {
+async function sendPowerState(deviceId: string, powerState: boolean) {
   if (!SINRIC_API_KEY) {
     throw new Error("SINRIC_API_KEY is not configured");
   }
 
-  const response = await fetch("https://api.sinric.pro/api/v1/auth", {
+  const response = await fetch(`https://api.sinric.pro/api/v1/devices/${deviceId}/action`, {
     method: "POST",
     headers: {
-      "x-sinric-api-key": SINRIC_API_KEY,
-      "Content-Type": "application/x-www-form-urlencoded",
+      "X-SINRIC-API-KEY": SINRIC_API_KEY,
+      "Content-Type": "application/json",
     },
-    body: new URLSearchParams({ client_id: SINRIC_APP_SECRET }),
-  });
-
-  if (!response.ok) {
-    const message = await response.text();
-    throw new Error(`Failed to authenticate with Sinric: ${response.status} ${message}`);
-  }
-
-  const payload = await response.json();
-  if (!payload.accessToken) {
-    throw new Error("Sinric auth response did not include an access token");
-  }
-
-  return payload.accessToken as string;
-}
-
-async function sendPowerState(deviceId: string, powerState: boolean) {
-  const accessToken = await getSinricAccessToken();
-  const query = new URLSearchParams({
-    clientId: SINRIC_APP_SECRET,
-    type: "request",
-    createdAt: `${Date.now()}`,
-    action: "setPowerState",
-    value: JSON.stringify({ state: powerState ? "On" : "Off" }),
-  });
-
-  const response = await fetch(`https://api.sinric.pro/api/v1/devices/${deviceId}/action?${query.toString()}`, {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-Type": "application/x-www-form-urlencoded",
-    },
+    body: JSON.stringify({
+      type: "request",
+      action: "setPowerState",
+      value: JSON.stringify({ state: powerState ? "On" : "Off" }),
+    }),
   });
 
   const text = await response.text();

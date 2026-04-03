@@ -45,34 +45,17 @@ function jsonResponse(body: unknown, status = 200) {
   });
 }
 
-async function getSinricAccessToken(): Promise<string> {
+async function fetchSinricDevices(): Promise<SinricDevice[]> {
   if (!SINRIC_API_KEY) throw new Error("SINRIC_API_KEY not configured");
 
-  const res = await fetch("https://api.sinric.pro/api/v1/auth", {
-    method: "POST",
+  const res = await fetch("https://api.sinric.pro/api/v1/devices", {
     headers: {
-      "x-sinric-api-key": SINRIC_API_KEY,
-      "Content-Type": "application/x-www-form-urlencoded",
+      "X-SINRIC-API-KEY": SINRIC_API_KEY,
     },
-    body: new URLSearchParams({ client_id: SINRIC_APP_SECRET }),
   });
 
   if (!res.ok) {
-    throw new Error(`Sinric auth failed: ${res.status} ${await res.text()}`);
-  }
-
-  const payload = await res.json();
-  if (!payload.accessToken) throw new Error("No accessToken in Sinric auth response");
-  return payload.accessToken as string;
-}
-
-async function fetchSinricDashboard(token: string): Promise<SinricDevice[]> {
-  const res = await fetch("https://api.sinric.pro/api/v1/dashboard", {
-    headers: { Authorization: `Bearer ${token}` },
-  });
-
-  if (!res.ok) {
-    throw new Error(`Sinric dashboard failed: ${res.status} ${await res.text()}`);
+    throw new Error(`Sinric devices fetch failed: ${res.status} ${await res.text()}`);
   }
 
   const payload: SinricDashboardResponse = await res.json();
@@ -91,11 +74,10 @@ serve(async (req) => {
   }
 
   try {
-    const accessToken = await getSinricAccessToken();
-    const sinricDevices = await fetchSinricDashboard(accessToken);
+    const sinricDevices = await fetchSinricDevices();
 
     if (sinricDevices.length === 0) {
-      return jsonResponse({ synced: 0, message: "No devices on Sinric dashboard" });
+      return jsonResponse({ synced: 0, message: "No devices on Sinric account" });
     }
 
     const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
