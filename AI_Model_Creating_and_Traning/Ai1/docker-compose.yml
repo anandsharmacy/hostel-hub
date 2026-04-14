@@ -1,0 +1,102 @@
+version: '3.8'
+
+services:
+  # ============================================================================
+  # LiveKit Voice Agent
+  # ============================================================================
+  voice-agent:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: hostel-voice-agent
+    environment:
+      - SUPABASE_URL=${https://zvbhaehxojklmzylpjri.supabase.co}
+      - SUPABASE_ANON_KEY=${eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp2YmhhZWh4b2prbG16eWxwanJpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI4MTUyNjUsImV4cCI6MjA4ODM5MTI2NX0.D0yYFJe3e4qdnVgYZ9ouUxuBncNLukH_WahrKW1FFrU}
+      - SUPABASE_SERVICE_ROLE_KEY=${eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp2YmhhZWh4b2prbG16eWxwanJpIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3MjgxNTI2NSwiZXhwIjoyMDg4MzkxMjY1fQ.0xrOHuy_ldfhwr9MIPoBPz7EcEBx2D8lZ82vu0N2nUo}
+      - LIVEKIT_URL=${wss://aiassistanthostelhub-ft8vki8c.livekit.cloud}
+      - LIVEKIT_API_KEY=${API8mJeQjPPNXDs}
+      - LIVEKIT_API_SECRET=${yeDDoYBOqyHYJ0uHC6c2bXVG4aeKil0E1fGw5zp7xeQA}
+      - OPENAI_API_KEY=${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}
+      - LOG_LEVEL=INFO
+    ports:
+      - "9001:9001"  # LiveKit agent port (if exposed)
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    healthcheck:
+      test: ["CMD", "python", "-c", "print('healthy')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    networks:
+      - hostel-network
+
+  # ============================================================================
+  # FastAPI Backend Service
+  # ============================================================================
+  api-service:
+    image: python:3.11-slim
+    container_name: hostel-voice-api
+    working_dir: /app
+    command: |
+      bash -c "
+        pip install --no-cache-dir fastapi uvicorn supabase pyjwt python-jose
+        python voice_api.py
+      "
+    volumes:
+      - ./voice_api.py:/app/voice_api.py
+      - ./supabase_client.py:/app/supabase_client.py
+    environment:
+      - SUPABASE_URL=${https://zvbhaehxojklmzylpjri.supabase.co}
+      - SUPABASE_ANON_KEY=${eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp2YmhhZWh4b2prbG16eWxwanJpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI4MTUyNjUsImV4cCI6MjA4ODM5MTI2NX0.D0yYFJe3e4qdnVgYZ9ouUxuBncNLukH_WahrKW1FFrU}
+      - SUPABASE_SERVICE_ROLE_KEY=${eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp2YmhhZWh4b2prbG16eWxwanJpIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3MjgxNTI2NSwiZXhwIjoyMDg4MzkxMjY1fQ.0xrOHuy_ldfhwr9MIPoBPz7EcEBx2D8lZ82vu0N2nUo}
+      - LIVEKIT_URL=${wss://aiassistanthostelhub-ft8vki8c.livekit.cloud}
+      - LIVEKIT_API_KEY=${API8mJeQjPPNXDs}
+      - LIVEKIT_API_SECRET=${yeDDoYBOqyHYJ0uHC6c2bXVG4aeKil0E1fGw5zp7xeQA}
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    depends_on:
+      - voice-agent
+    networks:
+      - hostel-network
+
+  # ============================================================================
+  # Optional: PostgreSQL for local development
+  # (Comment out if using Supabase cloud)
+  # ============================================================================
+  # postgres:
+  #   image: postgres:15-alpine
+  #   container_name: hostel-postgres
+  #   environment:
+  #     POSTGRES_USER: postgres
+  #     POSTGRES_PASSWORD: postgres
+  #     POSTGRES_DB: hostel
+  #   ports:
+  #     - "5432:5432"
+  #   volumes:
+  #     - postgres_data:/var/lib/postgresql/data
+  #   networks:
+  #     - hostel-network
+
+networks:
+  hostel-network:
+    driver: bridge
+
+# volumes:
+#   postgres_data:

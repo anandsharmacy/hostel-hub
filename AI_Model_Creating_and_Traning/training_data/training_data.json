@@ -1,0 +1,2942 @@
+[
+  {
+    "text": "Can you book a cleaning for my room?",
+    "language": "en",
+    "intent": "booking_cleaning_service",
+    "function": "bookingcleaningservice",
+    "role": "student"
+  },
+  {
+    "text": "Clean my room on next week",
+    "language": "en",
+    "intent": "booking_cleaning_service",
+    "function": "bookingcleaningservice",
+    "role": "student"
+  },
+  {
+    "text": "Book cleaning for next month at 3 PM",
+    "language": "en",
+    "intent": "booking_cleaning_service",
+    "function": "bookingcleaningservice",
+    "role": "student"
+  },
+  {
+    "text": "Schedule cleaning for tomorrow morning",
+    "language": "en",
+    "intent": "booking_cleaning_service",
+    "function": "bookingcleaningservice",
+    "role": "student"
+  },
+  {
+    "text": "My room needs cleaning",
+    "language": "en",
+    "intent": "booking_cleaning_service",
+    "function": "bookingcleaningservice",
+    "role": "student"
+  },
+  {
+    "text": "Schedule a room cleaning for next monday at 2 PM",
+    "language": "en",
+    "intent": "booking_cleaning_service",
+    "function": "bookingcleaningservice",
+    "role": "student"
+  },
+  {
+    "text": "Book a cleaning service for tomorrow",
+    "language": "en",
+    "intent": "booking_cleaning_service",
+    "function": "bookingcleaningservice",
+    "role": "student"
+  },
+  {
+    "text": "Schedule a room cleaning for next monday at 2 PM",
+    "language": "en",
+    "intent": "booking_cleaning_service",
+    "function": "bookingcleaningservice",
+    "role": "student"
+  },
+  {
+    "text": "Schedule a room cleaning for next monday at 2 PM",
+    "language": "en",
+    "intent": "booking_cleaning_service",
+    "function": "bookingcleaningservice",
+    "role": "student"
+  },
+  {
+    "text": "My room needs cleaning",
+    "language": "en",
+    "intent": "booking_cleaning_service",
+    "function": "bookingcleaningservice",
+    "role": "student"
+  },
+  {
+    "text": "I'd like to book a cleaning appointment",
+    "language": "en",
+    "intent": "booking_cleaning_service",
+    "function": "bookingcleaningservice",
+    "role": "student"
+  },
+  {
+    "text": "My room needs cleaning",
+    "language": "en",
+    "intent": "booking_cleaning_service",
+    "function": "bookingcleaningservice",
+    "role": "student"
+  },
+  {
+    "text": "I need my room cleaned",
+    "language": "en",
+    "intent": "booking_cleaning_service",
+    "function": "bookingcleaningservice",
+    "role": "student"
+  },
+  {
+    "text": "Schedule cleaning for tomorrow morning",
+    "language": "en",
+    "intent": "booking_cleaning_service",
+    "function": "bookingcleaningservice",
+    "role": "student"
+  },
+  {
+    "text": "I want to request a cleaning service",
+    "language": "en",
+    "intent": "booking_cleaning_service",
+    "function": "bookingcleaningservice",
+    "role": "student"
+  },
+  {
+    "text": "Please arrange a cleaning service for next monday",
+    "language": "en",
+    "intent": "booking_cleaning_service",
+    "function": "bookingcleaningservice",
+    "role": "student"
+  },
+  {
+    "text": "Can you clean my hostel room?",
+    "language": "en",
+    "intent": "booking_cleaning_service",
+    "function": "bookingcleaningservice",
+    "role": "student"
+  },
+  {
+    "text": "Please arrange a cleaning service for tomorrow",
+    "language": "en",
+    "intent": "booking_cleaning_service",
+    "function": "bookingcleaningservice",
+    "role": "student"
+  },
+  {
+    "text": "Can you clean my hostel room?",
+    "language": "en",
+    "intent": "booking_cleaning_service",
+    "function": "bookingcleaningservice",
+    "role": "student"
+  },
+  {
+    "text": "Please arrange a cleaning service for tomorrow",
+    "language": "en",
+    "intent": "booking_cleaning_service",
+    "function": "bookingcleaningservice",
+    "role": "student"
+  },
+  {
+    "text": "Please arrange a cleaning service for tomorrow",
+    "language": "en",
+    "intent": "booking_cleaning_service",
+    "function": "bookingcleaningservice",
+    "role": "student"
+  },
+  {
+    "text": "Schedule cleaning for tomorrow morning",
+    "language": "en",
+    "intent": "booking_cleaning_service",
+    "function": "bookingcleaningservice",
+    "role": "student"
+  },
+  {
+    "text": "Room cleaning request for next week at 3 PM",
+    "language": "en",
+    "intent": "booking_cleaning_service",
+    "function": "bookingcleaningservice",
+    "role": "student"
+  },
+  {
+    "text": "I need my room cleaned",
+    "language": "en",
+    "intent": "booking_cleaning_service",
+    "function": "bookingcleaningservice",
+    "role": "student"
+  },
+  {
+    "text": "Can I book the cleaning service?",
+    "language": "en",
+    "intent": "booking_cleaning_service",
+    "function": "bookingcleaningservice",
+    "role": "student"
+  },
+  {
+    "text": "Can you book a cleaning for my room?",
+    "language": "en",
+    "intent": "booking_cleaning_service",
+    "function": "bookingcleaningservice",
+    "role": "student"
+  },
+  {
+    "text": "Schedule a room cleaning for next monday at 2 PM",
+    "language": "en",
+    "intent": "booking_cleaning_service",
+    "function": "bookingcleaningservice",
+    "role": "student"
+  },
+  {
+    "text": "Schedule a room cleaning for next monday at 2 PM",
+    "language": "en",
+    "intent": "booking_cleaning_service",
+    "function": "bookingcleaningservice",
+    "role": "student"
+  },
+  {
+    "text": "Can I book the cleaning service?",
+    "language": "en",
+    "intent": "booking_cleaning_service",
+    "function": "bookingcleaningservice",
+    "role": "student"
+  },
+  {
+    "text": "I'd like to book a cleaning appointment",
+    "language": "en",
+    "intent": "booking_cleaning_service",
+    "function": "bookingcleaningservice",
+    "role": "student"
+  },
+  {
+    "text": "कमरा साफ करो next week को",
+    "language": "hi",
+    "intent": "booking_cleaning_service",
+    "function": "bookingcleaningservice",
+    "role": "student"
+  },
+  {
+    "text": "कल सुबह सफाई हो जाए",
+    "language": "hi",
+    "intent": "booking_cleaning_service",
+    "function": "bookingcleaningservice",
+    "role": "student"
+  },
+  {
+    "text": "मेरे कमरे को साफ करवा दो",
+    "language": "hi",
+    "intent": "booking_cleaning_service",
+    "function": "bookingcleaningservice",
+    "role": "student"
+  },
+  {
+    "text": "मेरे कमरे की सफाई बुक करो",
+    "language": "hi",
+    "intent": "booking_cleaning_service",
+    "function": "bookingcleaningservice",
+    "role": "student"
+  },
+  {
+    "text": "in 2 days को सफाई की व्यवस्था करो",
+    "language": "hi",
+    "intent": "booking_cleaning_service",
+    "function": "bookingcleaningservice",
+    "role": "student"
+  },
+  {
+    "text": "कल सुबह सफाई हो जाए",
+    "language": "hi",
+    "intent": "booking_cleaning_service",
+    "function": "bookingcleaningservice",
+    "role": "student"
+  },
+  {
+    "text": "सफाई सेवा बुक करना है",
+    "language": "hi",
+    "intent": "booking_cleaning_service",
+    "function": "bookingcleaningservice",
+    "role": "student"
+  },
+  {
+    "text": "on friday को सफाई की व्यवस्था करो",
+    "language": "hi",
+    "intent": "booking_cleaning_service",
+    "function": "bookingcleaningservice",
+    "role": "student"
+  },
+  {
+    "text": "मेरे कमरे की सफाई बुक करो",
+    "language": "hi",
+    "intent": "booking_cleaning_service",
+    "function": "bookingcleaningservice",
+    "role": "student"
+  },
+  {
+    "text": "कमरा साफ करो tomorrow को",
+    "language": "hi",
+    "intent": "booking_cleaning_service",
+    "function": "bookingcleaningservice",
+    "role": "student"
+  },
+  {
+    "text": "कल सुबह सफाई हो जाए",
+    "language": "hi",
+    "intent": "booking_cleaning_service",
+    "function": "bookingcleaningservice",
+    "role": "student"
+  },
+  {
+    "text": "कल सुबह सफाई हो जाए",
+    "language": "hi",
+    "intent": "booking_cleaning_service",
+    "function": "bookingcleaningservice",
+    "role": "student"
+  },
+  {
+    "text": "सफाई सेवा बुक करना है",
+    "language": "hi",
+    "intent": "booking_cleaning_service",
+    "function": "bookingcleaningservice",
+    "role": "student"
+  },
+  {
+    "text": "next monday को सफाई की व्यवस्था करो",
+    "language": "hi",
+    "intent": "booking_cleaning_service",
+    "function": "bookingcleaningservice",
+    "role": "student"
+  },
+  {
+    "text": "कल सफाई करवानी है",
+    "language": "hi",
+    "intent": "booking_cleaning_service",
+    "function": "bookingcleaningservice",
+    "role": "student"
+  },
+  {
+    "text": "मेरे कमरे की सफाई बुक करो",
+    "language": "hi",
+    "intent": "booking_cleaning_service",
+    "function": "bookingcleaningservice",
+    "role": "student"
+  },
+  {
+    "text": "मेरे कमरे में सफाई चाहिए",
+    "language": "hi",
+    "intent": "booking_cleaning_service",
+    "function": "bookingcleaningservice",
+    "role": "student"
+  },
+  {
+    "text": "next monday को सफाई की व्यवस्था करो",
+    "language": "hi",
+    "intent": "booking_cleaning_service",
+    "function": "bookingcleaningservice",
+    "role": "student"
+  },
+  {
+    "text": "कल सफाई करवानी है",
+    "language": "hi",
+    "intent": "booking_cleaning_service",
+    "function": "bookingcleaningservice",
+    "role": "student"
+  },
+  {
+    "text": "सफाई के लिए अनुरोध करो",
+    "language": "hi",
+    "intent": "booking_cleaning_service",
+    "function": "bookingcleaningservice",
+    "role": "student"
+  },
+  {
+    "text": "मेरे कमरे की सफाई बुक करो",
+    "language": "hi",
+    "intent": "booking_cleaning_service",
+    "function": "bookingcleaningservice",
+    "role": "student"
+  },
+  {
+    "text": "सफाई सेवा next week के लिए",
+    "language": "hi",
+    "intent": "booking_cleaning_service",
+    "function": "bookingcleaningservice",
+    "role": "student"
+  },
+  {
+    "text": "सफाई सेवा next week के लिए",
+    "language": "hi",
+    "intent": "booking_cleaning_service",
+    "function": "bookingcleaningservice",
+    "role": "student"
+  },
+  {
+    "text": "कल सुबह सफाई हो जाए",
+    "language": "hi",
+    "intent": "booking_cleaning_service",
+    "function": "bookingcleaningservice",
+    "role": "student"
+  },
+  {
+    "text": "कमरा साफ करो next monday को",
+    "language": "hi",
+    "intent": "booking_cleaning_service",
+    "function": "bookingcleaningservice",
+    "role": "student"
+  },
+  {
+    "text": "सफाई सेवा बुक करना है",
+    "language": "hi",
+    "intent": "booking_cleaning_service",
+    "function": "bookingcleaningservice",
+    "role": "student"
+  },
+  {
+    "text": "कल सफाई करवानी है",
+    "language": "hi",
+    "intent": "booking_cleaning_service",
+    "function": "bookingcleaningservice",
+    "role": "student"
+  },
+  {
+    "text": "कमरा साफ करो tomorrow को",
+    "language": "hi",
+    "intent": "booking_cleaning_service",
+    "function": "bookingcleaningservice",
+    "role": "student"
+  },
+  {
+    "text": "कल सुबह सफाई हो जाए",
+    "language": "hi",
+    "intent": "booking_cleaning_service",
+    "function": "bookingcleaningservice",
+    "role": "student"
+  },
+  {
+    "text": "मेरे कमरे में सफाई चाहिए",
+    "language": "hi",
+    "intent": "booking_cleaning_service",
+    "function": "bookingcleaningservice",
+    "role": "student"
+  },
+  {
+    "text": "Report an appliance issue",
+    "language": "en",
+    "intent": "reporting_appliance_issue",
+    "function": "reportingapplianceissue",
+    "role": "student"
+  },
+  {
+    "text": "I have a problem with my door lock",
+    "language": "en",
+    "intent": "reporting_appliance_issue",
+    "function": "reportingapplianceissue",
+    "role": "student"
+  },
+  {
+    "text": "Report an appliance issue",
+    "language": "en",
+    "intent": "reporting_appliance_issue",
+    "function": "reportingapplianceissue",
+    "role": "student"
+  },
+  {
+    "text": "The heater needs repair",
+    "language": "en",
+    "intent": "reporting_appliance_issue",
+    "function": "reportingapplianceissue",
+    "role": "student"
+  },
+  {
+    "text": "The fan in my room is not working",
+    "language": "en",
+    "intent": "reporting_appliance_issue",
+    "function": "reportingapplianceissue",
+    "role": "student"
+  },
+  {
+    "text": "Help! The door lock is damaged",
+    "language": "en",
+    "intent": "reporting_appliance_issue",
+    "function": "reportingapplianceissue",
+    "role": "student"
+  },
+  {
+    "text": "Report an appliance issue",
+    "language": "en",
+    "intent": "reporting_appliance_issue",
+    "function": "reportingapplianceissue",
+    "role": "student"
+  },
+  {
+    "text": "My door lock is not working",
+    "language": "en",
+    "intent": "reporting_appliance_issue",
+    "function": "reportingapplianceissue",
+    "role": "student"
+  },
+  {
+    "text": "Report an appliance issue",
+    "language": "en",
+    "intent": "reporting_appliance_issue",
+    "function": "reportingapplianceissue",
+    "role": "student"
+  },
+  {
+    "text": "I have a problem with my heater",
+    "language": "en",
+    "intent": "reporting_appliance_issue",
+    "function": "reportingapplianceissue",
+    "role": "student"
+  },
+  {
+    "text": "electrical outlet is not working",
+    "language": "en",
+    "intent": "reporting_appliance_issue",
+    "function": "reportingapplianceissue",
+    "role": "student"
+  },
+  {
+    "text": "The light in my room is flickering",
+    "language": "en",
+    "intent": "reporting_appliance_issue",
+    "function": "reportingapplianceissue",
+    "role": "student"
+  },
+  {
+    "text": "There's an electrical issue in my room",
+    "language": "en",
+    "intent": "reporting_appliance_issue",
+    "function": "reportingapplianceissue",
+    "role": "student"
+  },
+  {
+    "text": "My AC is broken",
+    "language": "en",
+    "intent": "reporting_appliance_issue",
+    "function": "reportingapplianceissue",
+    "role": "student"
+  },
+  {
+    "text": "My door lock is not working",
+    "language": "en",
+    "intent": "reporting_appliance_issue",
+    "function": "reportingapplianceissue",
+    "role": "student"
+  },
+  {
+    "text": "The heater is not working properly",
+    "language": "en",
+    "intent": "reporting_appliance_issue",
+    "function": "reportingapplianceissue",
+    "role": "student"
+  },
+  {
+    "text": "AC is not working",
+    "language": "en",
+    "intent": "reporting_appliance_issue",
+    "function": "reportingapplianceissue",
+    "role": "student"
+  },
+  {
+    "text": "My bed is broken",
+    "language": "en",
+    "intent": "reporting_appliance_issue",
+    "function": "reportingapplianceissue",
+    "role": "student"
+  },
+  {
+    "text": "The light in my room is flickering",
+    "language": "en",
+    "intent": "reporting_appliance_issue",
+    "function": "reportingapplianceissue",
+    "role": "student"
+  },
+  {
+    "text": "The fan in my room is not working",
+    "language": "en",
+    "intent": "reporting_appliance_issue",
+    "function": "reportingapplianceissue",
+    "role": "student"
+  },
+  {
+    "text": "I have a problem with my bed",
+    "language": "en",
+    "intent": "reporting_appliance_issue",
+    "function": "reportingapplianceissue",
+    "role": "student"
+  },
+  {
+    "text": "Can you fix the bed?",
+    "language": "en",
+    "intent": "reporting_appliance_issue",
+    "function": "reportingapplianceissue",
+    "role": "student"
+  },
+  {
+    "text": "Help! The AC is damaged",
+    "language": "en",
+    "intent": "reporting_appliance_issue",
+    "function": "reportingapplianceissue",
+    "role": "student"
+  },
+  {
+    "text": "There's an electrical issue in my room",
+    "language": "en",
+    "intent": "reporting_appliance_issue",
+    "function": "reportingapplianceissue",
+    "role": "student"
+  },
+  {
+    "text": "Can you fix the door lock?",
+    "language": "en",
+    "intent": "reporting_appliance_issue",
+    "function": "reportingapplianceissue",
+    "role": "student"
+  },
+  {
+    "text": "The heater is not working properly",
+    "language": "en",
+    "intent": "reporting_appliance_issue",
+    "function": "reportingapplianceissue",
+    "role": "student"
+  },
+  {
+    "text": "Report appliance problem with door lock",
+    "language": "en",
+    "intent": "reporting_appliance_issue",
+    "function": "reportingapplianceissue",
+    "role": "student"
+  },
+  {
+    "text": "The heater is not working properly",
+    "language": "en",
+    "intent": "reporting_appliance_issue",
+    "function": "reportingapplianceissue",
+    "role": "student"
+  },
+  {
+    "text": "The light in my room is flickering",
+    "language": "en",
+    "intent": "reporting_appliance_issue",
+    "function": "reportingapplianceissue",
+    "role": "student"
+  },
+  {
+    "text": "I have a problem with my AC",
+    "language": "en",
+    "intent": "reporting_appliance_issue",
+    "function": "reportingapplianceissue",
+    "role": "student"
+  },
+  {
+    "text": "दरवाजे का ताला खराब है",
+    "language": "hi",
+    "intent": "reporting_appliance_issue",
+    "function": "reportingapplianceissue",
+    "role": "student"
+  },
+  {
+    "text": "कमरे में fan काम नहीं कर रहा",
+    "language": "hi",
+    "intent": "reporting_appliance_issue",
+    "function": "reportingapplianceissue",
+    "role": "student"
+  },
+  {
+    "text": "मेरे कमरे का heater टूटा है",
+    "language": "hi",
+    "intent": "reporting_appliance_issue",
+    "function": "reportingapplianceissue",
+    "role": "student"
+  },
+  {
+    "text": "पंखा काम नहीं कर रहा",
+    "language": "hi",
+    "intent": "reporting_appliance_issue",
+    "function": "reportingapplianceissue",
+    "role": "student"
+  },
+  {
+    "text": "fan टूटा हुआ है",
+    "language": "hi",
+    "intent": "reporting_appliance_issue",
+    "function": "reportingapplianceissue",
+    "role": "student"
+  },
+  {
+    "text": "पंखा काम नहीं कर रहा",
+    "language": "hi",
+    "intent": "reporting_appliance_issue",
+    "function": "reportingapplianceissue",
+    "role": "student"
+  },
+  {
+    "text": "रोशनी में समस्या है",
+    "language": "hi",
+    "intent": "reporting_appliance_issue",
+    "function": "reportingapplianceissue",
+    "role": "student"
+  },
+  {
+    "text": "heater की मरम्मत करो",
+    "language": "hi",
+    "intent": "reporting_appliance_issue",
+    "function": "reportingapplianceissue",
+    "role": "student"
+  },
+  {
+    "text": "मेरे कमरे का window टूटा है",
+    "language": "hi",
+    "intent": "reporting_appliance_issue",
+    "function": "reportingapplianceissue",
+    "role": "student"
+  },
+  {
+    "text": "window टूटा हुआ है",
+    "language": "hi",
+    "intent": "reporting_appliance_issue",
+    "function": "reportingapplianceissue",
+    "role": "student"
+  },
+  {
+    "text": "रोशनी में समस्या है",
+    "language": "hi",
+    "intent": "reporting_appliance_issue",
+    "function": "reportingapplianceissue",
+    "role": "student"
+  },
+  {
+    "text": "समस्या रिपोर्ट करो",
+    "language": "hi",
+    "intent": "reporting_appliance_issue",
+    "function": "reportingapplianceissue",
+    "role": "student"
+  },
+  {
+    "text": "bed टूटा हुआ है",
+    "language": "hi",
+    "intent": "reporting_appliance_issue",
+    "function": "reportingapplianceissue",
+    "role": "student"
+  },
+  {
+    "text": "कमरे में light काम नहीं कर रहा",
+    "language": "hi",
+    "intent": "reporting_appliance_issue",
+    "function": "reportingapplianceissue",
+    "role": "student"
+  },
+  {
+    "text": "कमरे में fan काम नहीं कर रहा",
+    "language": "hi",
+    "intent": "reporting_appliance_issue",
+    "function": "reportingapplianceissue",
+    "role": "student"
+  },
+  {
+    "text": "electrical outlet की मरम्मत करो",
+    "language": "hi",
+    "intent": "reporting_appliance_issue",
+    "function": "reportingapplianceissue",
+    "role": "student"
+  },
+  {
+    "text": "दरवाजे का ताला खराब है",
+    "language": "hi",
+    "intent": "reporting_appliance_issue",
+    "function": "reportingapplianceissue",
+    "role": "student"
+  },
+  {
+    "text": "कमरे में heater काम नहीं कर रहा",
+    "language": "hi",
+    "intent": "reporting_appliance_issue",
+    "function": "reportingapplianceissue",
+    "role": "student"
+  },
+  {
+    "text": "कमरे में bed काम नहीं कर रहा",
+    "language": "hi",
+    "intent": "reporting_appliance_issue",
+    "function": "reportingapplianceissue",
+    "role": "student"
+  },
+  {
+    "text": "समस्या रिपोर्ट करो",
+    "language": "hi",
+    "intent": "reporting_appliance_issue",
+    "function": "reportingapplianceissue",
+    "role": "student"
+  },
+  {
+    "text": "दरवाजे का ताला खराब है",
+    "language": "hi",
+    "intent": "reporting_appliance_issue",
+    "function": "reportingapplianceissue",
+    "role": "student"
+  },
+  {
+    "text": "fan टूटा हुआ है",
+    "language": "hi",
+    "intent": "reporting_appliance_issue",
+    "function": "reportingapplianceissue",
+    "role": "student"
+  },
+  {
+    "text": "एसी खराब है",
+    "language": "hi",
+    "intent": "reporting_appliance_issue",
+    "function": "reportingapplianceissue",
+    "role": "student"
+  },
+  {
+    "text": "fan टूटा हुआ है",
+    "language": "hi",
+    "intent": "reporting_appliance_issue",
+    "function": "reportingapplianceissue",
+    "role": "student"
+  },
+  {
+    "text": "रोशनी में समस्या है",
+    "language": "hi",
+    "intent": "reporting_appliance_issue",
+    "function": "reportingapplianceissue",
+    "role": "student"
+  },
+  {
+    "text": "रोशनी में समस्या है",
+    "language": "hi",
+    "intent": "reporting_appliance_issue",
+    "function": "reportingapplianceissue",
+    "role": "student"
+  },
+  {
+    "text": "समस्या रिपोर्ट करो",
+    "language": "hi",
+    "intent": "reporting_appliance_issue",
+    "function": "reportingapplianceissue",
+    "role": "student"
+  },
+  {
+    "text": "रोशनी में समस्या है",
+    "language": "hi",
+    "intent": "reporting_appliance_issue",
+    "function": "reportingapplianceissue",
+    "role": "student"
+  },
+  {
+    "text": "heater की मरम्मत करो",
+    "language": "hi",
+    "intent": "reporting_appliance_issue",
+    "function": "reportingapplianceissue",
+    "role": "student"
+  },
+  {
+    "text": "कमरे में light काम नहीं कर रहा",
+    "language": "hi",
+    "intent": "reporting_appliance_issue",
+    "function": "reportingapplianceissue",
+    "role": "student"
+  },
+  {
+    "text": "Order these items: pen, towel",
+    "language": "en",
+    "intent": "placing_store_order",
+    "function": "placingstoreorder",
+    "role": "student"
+  },
+  {
+    "text": "Buy me some snacks",
+    "language": "en",
+    "intent": "placing_store_order",
+    "function": "placingstoreorder",
+    "role": "student"
+  },
+  {
+    "text": "Get me magazine from the hostel store",
+    "language": "en",
+    "intent": "placing_store_order",
+    "function": "placingstoreorder",
+    "role": "student"
+  },
+  {
+    "text": "Can you get me soap?",
+    "language": "en",
+    "intent": "placing_store_order",
+    "function": "placingstoreorder",
+    "role": "student"
+  },
+  {
+    "text": "I need to buy magazine",
+    "language": "en",
+    "intent": "placing_store_order",
+    "function": "placingstoreorder",
+    "role": "student"
+  },
+  {
+    "text": "I'd like to purchase notebook",
+    "language": "en",
+    "intent": "placing_store_order",
+    "function": "placingstoreorder",
+    "role": "student"
+  },
+  {
+    "text": "I want to order a water bottle",
+    "language": "en",
+    "intent": "placing_store_order",
+    "function": "placingstoreorder",
+    "role": "student"
+  },
+  {
+    "text": "Can you get me snacks?",
+    "language": "en",
+    "intent": "placing_store_order",
+    "function": "placingstoreorder",
+    "role": "student"
+  },
+  {
+    "text": "Get me charger from the hostel store",
+    "language": "en",
+    "intent": "placing_store_order",
+    "function": "placingstoreorder",
+    "role": "student"
+  },
+  {
+    "text": "Stock up on charger",
+    "language": "en",
+    "intent": "placing_store_order",
+    "function": "placingstoreorder",
+    "role": "student"
+  },
+  {
+    "text": "Order towel delivery to my room",
+    "language": "en",
+    "intent": "placing_store_order",
+    "function": "placingstoreorder",
+    "role": "student"
+  },
+  {
+    "text": "Place a store order",
+    "language": "en",
+    "intent": "placing_store_order",
+    "function": "placingstoreorder",
+    "role": "student"
+  },
+  {
+    "text": "Shopping from hostel store",
+    "language": "en",
+    "intent": "placing_store_order",
+    "function": "placingstoreorder",
+    "role": "student"
+  },
+  {
+    "text": "Can I order shampoo from the store?",
+    "language": "en",
+    "intent": "placing_store_order",
+    "function": "placingstoreorder",
+    "role": "student"
+  },
+  {
+    "text": "I'd like to purchase shampoo",
+    "language": "en",
+    "intent": "placing_store_order",
+    "function": "placingstoreorder",
+    "role": "student"
+  },
+  {
+    "text": "Shopping from hostel store",
+    "language": "en",
+    "intent": "placing_store_order",
+    "function": "placingstoreorder",
+    "role": "student"
+  },
+  {
+    "text": "I need to buy notebook",
+    "language": "en",
+    "intent": "placing_store_order",
+    "function": "placingstoreorder",
+    "role": "student"
+  },
+  {
+    "text": "Order snacks delivery to my room",
+    "language": "en",
+    "intent": "placing_store_order",
+    "function": "placingstoreorder",
+    "role": "student"
+  },
+  {
+    "text": "I need magazine",
+    "language": "en",
+    "intent": "placing_store_order",
+    "function": "placingstoreorder",
+    "role": "student"
+  },
+  {
+    "text": "Place a store order",
+    "language": "en",
+    "intent": "placing_store_order",
+    "function": "placingstoreorder",
+    "role": "student"
+  },
+  {
+    "text": "Please order magazine for me",
+    "language": "en",
+    "intent": "placing_store_order",
+    "function": "placingstoreorder",
+    "role": "student"
+  },
+  {
+    "text": "Place a store order",
+    "language": "en",
+    "intent": "placing_store_order",
+    "function": "placingstoreorder",
+    "role": "student"
+  },
+  {
+    "text": "I want to order a water bottle",
+    "language": "en",
+    "intent": "placing_store_order",
+    "function": "placingstoreorder",
+    "role": "student"
+  },
+  {
+    "text": "I need to buy toothbrush",
+    "language": "en",
+    "intent": "placing_store_order",
+    "function": "placingstoreorder",
+    "role": "student"
+  },
+  {
+    "text": "Can you get me magazine?",
+    "language": "en",
+    "intent": "placing_store_order",
+    "function": "placingstoreorder",
+    "role": "student"
+  },
+  {
+    "text": "I want to order a water bottle",
+    "language": "en",
+    "intent": "placing_store_order",
+    "function": "placingstoreorder",
+    "role": "student"
+  },
+  {
+    "text": "I need to buy towel",
+    "language": "en",
+    "intent": "placing_store_order",
+    "function": "placingstoreorder",
+    "role": "student"
+  },
+  {
+    "text": "Order these items: towel, magazine",
+    "language": "en",
+    "intent": "placing_store_order",
+    "function": "placingstoreorder",
+    "role": "student"
+  },
+  {
+    "text": "Can you get me snacks?",
+    "language": "en",
+    "intent": "placing_store_order",
+    "function": "placingstoreorder",
+    "role": "student"
+  },
+  {
+    "text": "Order supplies from the store",
+    "language": "en",
+    "intent": "placing_store_order",
+    "function": "placingstoreorder",
+    "role": "student"
+  },
+  {
+    "text": "कुछ सप्लाई चाहिए",
+    "language": "hi",
+    "intent": "placing_store_order",
+    "function": "placingstoreorder",
+    "role": "student"
+  },
+  {
+    "text": "दुकान से ऑर्डर करो",
+    "language": "hi",
+    "intent": "placing_store_order",
+    "function": "placingstoreorder",
+    "role": "student"
+  },
+  {
+    "text": "मुझे magazine चाहिए",
+    "language": "hi",
+    "intent": "placing_store_order",
+    "function": "placingstoreorder",
+    "role": "student"
+  },
+  {
+    "text": "soap खरीद लाओ",
+    "language": "hi",
+    "intent": "placing_store_order",
+    "function": "placingstoreorder",
+    "role": "student"
+  },
+  {
+    "text": "मैं towel चाहता हूँ",
+    "language": "hi",
+    "intent": "placing_store_order",
+    "function": "placingstoreorder",
+    "role": "student"
+  },
+  {
+    "text": "दुकान से ऑर्डर करो",
+    "language": "hi",
+    "intent": "placing_store_order",
+    "function": "placingstoreorder",
+    "role": "student"
+  },
+  {
+    "text": "pen खरीद लाओ",
+    "language": "hi",
+    "intent": "placing_store_order",
+    "function": "placingstoreorder",
+    "role": "student"
+  },
+  {
+    "text": "दुकान से snacks मंगवा दो",
+    "language": "hi",
+    "intent": "placing_store_order",
+    "function": "placingstoreorder",
+    "role": "student"
+  },
+  {
+    "text": "बोतल और साबुन खरीदना है",
+    "language": "hi",
+    "intent": "placing_store_order",
+    "function": "placingstoreorder",
+    "role": "student"
+  },
+  {
+    "text": "दुकान से pen, notebook मंगवाने हैं",
+    "language": "hi",
+    "intent": "placing_store_order",
+    "function": "placingstoreorder",
+    "role": "student"
+  },
+  {
+    "text": "towel खरीद लाओ",
+    "language": "hi",
+    "intent": "placing_store_order",
+    "function": "placingstoreorder",
+    "role": "student"
+  },
+  {
+    "text": "toothbrush के लिए ऑर्डर करो",
+    "language": "hi",
+    "intent": "placing_store_order",
+    "function": "placingstoreorder",
+    "role": "student"
+  },
+  {
+    "text": "मुझे charger चाहिए",
+    "language": "hi",
+    "intent": "placing_store_order",
+    "function": "placingstoreorder",
+    "role": "student"
+  },
+  {
+    "text": "मैं towel चाहता हूँ",
+    "language": "hi",
+    "intent": "placing_store_order",
+    "function": "placingstoreorder",
+    "role": "student"
+  },
+  {
+    "text": "कुछ सप्लाई चाहिए",
+    "language": "hi",
+    "intent": "placing_store_order",
+    "function": "placingstoreorder",
+    "role": "student"
+  },
+  {
+    "text": "दुकान से ऑर्डर करो",
+    "language": "hi",
+    "intent": "placing_store_order",
+    "function": "placingstoreorder",
+    "role": "student"
+  },
+  {
+    "text": "मैं soap चाहता हूँ",
+    "language": "hi",
+    "intent": "placing_store_order",
+    "function": "placingstoreorder",
+    "role": "student"
+  },
+  {
+    "text": "कुछ सप्लाई चाहिए",
+    "language": "hi",
+    "intent": "placing_store_order",
+    "function": "placingstoreorder",
+    "role": "student"
+  },
+  {
+    "text": "बोतल और साबुन खरीदना है",
+    "language": "hi",
+    "intent": "placing_store_order",
+    "function": "placingstoreorder",
+    "role": "student"
+  },
+  {
+    "text": "दुकान से charger, magazine, pen मंगवाने हैं",
+    "language": "hi",
+    "intent": "placing_store_order",
+    "function": "placingstoreorder",
+    "role": "student"
+  },
+  {
+    "text": "दुकान से snacks, water bottle मंगवाने हैं",
+    "language": "hi",
+    "intent": "placing_store_order",
+    "function": "placingstoreorder",
+    "role": "student"
+  },
+  {
+    "text": "बोतल और साबुन खरीदना है",
+    "language": "hi",
+    "intent": "placing_store_order",
+    "function": "placingstoreorder",
+    "role": "student"
+  },
+  {
+    "text": "दुकान से shampoo, water bottle मंगवाने हैं",
+    "language": "hi",
+    "intent": "placing_store_order",
+    "function": "placingstoreorder",
+    "role": "student"
+  },
+  {
+    "text": "कुछ सप्लाई चाहिए",
+    "language": "hi",
+    "intent": "placing_store_order",
+    "function": "placingstoreorder",
+    "role": "student"
+  },
+  {
+    "text": "दुकान से ऑर्डर करो",
+    "language": "hi",
+    "intent": "placing_store_order",
+    "function": "placingstoreorder",
+    "role": "student"
+  },
+  {
+    "text": "magazine खरीद लाओ",
+    "language": "hi",
+    "intent": "placing_store_order",
+    "function": "placingstoreorder",
+    "role": "student"
+  },
+  {
+    "text": "snacks खरीद लाओ",
+    "language": "hi",
+    "intent": "placing_store_order",
+    "function": "placingstoreorder",
+    "role": "student"
+  },
+  {
+    "text": "कुछ सप्लाई चाहिए",
+    "language": "hi",
+    "intent": "placing_store_order",
+    "function": "placingstoreorder",
+    "role": "student"
+  },
+  {
+    "text": "मैं magazine चाहता हूँ",
+    "language": "hi",
+    "intent": "placing_store_order",
+    "function": "placingstoreorder",
+    "role": "student"
+  },
+  {
+    "text": "बोतल और साबुन खरीदना है",
+    "language": "hi",
+    "intent": "placing_store_order",
+    "function": "placingstoreorder",
+    "role": "student"
+  },
+  {
+    "text": "I'll upload my prescription",
+    "language": "en",
+    "intent": "requesting_medicine",
+    "function": "requestingmedicine",
+    "role": "student"
+  },
+  {
+    "text": "Medicine for cough",
+    "language": "en",
+    "intent": "requesting_medicine",
+    "function": "requestingmedicine",
+    "role": "student"
+  },
+  {
+    "text": "Request cold medicine",
+    "language": "en",
+    "intent": "requesting_medicine",
+    "function": "requestingmedicine",
+    "role": "student"
+  },
+  {
+    "text": "Prescription medicine request",
+    "language": "en",
+    "intent": "requesting_medicine",
+    "function": "requestingmedicine",
+    "role": "student"
+  },
+  {
+    "text": "Prescription medicine request",
+    "language": "en",
+    "intent": "requesting_medicine",
+    "function": "requestingmedicine",
+    "role": "student"
+  },
+  {
+    "text": "Prescription medicine request",
+    "language": "en",
+    "intent": "requesting_medicine",
+    "function": "requestingmedicine",
+    "role": "student"
+  },
+  {
+    "text": "I need antibiotic urgently",
+    "language": "en",
+    "intent": "requesting_medicine",
+    "function": "requestingmedicine",
+    "role": "student"
+  },
+  {
+    "text": "Prescription medicine request",
+    "language": "en",
+    "intent": "requesting_medicine",
+    "function": "requestingmedicine",
+    "role": "student"
+  },
+  {
+    "text": "Can you help with paracetamol?",
+    "language": "en",
+    "intent": "requesting_medicine",
+    "function": "requestingmedicine",
+    "role": "student"
+  },
+  {
+    "text": "I have a fever",
+    "language": "en",
+    "intent": "requesting_medicine",
+    "function": "requestingmedicine",
+    "role": "student"
+  },
+  {
+    "text": "Emergency medicine needed",
+    "language": "en",
+    "intent": "requesting_medicine",
+    "function": "requestingmedicine",
+    "role": "student"
+  },
+  {
+    "text": "Medicine for fever",
+    "language": "en",
+    "intent": "requesting_medicine",
+    "function": "requestingmedicine",
+    "role": "student"
+  },
+  {
+    "text": "Emergency medicine needed",
+    "language": "en",
+    "intent": "requesting_medicine",
+    "function": "requestingmedicine",
+    "role": "student"
+  },
+  {
+    "text": "Medicine for cold",
+    "language": "en",
+    "intent": "requesting_medicine",
+    "function": "requestingmedicine",
+    "role": "student"
+  },
+  {
+    "text": "Can I get antibiotic?",
+    "language": "en",
+    "intent": "requesting_medicine",
+    "function": "requestingmedicine",
+    "role": "student"
+  },
+  {
+    "text": "Request medicine",
+    "language": "en",
+    "intent": "requesting_medicine",
+    "function": "requestingmedicine",
+    "role": "student"
+  },
+  {
+    "text": "Can I get headache tablet?",
+    "language": "en",
+    "intent": "requesting_medicine",
+    "function": "requestingmedicine",
+    "role": "student"
+  },
+  {
+    "text": "I need medicine",
+    "language": "en",
+    "intent": "requesting_medicine",
+    "function": "requestingmedicine",
+    "role": "student"
+  },
+  {
+    "text": "Medicine for fever",
+    "language": "en",
+    "intent": "requesting_medicine",
+    "function": "requestingmedicine",
+    "role": "student"
+  },
+  {
+    "text": "Request antibiotic",
+    "language": "en",
+    "intent": "requesting_medicine",
+    "function": "requestingmedicine",
+    "role": "student"
+  },
+  {
+    "text": "I have a fever",
+    "language": "en",
+    "intent": "requesting_medicine",
+    "function": "requestingmedicine",
+    "role": "student"
+  },
+  {
+    "text": "Prescription medicine request",
+    "language": "en",
+    "intent": "requesting_medicine",
+    "function": "requestingmedicine",
+    "role": "student"
+  },
+  {
+    "text": "Can you help with ointment?",
+    "language": "en",
+    "intent": "requesting_medicine",
+    "function": "requestingmedicine",
+    "role": "student"
+  },
+  {
+    "text": "I have a fever",
+    "language": "en",
+    "intent": "requesting_medicine",
+    "function": "requestingmedicine",
+    "role": "student"
+  },
+  {
+    "text": "I'm sick and need help",
+    "language": "en",
+    "intent": "requesting_medicine",
+    "function": "requestingmedicine",
+    "role": "student"
+  },
+  {
+    "text": "Request medicine",
+    "language": "en",
+    "intent": "requesting_medicine",
+    "function": "requestingmedicine",
+    "role": "student"
+  },
+  {
+    "text": "I need medicine",
+    "language": "en",
+    "intent": "requesting_medicine",
+    "function": "requestingmedicine",
+    "role": "student"
+  },
+  {
+    "text": "Request medicine",
+    "language": "en",
+    "intent": "requesting_medicine",
+    "function": "requestingmedicine",
+    "role": "student"
+  },
+  {
+    "text": "I have a cold",
+    "language": "en",
+    "intent": "requesting_medicine",
+    "function": "requestingmedicine",
+    "role": "student"
+  },
+  {
+    "text": "I'll upload my prescription",
+    "language": "en",
+    "intent": "requesting_medicine",
+    "function": "requestingmedicine",
+    "role": "student"
+  },
+  {
+    "text": "बीमार हूँ",
+    "language": "hi",
+    "intent": "requesting_medicine",
+    "function": "requestingmedicine",
+    "role": "student"
+  },
+  {
+    "text": "paracetamol की जरूरत है",
+    "language": "hi",
+    "intent": "requesting_medicine",
+    "function": "requestingmedicine",
+    "role": "student"
+  },
+  {
+    "text": "कफ सिरप चाहिए",
+    "language": "hi",
+    "intent": "requesting_medicine",
+    "function": "requestingmedicine",
+    "role": "student"
+  },
+  {
+    "text": "paracetamol की जरूरत है",
+    "language": "hi",
+    "intent": "requesting_medicine",
+    "function": "requestingmedicine",
+    "role": "student"
+  },
+  {
+    "text": "बीमार हूँ",
+    "language": "hi",
+    "intent": "requesting_medicine",
+    "function": "requestingmedicine",
+    "role": "student"
+  },
+  {
+    "text": "जुकाम हो गया",
+    "language": "hi",
+    "intent": "requesting_medicine",
+    "function": "requestingmedicine",
+    "role": "student"
+  },
+  {
+    "text": "कफ सिरप चाहिए",
+    "language": "hi",
+    "intent": "requesting_medicine",
+    "function": "requestingmedicine",
+    "role": "student"
+  },
+  {
+    "text": "जुकाम हो गया",
+    "language": "hi",
+    "intent": "requesting_medicine",
+    "function": "requestingmedicine",
+    "role": "student"
+  },
+  {
+    "text": "cough syrup दे दो",
+    "language": "hi",
+    "intent": "requesting_medicine",
+    "function": "requestingmedicine",
+    "role": "student"
+  },
+  {
+    "text": "जुकाम हो गया",
+    "language": "hi",
+    "intent": "requesting_medicine",
+    "function": "requestingmedicine",
+    "role": "student"
+  },
+  {
+    "text": "बीमार हूँ",
+    "language": "hi",
+    "intent": "requesting_medicine",
+    "function": "requestingmedicine",
+    "role": "student"
+  },
+  {
+    "text": "paracetamol दे दो",
+    "language": "hi",
+    "intent": "requesting_medicine",
+    "function": "requestingmedicine",
+    "role": "student"
+  },
+  {
+    "text": "दवा चाहिए",
+    "language": "hi",
+    "intent": "requesting_medicine",
+    "function": "requestingmedicine",
+    "role": "student"
+  },
+  {
+    "text": "कफ सिरप चाहिए",
+    "language": "hi",
+    "intent": "requesting_medicine",
+    "function": "requestingmedicine",
+    "role": "student"
+  },
+  {
+    "text": "कफ सिरप चाहिए",
+    "language": "hi",
+    "intent": "requesting_medicine",
+    "function": "requestingmedicine",
+    "role": "student"
+  },
+  {
+    "text": "बीमार हूँ",
+    "language": "hi",
+    "intent": "requesting_medicine",
+    "function": "requestingmedicine",
+    "role": "student"
+  },
+  {
+    "text": "सिर दर्द है",
+    "language": "hi",
+    "intent": "requesting_medicine",
+    "function": "requestingmedicine",
+    "role": "student"
+  },
+  {
+    "text": "बुखार है",
+    "language": "hi",
+    "intent": "requesting_medicine",
+    "function": "requestingmedicine",
+    "role": "student"
+  },
+  {
+    "text": "बीमार हूँ",
+    "language": "hi",
+    "intent": "requesting_medicine",
+    "function": "requestingmedicine",
+    "role": "student"
+  },
+  {
+    "text": "ointment की जरूरत है",
+    "language": "hi",
+    "intent": "requesting_medicine",
+    "function": "requestingmedicine",
+    "role": "student"
+  },
+  {
+    "text": "सिर दर्द है",
+    "language": "hi",
+    "intent": "requesting_medicine",
+    "function": "requestingmedicine",
+    "role": "student"
+  },
+  {
+    "text": "सिर दर्द है",
+    "language": "hi",
+    "intent": "requesting_medicine",
+    "function": "requestingmedicine",
+    "role": "student"
+  },
+  {
+    "text": "antibiotic दे दो",
+    "language": "hi",
+    "intent": "requesting_medicine",
+    "function": "requestingmedicine",
+    "role": "student"
+  },
+  {
+    "text": "सिर दर्द है",
+    "language": "hi",
+    "intent": "requesting_medicine",
+    "function": "requestingmedicine",
+    "role": "student"
+  },
+  {
+    "text": "कफ सिरप चाहिए",
+    "language": "hi",
+    "intent": "requesting_medicine",
+    "function": "requestingmedicine",
+    "role": "student"
+  },
+  {
+    "text": "कफ सिरप चाहिए",
+    "language": "hi",
+    "intent": "requesting_medicine",
+    "function": "requestingmedicine",
+    "role": "student"
+  },
+  {
+    "text": "कफ सिरप चाहिए",
+    "language": "hi",
+    "intent": "requesting_medicine",
+    "function": "requestingmedicine",
+    "role": "student"
+  },
+  {
+    "text": "bandage दे दो",
+    "language": "hi",
+    "intent": "requesting_medicine",
+    "function": "requestingmedicine",
+    "role": "student"
+  },
+  {
+    "text": "ointment की जरूरत है",
+    "language": "hi",
+    "intent": "requesting_medicine",
+    "function": "requestingmedicine",
+    "role": "student"
+  },
+  {
+    "text": "paracetamol दे दो",
+    "language": "hi",
+    "intent": "requesting_medicine",
+    "function": "requestingmedicine",
+    "role": "student"
+  },
+  {
+    "text": "Check cleaning request status",
+    "language": "en",
+    "intent": "viewing_request_status",
+    "function": "viewingrequeststatus",
+    "role": "student"
+  },
+  {
+    "text": "Has my medicine been processed?",
+    "language": "en",
+    "intent": "viewing_request_status",
+    "function": "viewingrequeststatus",
+    "role": "student"
+  },
+  {
+    "text": "Check my request status",
+    "language": "en",
+    "intent": "viewing_request_status",
+    "function": "viewingrequeststatus",
+    "role": "student"
+  },
+  {
+    "text": "What's the status of my requests?",
+    "language": "en",
+    "intent": "viewing_request_status",
+    "function": "viewingrequeststatus",
+    "role": "student"
+  },
+  {
+    "text": "Check cleaning request status",
+    "language": "en",
+    "intent": "viewing_request_status",
+    "function": "viewingrequeststatus",
+    "role": "student"
+  },
+  {
+    "text": "Check cleaning request status",
+    "language": "en",
+    "intent": "viewing_request_status",
+    "function": "viewingrequeststatus",
+    "role": "student"
+  },
+  {
+    "text": "Check my request status",
+    "language": "en",
+    "intent": "viewing_request_status",
+    "function": "viewingrequeststatus",
+    "role": "student"
+  },
+  {
+    "text": "Has my medicine been processed?",
+    "language": "en",
+    "intent": "viewing_request_status",
+    "function": "viewingrequeststatus",
+    "role": "student"
+  },
+  {
+    "text": "Check my request status",
+    "language": "en",
+    "intent": "viewing_request_status",
+    "function": "viewingrequeststatus",
+    "role": "student"
+  },
+  {
+    "text": "What do I have pending?",
+    "language": "en",
+    "intent": "viewing_request_status",
+    "function": "viewingrequeststatus",
+    "role": "student"
+  },
+  {
+    "text": "Status of my appliance complaint",
+    "language": "en",
+    "intent": "viewing_request_status",
+    "function": "viewingrequeststatus",
+    "role": "student"
+  },
+  {
+    "text": "Status of my appliance complaint",
+    "language": "en",
+    "intent": "viewing_request_status",
+    "function": "viewingrequeststatus",
+    "role": "student"
+  },
+  {
+    "text": "Where's my order?",
+    "language": "en",
+    "intent": "viewing_request_status",
+    "function": "viewingrequeststatus",
+    "role": "student"
+  },
+  {
+    "text": "Has my medicine been processed?",
+    "language": "en",
+    "intent": "viewing_request_status",
+    "function": "viewingrequeststatus",
+    "role": "student"
+  },
+  {
+    "text": "What do I have pending?",
+    "language": "en",
+    "intent": "viewing_request_status",
+    "function": "viewingrequeststatus",
+    "role": "student"
+  },
+  {
+    "text": "Check cleaning request status",
+    "language": "en",
+    "intent": "viewing_request_status",
+    "function": "viewingrequeststatus",
+    "role": "student"
+  },
+  {
+    "text": "Check cleaning request status",
+    "language": "en",
+    "intent": "viewing_request_status",
+    "function": "viewingrequeststatus",
+    "role": "student"
+  },
+  {
+    "text": "What requests do I have?",
+    "language": "en",
+    "intent": "viewing_request_status",
+    "function": "viewingrequeststatus",
+    "role": "student"
+  },
+  {
+    "text": "Check cleaning request status",
+    "language": "en",
+    "intent": "viewing_request_status",
+    "function": "viewingrequeststatus",
+    "role": "student"
+  },
+  {
+    "text": "Show me all my requests",
+    "language": "en",
+    "intent": "viewing_request_status",
+    "function": "viewingrequeststatus",
+    "role": "student"
+  },
+  {
+    "text": "Where's my order?",
+    "language": "en",
+    "intent": "viewing_request_status",
+    "function": "viewingrequeststatus",
+    "role": "student"
+  },
+  {
+    "text": "View my pending requests",
+    "language": "en",
+    "intent": "viewing_request_status",
+    "function": "viewingrequeststatus",
+    "role": "student"
+  },
+  {
+    "text": "View my pending requests",
+    "language": "en",
+    "intent": "viewing_request_status",
+    "function": "viewingrequeststatus",
+    "role": "student"
+  },
+  {
+    "text": "Show pending requests",
+    "language": "en",
+    "intent": "viewing_request_status",
+    "function": "viewingrequeststatus",
+    "role": "student"
+  },
+  {
+    "text": "All my active requests",
+    "language": "en",
+    "intent": "viewing_request_status",
+    "function": "viewingrequeststatus",
+    "role": "student"
+  },
+  {
+    "text": "Status of my appliance complaint",
+    "language": "en",
+    "intent": "viewing_request_status",
+    "function": "viewingrequeststatus",
+    "role": "student"
+  },
+  {
+    "text": "Where's my order?",
+    "language": "en",
+    "intent": "viewing_request_status",
+    "function": "viewingrequeststatus",
+    "role": "student"
+  },
+  {
+    "text": "Status of my appliance complaint",
+    "language": "en",
+    "intent": "viewing_request_status",
+    "function": "viewingrequeststatus",
+    "role": "student"
+  },
+  {
+    "text": "Check my request status",
+    "language": "en",
+    "intent": "viewing_request_status",
+    "function": "viewingrequeststatus",
+    "role": "student"
+  },
+  {
+    "text": "What's the status of my requests?",
+    "language": "en",
+    "intent": "viewing_request_status",
+    "function": "viewingrequeststatus",
+    "role": "student"
+  },
+  {
+    "text": "मेरे अनुरोध की स्थिति",
+    "language": "hi",
+    "intent": "viewing_request_status",
+    "function": "viewingrequeststatus",
+    "role": "student"
+  },
+  {
+    "text": "मेरे अनुरोध की स्थिति",
+    "language": "hi",
+    "intent": "viewing_request_status",
+    "function": "viewingrequeststatus",
+    "role": "student"
+  },
+  {
+    "text": "मेरे सभी अनुरोध दिखाओ",
+    "language": "hi",
+    "intent": "viewing_request_status",
+    "function": "viewingrequeststatus",
+    "role": "student"
+  },
+  {
+    "text": "सभी चल रहे अनुरोध",
+    "language": "hi",
+    "intent": "viewing_request_status",
+    "function": "viewingrequeststatus",
+    "role": "student"
+  },
+  {
+    "text": "मेरे सभी अनुरोध दिखाओ",
+    "language": "hi",
+    "intent": "viewing_request_status",
+    "function": "viewingrequeststatus",
+    "role": "student"
+  },
+  {
+    "text": "क्या स्थिति है?",
+    "language": "hi",
+    "intent": "viewing_request_status",
+    "function": "viewingrequeststatus",
+    "role": "student"
+  },
+  {
+    "text": "क्या स्थिति है?",
+    "language": "hi",
+    "intent": "viewing_request_status",
+    "function": "viewingrequeststatus",
+    "role": "student"
+  },
+  {
+    "text": "मेरे सभी अनुरोध दिखाओ",
+    "language": "hi",
+    "intent": "viewing_request_status",
+    "function": "viewingrequeststatus",
+    "role": "student"
+  },
+  {
+    "text": "मेरे अनुरोध की स्थिति",
+    "language": "hi",
+    "intent": "viewing_request_status",
+    "function": "viewingrequeststatus",
+    "role": "student"
+  },
+  {
+    "text": "मेरे सभी अनुरोध दिखाओ",
+    "language": "hi",
+    "intent": "viewing_request_status",
+    "function": "viewingrequeststatus",
+    "role": "student"
+  },
+  {
+    "text": "मेरे पेंडिंग अनुरोध",
+    "language": "hi",
+    "intent": "viewing_request_status",
+    "function": "viewingrequeststatus",
+    "role": "student"
+  },
+  {
+    "text": "मेरे पेंडिंग अनुरोध",
+    "language": "hi",
+    "intent": "viewing_request_status",
+    "function": "viewingrequeststatus",
+    "role": "student"
+  },
+  {
+    "text": "मेरे अनुरोध की स्थिति",
+    "language": "hi",
+    "intent": "viewing_request_status",
+    "function": "viewingrequeststatus",
+    "role": "student"
+  },
+  {
+    "text": "क्या स्थिति है?",
+    "language": "hi",
+    "intent": "viewing_request_status",
+    "function": "viewingrequeststatus",
+    "role": "student"
+  },
+  {
+    "text": "मेरे सभी अनुरोध दिखाओ",
+    "language": "hi",
+    "intent": "viewing_request_status",
+    "function": "viewingrequeststatus",
+    "role": "student"
+  },
+  {
+    "text": "मेरे अनुरोध की स्थिति",
+    "language": "hi",
+    "intent": "viewing_request_status",
+    "function": "viewingrequeststatus",
+    "role": "student"
+  },
+  {
+    "text": "क्या स्थिति है?",
+    "language": "hi",
+    "intent": "viewing_request_status",
+    "function": "viewingrequeststatus",
+    "role": "student"
+  },
+  {
+    "text": "सभी चल रहे अनुरोध",
+    "language": "hi",
+    "intent": "viewing_request_status",
+    "function": "viewingrequeststatus",
+    "role": "student"
+  },
+  {
+    "text": "मेरे पेंडिंग अनुरोध",
+    "language": "hi",
+    "intent": "viewing_request_status",
+    "function": "viewingrequeststatus",
+    "role": "student"
+  },
+  {
+    "text": "मेरे पेंडिंग अनुरोध",
+    "language": "hi",
+    "intent": "viewing_request_status",
+    "function": "viewingrequeststatus",
+    "role": "student"
+  },
+  {
+    "text": "सभी चल रहे अनुरोध",
+    "language": "hi",
+    "intent": "viewing_request_status",
+    "function": "viewingrequeststatus",
+    "role": "student"
+  },
+  {
+    "text": "मेरे अनुरोध की स्थिति",
+    "language": "hi",
+    "intent": "viewing_request_status",
+    "function": "viewingrequeststatus",
+    "role": "student"
+  },
+  {
+    "text": "सभी चल रहे अनुरोध",
+    "language": "hi",
+    "intent": "viewing_request_status",
+    "function": "viewingrequeststatus",
+    "role": "student"
+  },
+  {
+    "text": "क्या स्थिति है?",
+    "language": "hi",
+    "intent": "viewing_request_status",
+    "function": "viewingrequeststatus",
+    "role": "student"
+  },
+  {
+    "text": "सभी चल रहे अनुरोध",
+    "language": "hi",
+    "intent": "viewing_request_status",
+    "function": "viewingrequeststatus",
+    "role": "student"
+  },
+  {
+    "text": "मेरे सभी अनुरोध दिखाओ",
+    "language": "hi",
+    "intent": "viewing_request_status",
+    "function": "viewingrequeststatus",
+    "role": "student"
+  },
+  {
+    "text": "मेरे पेंडिंग अनुरोध",
+    "language": "hi",
+    "intent": "viewing_request_status",
+    "function": "viewingrequeststatus",
+    "role": "student"
+  },
+  {
+    "text": "सभी चल रहे अनुरोध",
+    "language": "hi",
+    "intent": "viewing_request_status",
+    "function": "viewingrequeststatus",
+    "role": "student"
+  },
+  {
+    "text": "मेरे सभी अनुरोध दिखाओ",
+    "language": "hi",
+    "intent": "viewing_request_status",
+    "function": "viewingrequeststatus",
+    "role": "student"
+  },
+  {
+    "text": "क्या स्थिति है?",
+    "language": "hi",
+    "intent": "viewing_request_status",
+    "function": "viewingrequeststatus",
+    "role": "student"
+  },
+  {
+    "text": "Hair cutting queue",
+    "language": "en",
+    "intent": "joining_salon_queue",
+    "function": "joiningsalonqueue",
+    "role": "student"
+  },
+  {
+    "text": "When is my turn?",
+    "language": "en",
+    "intent": "joining_salon_queue",
+    "function": "joiningsalonqueue",
+    "role": "student"
+  },
+  {
+    "text": "I want to join the queue",
+    "language": "en",
+    "intent": "joining_salon_queue",
+    "function": "joiningsalonqueue",
+    "role": "student"
+  },
+  {
+    "text": "I want a haircut",
+    "language": "en",
+    "intent": "joining_salon_queue",
+    "function": "joiningsalonqueue",
+    "role": "student"
+  },
+  {
+    "text": "I want a haircut",
+    "language": "en",
+    "intent": "joining_salon_queue",
+    "function": "joiningsalonqueue",
+    "role": "student"
+  },
+  {
+    "text": "Hair cutting queue",
+    "language": "en",
+    "intent": "joining_salon_queue",
+    "function": "joiningsalonqueue",
+    "role": "student"
+  },
+  {
+    "text": "I want a haircut",
+    "language": "en",
+    "intent": "joining_salon_queue",
+    "function": "joiningsalonqueue",
+    "role": "student"
+  },
+  {
+    "text": "I need a shave",
+    "language": "en",
+    "intent": "joining_salon_queue",
+    "function": "joiningsalonqueue",
+    "role": "student"
+  },
+  {
+    "text": "Haircut service",
+    "language": "en",
+    "intent": "joining_salon_queue",
+    "function": "joiningsalonqueue",
+    "role": "student"
+  },
+  {
+    "text": "When is my turn?",
+    "language": "en",
+    "intent": "joining_salon_queue",
+    "function": "joiningsalonqueue",
+    "role": "student"
+  },
+  {
+    "text": "What's my position in the queue?",
+    "language": "en",
+    "intent": "joining_salon_queue",
+    "function": "joiningsalonqueue",
+    "role": "student"
+  },
+  {
+    "text": "Queue for barber",
+    "language": "en",
+    "intent": "joining_salon_queue",
+    "function": "joiningsalonqueue",
+    "role": "student"
+  },
+  {
+    "text": "Add me to the salon queue",
+    "language": "en",
+    "intent": "joining_salon_queue",
+    "function": "joiningsalonqueue",
+    "role": "student"
+  },
+  {
+    "text": "Add me to the salon queue",
+    "language": "en",
+    "intent": "joining_salon_queue",
+    "function": "joiningsalonqueue",
+    "role": "student"
+  },
+  {
+    "text": "Queue for barber",
+    "language": "en",
+    "intent": "joining_salon_queue",
+    "function": "joiningsalonqueue",
+    "role": "student"
+  },
+  {
+    "text": "Barber appointment",
+    "language": "en",
+    "intent": "joining_salon_queue",
+    "function": "joiningsalonqueue",
+    "role": "student"
+  },
+  {
+    "text": "Add me to the salon queue",
+    "language": "en",
+    "intent": "joining_salon_queue",
+    "function": "joiningsalonqueue",
+    "role": "student"
+  },
+  {
+    "text": "Check barber queue",
+    "language": "en",
+    "intent": "joining_salon_queue",
+    "function": "joiningsalonqueue",
+    "role": "student"
+  },
+  {
+    "text": "Add me to the salon queue",
+    "language": "en",
+    "intent": "joining_salon_queue",
+    "function": "joiningsalonqueue",
+    "role": "student"
+  },
+  {
+    "text": "Barber appointment",
+    "language": "en",
+    "intent": "joining_salon_queue",
+    "function": "joiningsalonqueue",
+    "role": "student"
+  },
+  {
+    "text": "Add me to the salon queue",
+    "language": "en",
+    "intent": "joining_salon_queue",
+    "function": "joiningsalonqueue",
+    "role": "student"
+  },
+  {
+    "text": "Join the barber queue",
+    "language": "en",
+    "intent": "joining_salon_queue",
+    "function": "joiningsalonqueue",
+    "role": "student"
+  },
+  {
+    "text": "When is my turn?",
+    "language": "en",
+    "intent": "joining_salon_queue",
+    "function": "joiningsalonqueue",
+    "role": "student"
+  },
+  {
+    "text": "Hair cutting queue",
+    "language": "en",
+    "intent": "joining_salon_queue",
+    "function": "joiningsalonqueue",
+    "role": "student"
+  },
+  {
+    "text": "I want to join the queue",
+    "language": "en",
+    "intent": "joining_salon_queue",
+    "function": "joiningsalonqueue",
+    "role": "student"
+  },
+  {
+    "text": "Hair cutting queue",
+    "language": "en",
+    "intent": "joining_salon_queue",
+    "function": "joiningsalonqueue",
+    "role": "student"
+  },
+  {
+    "text": "Add me to the salon queue",
+    "language": "en",
+    "intent": "joining_salon_queue",
+    "function": "joiningsalonqueue",
+    "role": "student"
+  },
+  {
+    "text": "Barber appointment",
+    "language": "en",
+    "intent": "joining_salon_queue",
+    "function": "joiningsalonqueue",
+    "role": "student"
+  },
+  {
+    "text": "I need a shave",
+    "language": "en",
+    "intent": "joining_salon_queue",
+    "function": "joiningsalonqueue",
+    "role": "student"
+  },
+  {
+    "text": "Join the barber queue",
+    "language": "en",
+    "intent": "joining_salon_queue",
+    "function": "joiningsalonqueue",
+    "role": "student"
+  },
+  {
+    "text": "कतार में मेरा नंबर क्या है?",
+    "language": "hi",
+    "intent": "joining_salon_queue",
+    "function": "joiningsalonqueue",
+    "role": "student"
+  },
+  {
+    "text": "मेरी बारी कब है?",
+    "language": "hi",
+    "intent": "joining_salon_queue",
+    "function": "joiningsalonqueue",
+    "role": "student"
+  },
+  {
+    "text": "मेरी बारी कब है?",
+    "language": "hi",
+    "intent": "joining_salon_queue",
+    "function": "joiningsalonqueue",
+    "role": "student"
+  },
+  {
+    "text": "बाल कटवाने हैं",
+    "language": "hi",
+    "intent": "joining_salon_queue",
+    "function": "joiningsalonqueue",
+    "role": "student"
+  },
+  {
+    "text": "कतार में मेरा नंबर क्या है?",
+    "language": "hi",
+    "intent": "joining_salon_queue",
+    "function": "joiningsalonqueue",
+    "role": "student"
+  },
+  {
+    "text": "नाई की कतार में लगा दो",
+    "language": "hi",
+    "intent": "joining_salon_queue",
+    "function": "joiningsalonqueue",
+    "role": "student"
+  },
+  {
+    "text": "नाई की कतार में लगा दो",
+    "language": "hi",
+    "intent": "joining_salon_queue",
+    "function": "joiningsalonqueue",
+    "role": "student"
+  },
+  {
+    "text": "मेरी बारी कब है?",
+    "language": "hi",
+    "intent": "joining_salon_queue",
+    "function": "joiningsalonqueue",
+    "role": "student"
+  },
+  {
+    "text": "कतार में शामिल करो",
+    "language": "hi",
+    "intent": "joining_salon_queue",
+    "function": "joiningsalonqueue",
+    "role": "student"
+  },
+  {
+    "text": "कतार में मेरा नंबर क्या है?",
+    "language": "hi",
+    "intent": "joining_salon_queue",
+    "function": "joiningsalonqueue",
+    "role": "student"
+  },
+  {
+    "text": "नाई की कतार में लगा दो",
+    "language": "hi",
+    "intent": "joining_salon_queue",
+    "function": "joiningsalonqueue",
+    "role": "student"
+  },
+  {
+    "text": "कतार में मेरा नंबर क्या है?",
+    "language": "hi",
+    "intent": "joining_salon_queue",
+    "function": "joiningsalonqueue",
+    "role": "student"
+  },
+  {
+    "text": "कतार में शामिल करो",
+    "language": "hi",
+    "intent": "joining_salon_queue",
+    "function": "joiningsalonqueue",
+    "role": "student"
+  },
+  {
+    "text": "नाई की कतार में लगा दो",
+    "language": "hi",
+    "intent": "joining_salon_queue",
+    "function": "joiningsalonqueue",
+    "role": "student"
+  },
+  {
+    "text": "कतार में मेरा नंबर क्या है?",
+    "language": "hi",
+    "intent": "joining_salon_queue",
+    "function": "joiningsalonqueue",
+    "role": "student"
+  },
+  {
+    "text": "कतार में शामिल करो",
+    "language": "hi",
+    "intent": "joining_salon_queue",
+    "function": "joiningsalonqueue",
+    "role": "student"
+  },
+  {
+    "text": "बाल कटवाने हैं",
+    "language": "hi",
+    "intent": "joining_salon_queue",
+    "function": "joiningsalonqueue",
+    "role": "student"
+  },
+  {
+    "text": "नाई के पास जाना है",
+    "language": "hi",
+    "intent": "joining_salon_queue",
+    "function": "joiningsalonqueue",
+    "role": "student"
+  },
+  {
+    "text": "कतार में मेरा नंबर क्या है?",
+    "language": "hi",
+    "intent": "joining_salon_queue",
+    "function": "joiningsalonqueue",
+    "role": "student"
+  },
+  {
+    "text": "कतार में शामिल करो",
+    "language": "hi",
+    "intent": "joining_salon_queue",
+    "function": "joiningsalonqueue",
+    "role": "student"
+  },
+  {
+    "text": "कतार में मेरा नंबर क्या है?",
+    "language": "hi",
+    "intent": "joining_salon_queue",
+    "function": "joiningsalonqueue",
+    "role": "student"
+  },
+  {
+    "text": "कतार में शामिल करो",
+    "language": "hi",
+    "intent": "joining_salon_queue",
+    "function": "joiningsalonqueue",
+    "role": "student"
+  },
+  {
+    "text": "बाल कटवाने हैं",
+    "language": "hi",
+    "intent": "joining_salon_queue",
+    "function": "joiningsalonqueue",
+    "role": "student"
+  },
+  {
+    "text": "नाई की कतार में लगा दो",
+    "language": "hi",
+    "intent": "joining_salon_queue",
+    "function": "joiningsalonqueue",
+    "role": "student"
+  },
+  {
+    "text": "बाल कटवाने हैं",
+    "language": "hi",
+    "intent": "joining_salon_queue",
+    "function": "joiningsalonqueue",
+    "role": "student"
+  },
+  {
+    "text": "मेरी बारी कब है?",
+    "language": "hi",
+    "intent": "joining_salon_queue",
+    "function": "joiningsalonqueue",
+    "role": "student"
+  },
+  {
+    "text": "मेरी बारी कब है?",
+    "language": "hi",
+    "intent": "joining_salon_queue",
+    "function": "joiningsalonqueue",
+    "role": "student"
+  },
+  {
+    "text": "नाई के पास जाना है",
+    "language": "hi",
+    "intent": "joining_salon_queue",
+    "function": "joiningsalonqueue",
+    "role": "student"
+  },
+  {
+    "text": "मेरी बारी कब है?",
+    "language": "hi",
+    "intent": "joining_salon_queue",
+    "function": "joiningsalonqueue",
+    "role": "student"
+  },
+  {
+    "text": "मेरी बारी कब है?",
+    "language": "hi",
+    "intent": "joining_salon_queue",
+    "function": "joiningsalonqueue",
+    "role": "student"
+  },
+  {
+    "text": "What's new?",
+    "language": "en",
+    "intent": "getting_notifications",
+    "function": "gettingnotifications",
+    "role": "student"
+  },
+  {
+    "text": "Any important updates?",
+    "language": "en",
+    "intent": "getting_notifications",
+    "function": "gettingnotifications",
+    "role": "student"
+  },
+  {
+    "text": "Any updates for me?",
+    "language": "en",
+    "intent": "getting_notifications",
+    "function": "gettingnotifications",
+    "role": "student"
+  },
+  {
+    "text": "Show announcements",
+    "language": "en",
+    "intent": "getting_notifications",
+    "function": "gettingnotifications",
+    "role": "student"
+  },
+  {
+    "text": "Any updates for me?",
+    "language": "en",
+    "intent": "getting_notifications",
+    "function": "gettingnotifications",
+    "role": "student"
+  },
+  {
+    "text": "What announcements are there?",
+    "language": "en",
+    "intent": "getting_notifications",
+    "function": "gettingnotifications",
+    "role": "student"
+  },
+  {
+    "text": "Get my notifications",
+    "language": "en",
+    "intent": "getting_notifications",
+    "function": "gettingnotifications",
+    "role": "student"
+  },
+  {
+    "text": "What are my notifications?",
+    "language": "en",
+    "intent": "getting_notifications",
+    "function": "gettingnotifications",
+    "role": "student"
+  },
+  {
+    "text": "Check my messages",
+    "language": "en",
+    "intent": "getting_notifications",
+    "function": "gettingnotifications",
+    "role": "student"
+  },
+  {
+    "text": "What are my notifications?",
+    "language": "en",
+    "intent": "getting_notifications",
+    "function": "gettingnotifications",
+    "role": "student"
+  },
+  {
+    "text": "What's new?",
+    "language": "en",
+    "intent": "getting_notifications",
+    "function": "gettingnotifications",
+    "role": "student"
+  },
+  {
+    "text": "What are my notifications?",
+    "language": "en",
+    "intent": "getting_notifications",
+    "function": "gettingnotifications",
+    "role": "student"
+  },
+  {
+    "text": "Any updates for me?",
+    "language": "en",
+    "intent": "getting_notifications",
+    "function": "gettingnotifications",
+    "role": "student"
+  },
+  {
+    "text": "What's new?",
+    "language": "en",
+    "intent": "getting_notifications",
+    "function": "gettingnotifications",
+    "role": "student"
+  },
+  {
+    "text": "Check my messages",
+    "language": "en",
+    "intent": "getting_notifications",
+    "function": "gettingnotifications",
+    "role": "student"
+  },
+  {
+    "text": "Any updates for me?",
+    "language": "en",
+    "intent": "getting_notifications",
+    "function": "gettingnotifications",
+    "role": "student"
+  },
+  {
+    "text": "Any updates for me?",
+    "language": "en",
+    "intent": "getting_notifications",
+    "function": "gettingnotifications",
+    "role": "student"
+  },
+  {
+    "text": "Any updates for me?",
+    "language": "en",
+    "intent": "getting_notifications",
+    "function": "gettingnotifications",
+    "role": "student"
+  },
+  {
+    "text": "Get my notifications",
+    "language": "en",
+    "intent": "getting_notifications",
+    "function": "gettingnotifications",
+    "role": "student"
+  },
+  {
+    "text": "Check my messages",
+    "language": "en",
+    "intent": "getting_notifications",
+    "function": "gettingnotifications",
+    "role": "student"
+  },
+  {
+    "text": "Tell me my notifications",
+    "language": "en",
+    "intent": "getting_notifications",
+    "function": "gettingnotifications",
+    "role": "student"
+  },
+  {
+    "text": "Tell me my notifications",
+    "language": "en",
+    "intent": "getting_notifications",
+    "function": "gettingnotifications",
+    "role": "student"
+  },
+  {
+    "text": "Tell me my notifications",
+    "language": "en",
+    "intent": "getting_notifications",
+    "function": "gettingnotifications",
+    "role": "student"
+  },
+  {
+    "text": "Show announcements",
+    "language": "en",
+    "intent": "getting_notifications",
+    "function": "gettingnotifications",
+    "role": "student"
+  },
+  {
+    "text": "Any important updates?",
+    "language": "en",
+    "intent": "getting_notifications",
+    "function": "gettingnotifications",
+    "role": "student"
+  },
+  {
+    "text": "Show announcements",
+    "language": "en",
+    "intent": "getting_notifications",
+    "function": "gettingnotifications",
+    "role": "student"
+  },
+  {
+    "text": "What's new?",
+    "language": "en",
+    "intent": "getting_notifications",
+    "function": "gettingnotifications",
+    "role": "student"
+  },
+  {
+    "text": "Get my notifications",
+    "language": "en",
+    "intent": "getting_notifications",
+    "function": "gettingnotifications",
+    "role": "student"
+  },
+  {
+    "text": "Tell me my notifications",
+    "language": "en",
+    "intent": "getting_notifications",
+    "function": "gettingnotifications",
+    "role": "student"
+  },
+  {
+    "text": "What are my notifications?",
+    "language": "en",
+    "intent": "getting_notifications",
+    "function": "gettingnotifications",
+    "role": "student"
+  },
+  {
+    "text": "मेरे लिए संदेश",
+    "language": "hi",
+    "intent": "getting_notifications",
+    "function": "gettingnotifications",
+    "role": "student"
+  },
+  {
+    "text": "कोई अपडेट है?",
+    "language": "hi",
+    "intent": "getting_notifications",
+    "function": "gettingnotifications",
+    "role": "student"
+  },
+  {
+    "text": "मेरी सूचनाएं दिखाओ",
+    "language": "hi",
+    "intent": "getting_notifications",
+    "function": "gettingnotifications",
+    "role": "student"
+  },
+  {
+    "text": "कोई अपडेट है?",
+    "language": "hi",
+    "intent": "getting_notifications",
+    "function": "gettingnotifications",
+    "role": "student"
+  },
+  {
+    "text": "क्या नया है?",
+    "language": "hi",
+    "intent": "getting_notifications",
+    "function": "gettingnotifications",
+    "role": "student"
+  },
+  {
+    "text": "मेरे लिए संदेश",
+    "language": "hi",
+    "intent": "getting_notifications",
+    "function": "gettingnotifications",
+    "role": "student"
+  },
+  {
+    "text": "मेरे लिए संदेश",
+    "language": "hi",
+    "intent": "getting_notifications",
+    "function": "gettingnotifications",
+    "role": "student"
+  },
+  {
+    "text": "कोई अपडेट है?",
+    "language": "hi",
+    "intent": "getting_notifications",
+    "function": "gettingnotifications",
+    "role": "student"
+  },
+  {
+    "text": "घोषणाएं क्या हैं?",
+    "language": "hi",
+    "intent": "getting_notifications",
+    "function": "gettingnotifications",
+    "role": "student"
+  },
+  {
+    "text": "क्या नया है?",
+    "language": "hi",
+    "intent": "getting_notifications",
+    "function": "gettingnotifications",
+    "role": "student"
+  },
+  {
+    "text": "कोई अपडेट है?",
+    "language": "hi",
+    "intent": "getting_notifications",
+    "function": "gettingnotifications",
+    "role": "student"
+  },
+  {
+    "text": "क्या नया है?",
+    "language": "hi",
+    "intent": "getting_notifications",
+    "function": "gettingnotifications",
+    "role": "student"
+  },
+  {
+    "text": "मेरी सूचनाएं दिखाओ",
+    "language": "hi",
+    "intent": "getting_notifications",
+    "function": "gettingnotifications",
+    "role": "student"
+  },
+  {
+    "text": "मेरे लिए संदेश",
+    "language": "hi",
+    "intent": "getting_notifications",
+    "function": "gettingnotifications",
+    "role": "student"
+  },
+  {
+    "text": "घोषणाएं क्या हैं?",
+    "language": "hi",
+    "intent": "getting_notifications",
+    "function": "gettingnotifications",
+    "role": "student"
+  },
+  {
+    "text": "कोई अपडेट है?",
+    "language": "hi",
+    "intent": "getting_notifications",
+    "function": "gettingnotifications",
+    "role": "student"
+  },
+  {
+    "text": "क्या नया है?",
+    "language": "hi",
+    "intent": "getting_notifications",
+    "function": "gettingnotifications",
+    "role": "student"
+  },
+  {
+    "text": "घोषणाएं क्या हैं?",
+    "language": "hi",
+    "intent": "getting_notifications",
+    "function": "gettingnotifications",
+    "role": "student"
+  },
+  {
+    "text": "क्या नया है?",
+    "language": "hi",
+    "intent": "getting_notifications",
+    "function": "gettingnotifications",
+    "role": "student"
+  },
+  {
+    "text": "मेरे लिए संदेश",
+    "language": "hi",
+    "intent": "getting_notifications",
+    "function": "gettingnotifications",
+    "role": "student"
+  },
+  {
+    "text": "कोई अपडेट है?",
+    "language": "hi",
+    "intent": "getting_notifications",
+    "function": "gettingnotifications",
+    "role": "student"
+  },
+  {
+    "text": "क्या नया है?",
+    "language": "hi",
+    "intent": "getting_notifications",
+    "function": "gettingnotifications",
+    "role": "student"
+  },
+  {
+    "text": "मेरे लिए संदेश",
+    "language": "hi",
+    "intent": "getting_notifications",
+    "function": "gettingnotifications",
+    "role": "student"
+  },
+  {
+    "text": "मेरे लिए संदेश",
+    "language": "hi",
+    "intent": "getting_notifications",
+    "function": "gettingnotifications",
+    "role": "student"
+  },
+  {
+    "text": "घोषणाएं क्या हैं?",
+    "language": "hi",
+    "intent": "getting_notifications",
+    "function": "gettingnotifications",
+    "role": "student"
+  },
+  {
+    "text": "मेरी सूचनाएं दिखाओ",
+    "language": "hi",
+    "intent": "getting_notifications",
+    "function": "gettingnotifications",
+    "role": "student"
+  },
+  {
+    "text": "मेरे लिए संदेश",
+    "language": "hi",
+    "intent": "getting_notifications",
+    "function": "gettingnotifications",
+    "role": "student"
+  },
+  {
+    "text": "कोई अपडेट है?",
+    "language": "hi",
+    "intent": "getting_notifications",
+    "function": "gettingnotifications",
+    "role": "student"
+  },
+  {
+    "text": "क्या नया है?",
+    "language": "hi",
+    "intent": "getting_notifications",
+    "function": "gettingnotifications",
+    "role": "student"
+  },
+  {
+    "text": "मेरी सूचनाएं दिखाओ",
+    "language": "hi",
+    "intent": "getting_notifications",
+    "function": "gettingnotifications",
+    "role": "student"
+  }
+]

@@ -1,0 +1,63 @@
+[
+  {
+    "intent": "booking_cleaning_service",
+    "utterance": "Book a cleaning service for tomorrow",
+    "expected_function": "book_cleaning_service",
+    "expected_params": {
+      "date": "tomorrow"
+    },
+    "language": "en"
+  },
+  {
+    "intent": "reporting_appliance_issue",
+    "utterance": "The fan is not working",
+    "expected_function": "report_appliance_issue",
+    "expected_params": {
+      "appliance_type": "fan"
+    },
+    "language": "en"
+  },
+  {
+    "intent": "placing_store_order",
+    "utterance": "Order a water bottle from the store",
+    "expected_function": "place_store_order",
+    "expected_params": {
+      "items": [
+        "water bottle"
+      ]
+    },
+    "language": "en"
+  },
+  {
+    "intent": "booking_cleaning_service",
+    "utterance": "कल सफाई करवानी है",
+    "expected_function": "book_cleaning_service",
+    "expected_params": {
+      "date": "tomorrow"
+    },
+    "language": "hi"
+  },
+  {
+    "intent": "requesting_medicine",
+    "utterance": "बुखार है, दवा चाहिए",
+    "expected_function": "request_medicine",
+    "expected_params": {
+      "urgency": "moderate"
+    },
+    "language": "hi"
+  },
+  {
+    "intent": "joining_salon_queue",
+    "utterance": "What's my position in the barber queue?",
+    "expected_function": "get_queue_status",
+    "expected_params": {},
+    "language": "en"
+  },
+  {
+    "intent": "viewing_request_status",
+    "utterance": "Show me all my pending requests",
+    "expected_function": "view_my_requests",
+    "expected_params": {},
+    "language": "en"
+  }
+]

@@ -1,0 +1,1502 @@
+[
+  {
+    "scenario_type": "cleaning_booking",
+    "language": "hi",
+    "turns": [
+      {
+        "speaker": "user",
+        "text": "Book cleaning for {date} at {time}"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Sure! I can help you book a cleaning service. When would you like the cleaning done?"
+      },
+      {
+        "speaker": "user",
+        "text": "Tomorrow at morning"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Perfect! Your cleaning is booked for tomorrow. Any special requests?"
+      },
+      {
+        "speaker": "user",
+        "text": "No, just the standard cleaning. Thank you!"
+      },
+      {
+        "speaker": "assistant",
+        "text": "✓ Booking confirmed! Your cleaning is scheduled."
+      }
+    ]
+  },
+  {
+    "scenario_type": "cleaning_booking",
+    "language": "hi",
+    "turns": [
+      {
+        "speaker": "user",
+        "text": "I need my room cleaned"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Sure! I can help you book a cleaning service. When would you like the cleaning done?"
+      },
+      {
+        "speaker": "user",
+        "text": "Tomorrow at afternoon"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Perfect! Your cleaning is booked for tomorrow. Any special requests?"
+      },
+      {
+        "speaker": "user",
+        "text": "No, just the standard cleaning. Thank you!"
+      },
+      {
+        "speaker": "assistant",
+        "text": "✓ Booking confirmed! Your cleaning is scheduled."
+      }
+    ]
+  },
+  {
+    "scenario_type": "cleaning_booking",
+    "language": "en",
+    "turns": [
+      {
+        "speaker": "user",
+        "text": "कमरा साफ करो {date} को"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Sure! I can help you book a cleaning service. When would you like the cleaning done?"
+      },
+      {
+        "speaker": "user",
+        "text": "Tomorrow at after 5 PM"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Perfect! Your cleaning is booked for tomorrow. Any special requests?"
+      },
+      {
+        "speaker": "user",
+        "text": "No, just the standard cleaning. Thank you!"
+      },
+      {
+        "speaker": "assistant",
+        "text": "✓ Booking confirmed! Your cleaning is scheduled."
+      }
+    ]
+  },
+  {
+    "scenario_type": "cleaning_booking",
+    "language": "hi",
+    "turns": [
+      {
+        "speaker": "user",
+        "text": "मेरे कमरे की सफाई बुक करो"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Sure! I can help you book a cleaning service. When would you like the cleaning done?"
+      },
+      {
+        "speaker": "user",
+        "text": "Tomorrow at 2 PM"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Perfect! Your cleaning is booked for tomorrow. Any special requests?"
+      },
+      {
+        "speaker": "user",
+        "text": "No, just the standard cleaning. Thank you!"
+      },
+      {
+        "speaker": "assistant",
+        "text": "✓ Booking confirmed! Your cleaning is scheduled."
+      }
+    ]
+  },
+  {
+    "scenario_type": "cleaning_booking",
+    "language": "en",
+    "turns": [
+      {
+        "speaker": "user",
+        "text": "I want to request a cleaning service"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Sure! I can help you book a cleaning service. When would you like the cleaning done?"
+      },
+      {
+        "speaker": "user",
+        "text": "Tomorrow at morning"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Perfect! Your cleaning is booked for tomorrow. Any special requests?"
+      },
+      {
+        "speaker": "user",
+        "text": "No, just the standard cleaning. Thank you!"
+      },
+      {
+        "speaker": "assistant",
+        "text": "✓ Booking confirmed! Your cleaning is scheduled."
+      }
+    ]
+  },
+  {
+    "scenario_type": "cleaning_booking",
+    "language": "en",
+    "turns": [
+      {
+        "speaker": "user",
+        "text": "Book cleaning for {date} at {time}"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Sure! I can help you book a cleaning service. When would you like the cleaning done?"
+      },
+      {
+        "speaker": "user",
+        "text": "Tomorrow at 2 PM"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Perfect! Your cleaning is booked for tomorrow. Any special requests?"
+      },
+      {
+        "speaker": "user",
+        "text": "No, just the standard cleaning. Thank you!"
+      },
+      {
+        "speaker": "assistant",
+        "text": "✓ Booking confirmed! Your cleaning is scheduled."
+      }
+    ]
+  },
+  {
+    "scenario_type": "cleaning_booking",
+    "language": "hi",
+    "turns": [
+      {
+        "speaker": "user",
+        "text": "कल सुबह सफाई हो जाए"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Sure! I can help you book a cleaning service. When would you like the cleaning done?"
+      },
+      {
+        "speaker": "user",
+        "text": "Tomorrow at morning"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Perfect! Your cleaning is booked for tomorrow. Any special requests?"
+      },
+      {
+        "speaker": "user",
+        "text": "No, just the standard cleaning. Thank you!"
+      },
+      {
+        "speaker": "assistant",
+        "text": "✓ Booking confirmed! Your cleaning is scheduled."
+      }
+    ]
+  },
+  {
+    "scenario_type": "cleaning_booking",
+    "language": "en",
+    "turns": [
+      {
+        "speaker": "user",
+        "text": "मेरे कमरे में सफाई चाहिए"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Sure! I can help you book a cleaning service. When would you like the cleaning done?"
+      },
+      {
+        "speaker": "user",
+        "text": "Tomorrow at 2 PM"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Perfect! Your cleaning is booked for tomorrow. Any special requests?"
+      },
+      {
+        "speaker": "user",
+        "text": "No, just the standard cleaning. Thank you!"
+      },
+      {
+        "speaker": "assistant",
+        "text": "✓ Booking confirmed! Your cleaning is scheduled."
+      }
+    ]
+  },
+  {
+    "scenario_type": "cleaning_booking",
+    "language": "en",
+    "turns": [
+      {
+        "speaker": "user",
+        "text": "सफाई सेवा {date} के लिए"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Sure! I can help you book a cleaning service. When would you like the cleaning done?"
+      },
+      {
+        "speaker": "user",
+        "text": "Tomorrow at after 5 PM"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Perfect! Your cleaning is booked for tomorrow. Any special requests?"
+      },
+      {
+        "speaker": "user",
+        "text": "No, just the standard cleaning. Thank you!"
+      },
+      {
+        "speaker": "assistant",
+        "text": "✓ Booking confirmed! Your cleaning is scheduled."
+      }
+    ]
+  },
+  {
+    "scenario_type": "cleaning_booking",
+    "language": "en",
+    "turns": [
+      {
+        "speaker": "user",
+        "text": "Cleaning service for {date} please"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Sure! I can help you book a cleaning service. When would you like the cleaning done?"
+      },
+      {
+        "speaker": "user",
+        "text": "Tomorrow at evening"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Perfect! Your cleaning is booked for tomorrow. Any special requests?"
+      },
+      {
+        "speaker": "user",
+        "text": "No, just the standard cleaning. Thank you!"
+      },
+      {
+        "speaker": "assistant",
+        "text": "✓ Booking confirmed! Your cleaning is scheduled."
+      }
+    ]
+  },
+  {
+    "scenario_type": "cleaning_booking",
+    "language": "en",
+    "turns": [
+      {
+        "speaker": "user",
+        "text": "I want to request a cleaning service"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Sure! I can help you book a cleaning service. When would you like the cleaning done?"
+      },
+      {
+        "speaker": "user",
+        "text": "Tomorrow at early morning"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Perfect! Your cleaning is booked for tomorrow. Any special requests?"
+      },
+      {
+        "speaker": "user",
+        "text": "No, just the standard cleaning. Thank you!"
+      },
+      {
+        "speaker": "assistant",
+        "text": "✓ Booking confirmed! Your cleaning is scheduled."
+      }
+    ]
+  },
+  {
+    "scenario_type": "cleaning_booking",
+    "language": "en",
+    "turns": [
+      {
+        "speaker": "user",
+        "text": "Schedule a room cleaning for next monday at 2 PM"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Sure! I can help you book a cleaning service. When would you like the cleaning done?"
+      },
+      {
+        "speaker": "user",
+        "text": "Tomorrow at morning"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Perfect! Your cleaning is booked for tomorrow. Any special requests?"
+      },
+      {
+        "speaker": "user",
+        "text": "No, just the standard cleaning. Thank you!"
+      },
+      {
+        "speaker": "assistant",
+        "text": "✓ Booking confirmed! Your cleaning is scheduled."
+      }
+    ]
+  },
+  {
+    "scenario_type": "cleaning_booking",
+    "language": "hi",
+    "turns": [
+      {
+        "speaker": "user",
+        "text": "Room cleaning request for {date} at {time}"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Sure! I can help you book a cleaning service. When would you like the cleaning done?"
+      },
+      {
+        "speaker": "user",
+        "text": "Tomorrow at 2 PM"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Perfect! Your cleaning is booked for tomorrow. Any special requests?"
+      },
+      {
+        "speaker": "user",
+        "text": "No, just the standard cleaning. Thank you!"
+      },
+      {
+        "speaker": "assistant",
+        "text": "✓ Booking confirmed! Your cleaning is scheduled."
+      }
+    ]
+  },
+  {
+    "scenario_type": "cleaning_booking",
+    "language": "hi",
+    "turns": [
+      {
+        "speaker": "user",
+        "text": "कमरा साफ करो {date} को"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Sure! I can help you book a cleaning service. When would you like the cleaning done?"
+      },
+      {
+        "speaker": "user",
+        "text": "Tomorrow at early morning"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Perfect! Your cleaning is booked for tomorrow. Any special requests?"
+      },
+      {
+        "speaker": "user",
+        "text": "No, just the standard cleaning. Thank you!"
+      },
+      {
+        "speaker": "assistant",
+        "text": "✓ Booking confirmed! Your cleaning is scheduled."
+      }
+    ]
+  },
+  {
+    "scenario_type": "cleaning_booking",
+    "language": "en",
+    "turns": [
+      {
+        "speaker": "user",
+        "text": "सफाई के लिए अनुरोध करो"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Sure! I can help you book a cleaning service. When would you like the cleaning done?"
+      },
+      {
+        "speaker": "user",
+        "text": "Tomorrow at morning"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Perfect! Your cleaning is booked for tomorrow. Any special requests?"
+      },
+      {
+        "speaker": "user",
+        "text": "No, just the standard cleaning. Thank you!"
+      },
+      {
+        "speaker": "assistant",
+        "text": "✓ Booking confirmed! Your cleaning is scheduled."
+      }
+    ]
+  },
+  {
+    "scenario_type": "cleaning_booking",
+    "language": "hi",
+    "turns": [
+      {
+        "speaker": "user",
+        "text": "कल सफाई करवानी है"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Sure! I can help you book a cleaning service. When would you like the cleaning done?"
+      },
+      {
+        "speaker": "user",
+        "text": "Tomorrow at early morning"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Perfect! Your cleaning is booked for tomorrow. Any special requests?"
+      },
+      {
+        "speaker": "user",
+        "text": "No, just the standard cleaning. Thank you!"
+      },
+      {
+        "speaker": "assistant",
+        "text": "✓ Booking confirmed! Your cleaning is scheduled."
+      }
+    ]
+  },
+  {
+    "scenario_type": "cleaning_booking",
+    "language": "en",
+    "turns": [
+      {
+        "speaker": "user",
+        "text": "Schedule cleaning for tomorrow morning"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Sure! I can help you book a cleaning service. When would you like the cleaning done?"
+      },
+      {
+        "speaker": "user",
+        "text": "Tomorrow at early morning"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Perfect! Your cleaning is booked for tomorrow. Any special requests?"
+      },
+      {
+        "speaker": "user",
+        "text": "No, just the standard cleaning. Thank you!"
+      },
+      {
+        "speaker": "assistant",
+        "text": "✓ Booking confirmed! Your cleaning is scheduled."
+      }
+    ]
+  },
+  {
+    "scenario_type": "cleaning_booking",
+    "language": "hi",
+    "turns": [
+      {
+        "speaker": "user",
+        "text": "कमरा साफ करो {date} को"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Sure! I can help you book a cleaning service. When would you like the cleaning done?"
+      },
+      {
+        "speaker": "user",
+        "text": "Tomorrow at morning"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Perfect! Your cleaning is booked for tomorrow. Any special requests?"
+      },
+      {
+        "speaker": "user",
+        "text": "No, just the standard cleaning. Thank you!"
+      },
+      {
+        "speaker": "assistant",
+        "text": "✓ Booking confirmed! Your cleaning is scheduled."
+      }
+    ]
+  },
+  {
+    "scenario_type": "cleaning_booking",
+    "language": "hi",
+    "turns": [
+      {
+        "speaker": "user",
+        "text": "सफाई सेवा {date} के लिए"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Sure! I can help you book a cleaning service. When would you like the cleaning done?"
+      },
+      {
+        "speaker": "user",
+        "text": "Tomorrow at 2 PM"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Perfect! Your cleaning is booked for tomorrow. Any special requests?"
+      },
+      {
+        "speaker": "user",
+        "text": "No, just the standard cleaning. Thank you!"
+      },
+      {
+        "speaker": "assistant",
+        "text": "✓ Booking confirmed! Your cleaning is scheduled."
+      }
+    ]
+  },
+  {
+    "scenario_type": "cleaning_booking",
+    "language": "hi",
+    "turns": [
+      {
+        "speaker": "user",
+        "text": "मेरे कमरे में सफाई चाहिए"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Sure! I can help you book a cleaning service. When would you like the cleaning done?"
+      },
+      {
+        "speaker": "user",
+        "text": "Tomorrow at after 5 PM"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Perfect! Your cleaning is booked for tomorrow. Any special requests?"
+      },
+      {
+        "speaker": "user",
+        "text": "No, just the standard cleaning. Thank you!"
+      },
+      {
+        "speaker": "assistant",
+        "text": "✓ Booking confirmed! Your cleaning is scheduled."
+      }
+    ]
+  },
+  {
+    "scenario_type": "cleaning_booking",
+    "language": "en",
+    "turns": [
+      {
+        "speaker": "user",
+        "text": "Can you clean my hostel room?"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Sure! I can help you book a cleaning service. When would you like the cleaning done?"
+      },
+      {
+        "speaker": "user",
+        "text": "Tomorrow at evening"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Perfect! Your cleaning is booked for tomorrow. Any special requests?"
+      },
+      {
+        "speaker": "user",
+        "text": "No, just the standard cleaning. Thank you!"
+      },
+      {
+        "speaker": "assistant",
+        "text": "✓ Booking confirmed! Your cleaning is scheduled."
+      }
+    ]
+  },
+  {
+    "scenario_type": "cleaning_booking",
+    "language": "hi",
+    "turns": [
+      {
+        "speaker": "user",
+        "text": "{date} को सफाई की व्यवस्था करो"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Sure! I can help you book a cleaning service. When would you like the cleaning done?"
+      },
+      {
+        "speaker": "user",
+        "text": "Tomorrow at afternoon"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Perfect! Your cleaning is booked for tomorrow. Any special requests?"
+      },
+      {
+        "speaker": "user",
+        "text": "No, just the standard cleaning. Thank you!"
+      },
+      {
+        "speaker": "assistant",
+        "text": "✓ Booking confirmed! Your cleaning is scheduled."
+      }
+    ]
+  },
+  {
+    "scenario_type": "cleaning_booking",
+    "language": "en",
+    "turns": [
+      {
+        "speaker": "user",
+        "text": "Book cleaning for {date} at {time}"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Sure! I can help you book a cleaning service. When would you like the cleaning done?"
+      },
+      {
+        "speaker": "user",
+        "text": "Tomorrow at afternoon"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Perfect! Your cleaning is booked for tomorrow. Any special requests?"
+      },
+      {
+        "speaker": "user",
+        "text": "No, just the standard cleaning. Thank you!"
+      },
+      {
+        "speaker": "assistant",
+        "text": "✓ Booking confirmed! Your cleaning is scheduled."
+      }
+    ]
+  },
+  {
+    "scenario_type": "cleaning_booking",
+    "language": "hi",
+    "turns": [
+      {
+        "speaker": "user",
+        "text": "सफाई सेवा बुक करना है"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Sure! I can help you book a cleaning service. When would you like the cleaning done?"
+      },
+      {
+        "speaker": "user",
+        "text": "Tomorrow at evening"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Perfect! Your cleaning is booked for tomorrow. Any special requests?"
+      },
+      {
+        "speaker": "user",
+        "text": "No, just the standard cleaning. Thank you!"
+      },
+      {
+        "speaker": "assistant",
+        "text": "✓ Booking confirmed! Your cleaning is scheduled."
+      }
+    ]
+  },
+  {
+    "scenario_type": "cleaning_booking",
+    "language": "hi",
+    "turns": [
+      {
+        "speaker": "user",
+        "text": "Book cleaning for {date} at {time}"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Sure! I can help you book a cleaning service. When would you like the cleaning done?"
+      },
+      {
+        "speaker": "user",
+        "text": "Tomorrow at early morning"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Perfect! Your cleaning is booked for tomorrow. Any special requests?"
+      },
+      {
+        "speaker": "user",
+        "text": "No, just the standard cleaning. Thank you!"
+      },
+      {
+        "speaker": "assistant",
+        "text": "✓ Booking confirmed! Your cleaning is scheduled."
+      }
+    ]
+  },
+  {
+    "scenario_type": "cleaning_booking",
+    "language": "hi",
+    "turns": [
+      {
+        "speaker": "user",
+        "text": "Please arrange a cleaning service for {date}"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Sure! I can help you book a cleaning service. When would you like the cleaning done?"
+      },
+      {
+        "speaker": "user",
+        "text": "Tomorrow at evening"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Perfect! Your cleaning is booked for tomorrow. Any special requests?"
+      },
+      {
+        "speaker": "user",
+        "text": "No, just the standard cleaning. Thank you!"
+      },
+      {
+        "speaker": "assistant",
+        "text": "✓ Booking confirmed! Your cleaning is scheduled."
+      }
+    ]
+  },
+  {
+    "scenario_type": "cleaning_booking",
+    "language": "hi",
+    "turns": [
+      {
+        "speaker": "user",
+        "text": "सफाई सेवा {date} के लिए"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Sure! I can help you book a cleaning service. When would you like the cleaning done?"
+      },
+      {
+        "speaker": "user",
+        "text": "Tomorrow at after 5 PM"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Perfect! Your cleaning is booked for tomorrow. Any special requests?"
+      },
+      {
+        "speaker": "user",
+        "text": "No, just the standard cleaning. Thank you!"
+      },
+      {
+        "speaker": "assistant",
+        "text": "✓ Booking confirmed! Your cleaning is scheduled."
+      }
+    ]
+  },
+  {
+    "scenario_type": "cleaning_booking",
+    "language": "hi",
+    "turns": [
+      {
+        "speaker": "user",
+        "text": "Room cleaning request for {date} at {time}"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Sure! I can help you book a cleaning service. When would you like the cleaning done?"
+      },
+      {
+        "speaker": "user",
+        "text": "Tomorrow at morning"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Perfect! Your cleaning is booked for tomorrow. Any special requests?"
+      },
+      {
+        "speaker": "user",
+        "text": "No, just the standard cleaning. Thank you!"
+      },
+      {
+        "speaker": "assistant",
+        "text": "✓ Booking confirmed! Your cleaning is scheduled."
+      }
+    ]
+  },
+  {
+    "scenario_type": "cleaning_booking",
+    "language": "en",
+    "turns": [
+      {
+        "speaker": "user",
+        "text": "मेरे कमरे में सफाई चाहिए"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Sure! I can help you book a cleaning service. When would you like the cleaning done?"
+      },
+      {
+        "speaker": "user",
+        "text": "Tomorrow at early morning"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Perfect! Your cleaning is booked for tomorrow. Any special requests?"
+      },
+      {
+        "speaker": "user",
+        "text": "No, just the standard cleaning. Thank you!"
+      },
+      {
+        "speaker": "assistant",
+        "text": "✓ Booking confirmed! Your cleaning is scheduled."
+      }
+    ]
+  },
+  {
+    "scenario_type": "cleaning_booking",
+    "language": "hi",
+    "turns": [
+      {
+        "speaker": "user",
+        "text": "सफाई सेवा {date} के लिए"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Sure! I can help you book a cleaning service. When would you like the cleaning done?"
+      },
+      {
+        "speaker": "user",
+        "text": "Tomorrow at after 5 PM"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Perfect! Your cleaning is booked for tomorrow. Any special requests?"
+      },
+      {
+        "speaker": "user",
+        "text": "No, just the standard cleaning. Thank you!"
+      },
+      {
+        "speaker": "assistant",
+        "text": "✓ Booking confirmed! Your cleaning is scheduled."
+      }
+    ]
+  },
+  {
+    "scenario_type": "cleaning_booking",
+    "language": "en",
+    "turns": [
+      {
+        "speaker": "user",
+        "text": "सफाई सेवा {date} के लिए"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Sure! I can help you book a cleaning service. When would you like the cleaning done?"
+      },
+      {
+        "speaker": "user",
+        "text": "Tomorrow at after 5 PM"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Perfect! Your cleaning is booked for tomorrow. Any special requests?"
+      },
+      {
+        "speaker": "user",
+        "text": "No, just the standard cleaning. Thank you!"
+      },
+      {
+        "speaker": "assistant",
+        "text": "✓ Booking confirmed! Your cleaning is scheduled."
+      }
+    ]
+  },
+  {
+    "scenario_type": "cleaning_booking",
+    "language": "en",
+    "turns": [
+      {
+        "speaker": "user",
+        "text": "सफाई के लिए अनुरोध करो"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Sure! I can help you book a cleaning service. When would you like the cleaning done?"
+      },
+      {
+        "speaker": "user",
+        "text": "Tomorrow at morning"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Perfect! Your cleaning is booked for tomorrow. Any special requests?"
+      },
+      {
+        "speaker": "user",
+        "text": "No, just the standard cleaning. Thank you!"
+      },
+      {
+        "speaker": "assistant",
+        "text": "✓ Booking confirmed! Your cleaning is scheduled."
+      }
+    ]
+  },
+  {
+    "scenario_type": "cleaning_booking",
+    "language": "en",
+    "turns": [
+      {
+        "speaker": "user",
+        "text": "सफाई सेवा बुक करना है"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Sure! I can help you book a cleaning service. When would you like the cleaning done?"
+      },
+      {
+        "speaker": "user",
+        "text": "Tomorrow at early morning"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Perfect! Your cleaning is booked for tomorrow. Any special requests?"
+      },
+      {
+        "speaker": "user",
+        "text": "No, just the standard cleaning. Thank you!"
+      },
+      {
+        "speaker": "assistant",
+        "text": "✓ Booking confirmed! Your cleaning is scheduled."
+      }
+    ]
+  },
+  {
+    "scenario_type": "cleaning_booking",
+    "language": "hi",
+    "turns": [
+      {
+        "speaker": "user",
+        "text": "{date} को सफाई की व्यवस्था करो"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Sure! I can help you book a cleaning service. When would you like the cleaning done?"
+      },
+      {
+        "speaker": "user",
+        "text": "Tomorrow at after 5 PM"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Perfect! Your cleaning is booked for tomorrow. Any special requests?"
+      },
+      {
+        "speaker": "user",
+        "text": "No, just the standard cleaning. Thank you!"
+      },
+      {
+        "speaker": "assistant",
+        "text": "✓ Booking confirmed! Your cleaning is scheduled."
+      }
+    ]
+  },
+  {
+    "scenario_type": "cleaning_booking",
+    "language": "en",
+    "turns": [
+      {
+        "speaker": "user",
+        "text": "Room cleaning request for {date} at {time}"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Sure! I can help you book a cleaning service. When would you like the cleaning done?"
+      },
+      {
+        "speaker": "user",
+        "text": "Tomorrow at afternoon"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Perfect! Your cleaning is booked for tomorrow. Any special requests?"
+      },
+      {
+        "speaker": "user",
+        "text": "No, just the standard cleaning. Thank you!"
+      },
+      {
+        "speaker": "assistant",
+        "text": "✓ Booking confirmed! Your cleaning is scheduled."
+      }
+    ]
+  },
+  {
+    "scenario_type": "cleaning_booking",
+    "language": "hi",
+    "turns": [
+      {
+        "speaker": "user",
+        "text": "मेरे कमरे की सफाई बुक करो"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Sure! I can help you book a cleaning service. When would you like the cleaning done?"
+      },
+      {
+        "speaker": "user",
+        "text": "Tomorrow at 2 PM"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Perfect! Your cleaning is booked for tomorrow. Any special requests?"
+      },
+      {
+        "speaker": "user",
+        "text": "No, just the standard cleaning. Thank you!"
+      },
+      {
+        "speaker": "assistant",
+        "text": "✓ Booking confirmed! Your cleaning is scheduled."
+      }
+    ]
+  },
+  {
+    "scenario_type": "cleaning_booking",
+    "language": "en",
+    "turns": [
+      {
+        "speaker": "user",
+        "text": "Cleaning service for {date} please"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Sure! I can help you book a cleaning service. When would you like the cleaning done?"
+      },
+      {
+        "speaker": "user",
+        "text": "Tomorrow at 3 PM"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Perfect! Your cleaning is booked for tomorrow. Any special requests?"
+      },
+      {
+        "speaker": "user",
+        "text": "No, just the standard cleaning. Thank you!"
+      },
+      {
+        "speaker": "assistant",
+        "text": "✓ Booking confirmed! Your cleaning is scheduled."
+      }
+    ]
+  },
+  {
+    "scenario_type": "cleaning_booking",
+    "language": "en",
+    "turns": [
+      {
+        "speaker": "user",
+        "text": "मेरे कमरे की सफाई बुक करो"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Sure! I can help you book a cleaning service. When would you like the cleaning done?"
+      },
+      {
+        "speaker": "user",
+        "text": "Tomorrow at morning"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Perfect! Your cleaning is booked for tomorrow. Any special requests?"
+      },
+      {
+        "speaker": "user",
+        "text": "No, just the standard cleaning. Thank you!"
+      },
+      {
+        "speaker": "assistant",
+        "text": "✓ Booking confirmed! Your cleaning is scheduled."
+      }
+    ]
+  },
+  {
+    "scenario_type": "cleaning_booking",
+    "language": "en",
+    "turns": [
+      {
+        "speaker": "user",
+        "text": "{date} को सफाई की व्यवस्था करो"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Sure! I can help you book a cleaning service. When would you like the cleaning done?"
+      },
+      {
+        "speaker": "user",
+        "text": "Tomorrow at evening"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Perfect! Your cleaning is booked for tomorrow. Any special requests?"
+      },
+      {
+        "speaker": "user",
+        "text": "No, just the standard cleaning. Thank you!"
+      },
+      {
+        "speaker": "assistant",
+        "text": "✓ Booking confirmed! Your cleaning is scheduled."
+      }
+    ]
+  },
+  {
+    "scenario_type": "cleaning_booking",
+    "language": "en",
+    "turns": [
+      {
+        "speaker": "user",
+        "text": "Schedule a room cleaning for next monday at 2 PM"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Sure! I can help you book a cleaning service. When would you like the cleaning done?"
+      },
+      {
+        "speaker": "user",
+        "text": "Tomorrow at 2 PM"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Perfect! Your cleaning is booked for tomorrow. Any special requests?"
+      },
+      {
+        "speaker": "user",
+        "text": "No, just the standard cleaning. Thank you!"
+      },
+      {
+        "speaker": "assistant",
+        "text": "✓ Booking confirmed! Your cleaning is scheduled."
+      }
+    ]
+  },
+  {
+    "scenario_type": "cleaning_booking",
+    "language": "hi",
+    "turns": [
+      {
+        "speaker": "user",
+        "text": "Room cleaning request for {date} at {time}"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Sure! I can help you book a cleaning service. When would you like the cleaning done?"
+      },
+      {
+        "speaker": "user",
+        "text": "Tomorrow at 3 PM"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Perfect! Your cleaning is booked for tomorrow. Any special requests?"
+      },
+      {
+        "speaker": "user",
+        "text": "No, just the standard cleaning. Thank you!"
+      },
+      {
+        "speaker": "assistant",
+        "text": "✓ Booking confirmed! Your cleaning is scheduled."
+      }
+    ]
+  },
+  {
+    "scenario_type": "cleaning_booking",
+    "language": "hi",
+    "turns": [
+      {
+        "speaker": "user",
+        "text": "Schedule cleaning for tomorrow morning"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Sure! I can help you book a cleaning service. When would you like the cleaning done?"
+      },
+      {
+        "speaker": "user",
+        "text": "Tomorrow at early morning"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Perfect! Your cleaning is booked for tomorrow. Any special requests?"
+      },
+      {
+        "speaker": "user",
+        "text": "No, just the standard cleaning. Thank you!"
+      },
+      {
+        "speaker": "assistant",
+        "text": "✓ Booking confirmed! Your cleaning is scheduled."
+      }
+    ]
+  },
+  {
+    "scenario_type": "cleaning_booking",
+    "language": "hi",
+    "turns": [
+      {
+        "speaker": "user",
+        "text": "Book cleaning for {date} at {time}"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Sure! I can help you book a cleaning service. When would you like the cleaning done?"
+      },
+      {
+        "speaker": "user",
+        "text": "Tomorrow at 2 PM"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Perfect! Your cleaning is booked for tomorrow. Any special requests?"
+      },
+      {
+        "speaker": "user",
+        "text": "No, just the standard cleaning. Thank you!"
+      },
+      {
+        "speaker": "assistant",
+        "text": "✓ Booking confirmed! Your cleaning is scheduled."
+      }
+    ]
+  },
+  {
+    "scenario_type": "cleaning_booking",
+    "language": "hi",
+    "turns": [
+      {
+        "speaker": "user",
+        "text": "Room cleaning request for {date} at {time}"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Sure! I can help you book a cleaning service. When would you like the cleaning done?"
+      },
+      {
+        "speaker": "user",
+        "text": "Tomorrow at morning"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Perfect! Your cleaning is booked for tomorrow. Any special requests?"
+      },
+      {
+        "speaker": "user",
+        "text": "No, just the standard cleaning. Thank you!"
+      },
+      {
+        "speaker": "assistant",
+        "text": "✓ Booking confirmed! Your cleaning is scheduled."
+      }
+    ]
+  },
+  {
+    "scenario_type": "cleaning_booking",
+    "language": "en",
+    "turns": [
+      {
+        "speaker": "user",
+        "text": "Can you clean my hostel room?"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Sure! I can help you book a cleaning service. When would you like the cleaning done?"
+      },
+      {
+        "speaker": "user",
+        "text": "Tomorrow at 2 PM"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Perfect! Your cleaning is booked for tomorrow. Any special requests?"
+      },
+      {
+        "speaker": "user",
+        "text": "No, just the standard cleaning. Thank you!"
+      },
+      {
+        "speaker": "assistant",
+        "text": "✓ Booking confirmed! Your cleaning is scheduled."
+      }
+    ]
+  },
+  {
+    "scenario_type": "cleaning_booking",
+    "language": "hi",
+    "turns": [
+      {
+        "speaker": "user",
+        "text": "सफाई सेवा {date} के लिए"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Sure! I can help you book a cleaning service. When would you like the cleaning done?"
+      },
+      {
+        "speaker": "user",
+        "text": "Tomorrow at evening"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Perfect! Your cleaning is booked for tomorrow. Any special requests?"
+      },
+      {
+        "speaker": "user",
+        "text": "No, just the standard cleaning. Thank you!"
+      },
+      {
+        "speaker": "assistant",
+        "text": "✓ Booking confirmed! Your cleaning is scheduled."
+      }
+    ]
+  },
+  {
+    "scenario_type": "cleaning_booking",
+    "language": "hi",
+    "turns": [
+      {
+        "speaker": "user",
+        "text": "Can you clean my hostel room?"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Sure! I can help you book a cleaning service. When would you like the cleaning done?"
+      },
+      {
+        "speaker": "user",
+        "text": "Tomorrow at 2 PM"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Perfect! Your cleaning is booked for tomorrow. Any special requests?"
+      },
+      {
+        "speaker": "user",
+        "text": "No, just the standard cleaning. Thank you!"
+      },
+      {
+        "speaker": "assistant",
+        "text": "✓ Booking confirmed! Your cleaning is scheduled."
+      }
+    ]
+  },
+  {
+    "scenario_type": "cleaning_booking",
+    "language": "hi",
+    "turns": [
+      {
+        "speaker": "user",
+        "text": "मेरे कमरे में सफाई चाहिए"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Sure! I can help you book a cleaning service. When would you like the cleaning done?"
+      },
+      {
+        "speaker": "user",
+        "text": "Tomorrow at evening"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Perfect! Your cleaning is booked for tomorrow. Any special requests?"
+      },
+      {
+        "speaker": "user",
+        "text": "No, just the standard cleaning. Thank you!"
+      },
+      {
+        "speaker": "assistant",
+        "text": "✓ Booking confirmed! Your cleaning is scheduled."
+      }
+    ]
+  },
+  {
+    "scenario_type": "cleaning_booking",
+    "language": "hi",
+    "turns": [
+      {
+        "speaker": "user",
+        "text": "मेरे कमरे को साफ करवा दो"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Sure! I can help you book a cleaning service. When would you like the cleaning done?"
+      },
+      {
+        "speaker": "user",
+        "text": "Tomorrow at after 5 PM"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Perfect! Your cleaning is booked for tomorrow. Any special requests?"
+      },
+      {
+        "speaker": "user",
+        "text": "No, just the standard cleaning. Thank you!"
+      },
+      {
+        "speaker": "assistant",
+        "text": "✓ Booking confirmed! Your cleaning is scheduled."
+      }
+    ]
+  },
+  {
+    "scenario_type": "cleaning_booking",
+    "language": "en",
+    "turns": [
+      {
+        "speaker": "user",
+        "text": "मेरे कमरे में सफाई चाहिए"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Sure! I can help you book a cleaning service. When would you like the cleaning done?"
+      },
+      {
+        "speaker": "user",
+        "text": "Tomorrow at early morning"
+      },
+      {
+        "speaker": "assistant",
+        "text": "Perfect! Your cleaning is booked for tomorrow. Any special requests?"
+      },
+      {
+        "speaker": "user",
+        "text": "No, just the standard cleaning. Thank you!"
+      },
+      {
+        "speaker": "assistant",
+        "text": "✓ Booking confirmed! Your cleaning is scheduled."
+      }
+    ]
+  }
+]

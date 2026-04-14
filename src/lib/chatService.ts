@@ -1,6 +1,6 @@
 export type ChatMessage = { role: "user" | "assistant"; content: string };
 
-const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/chat`;
+const CHAT_URL = `${import.meta.env.VITE_SUPABASE_EDGE_FUNCTION_URL || "https://zvbhaehxojklmzylpjri.supabase.co/functions/v1"}/chat`;
 
 /** Decode JWT payload segment (base64url). Plain atob() fails on Supabase JWTs. */
 function decodeJwtPayload(token: string): { exp?: number } | null {

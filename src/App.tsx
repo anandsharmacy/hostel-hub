@@ -21,6 +21,7 @@ import LaundryDashboard from "./pages/laundry/LaundryDashboard";
 import ResetPassword from "./pages/ResetPassword";
 import NotFound from "./pages/NotFound";
 import { AIChatBot } from "@/components/chat/AIChatBot";
+import { VoiceAssistant } from "@/components/chat/VoiceAssistant";
 
 const queryClient = new QueryClient();
 
@@ -121,6 +122,7 @@ const App = () => (
             <BrowserRouter>
               <AppRoutes />
               <AIChatBot />
+              <VoiceAssistant />
             </BrowserRouter>
           </TooltipProvider>
         </DataProvider>
